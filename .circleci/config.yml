@@ -15,7 +15,7 @@ jobs:
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
-      - image: xinxinli510/puffin
+      - image: xinxinli510/puffin:latest
         auth:
           username: $DOCKER_USRN
           password: $DOCKER_PWD
@@ -33,6 +33,21 @@ jobs:
           name: Run tests
           command: npm test
 
+  publishLatestToHub: 
+      machine:
+        image: ubuntu-2204:2022.04.2
+      steps: 
+        - checkout
+
+        - run: |
+            echo "$DOCKER_PWD" | docker login --username $DOCKER_USRN --password-stdin
+
+        # build the application image
+        - run: docker build -t  xinxinli510/puffin .
+
+        # deploy the image
+        - run: docker push  xinxinli510/puffin
+
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
@@ -41,5 +56,6 @@ workflows:
   sample:
     jobs:
       - build-and-test
+      - publishLatestToHub
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
