@@ -32,19 +32,22 @@ jobs:
       - run:
           name: Run tests
           command: npm test
+
   publishLatestToHub: 
       machine:
         image: ubuntu-2204:2022.04.2
       steps: 
         - checkout
-        - setup_remote_docker
-        - run: 
-            name: Publish Docker Image to Docker Hub
-            command: |
-              echo "$DOCKER_PWD" | docker login -u "$DOCKER_USRN" --password-stdin
-              docker run xinxinli510/puffin
-              docker build -t xinxinli510/puffin .
-              docker push xinxinli510/puffin:latest
+
+        - run: |
+            echo "$DOCKER_PWD" | docker login --username $DOCKER_USRN --password-stdin
+            docker run  xinxinli510/puffin
+
+        # build the application image
+        - run: docker build -t  xinxinli510/puffin .
+
+        # deploy the image
+        - run: docker push  xinxinli510/puffin
 
 workflows:
   # Below is the definition of your workflow.
