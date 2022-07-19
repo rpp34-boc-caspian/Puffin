@@ -8,6 +8,16 @@ orbs:
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@4.7
 
+executors:
+  docker-publisher: 
+    environment:
+      IMAGE_NAME: xinxinli510/puffin
+    docker:
+      - image: xinxinli510/puffin:latest
+        auth:
+            username: $DOCKER_USRN
+            password: $DOCKER_PWD
+
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build-and-test:
@@ -15,7 +25,7 @@ jobs:
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
-      - image: xinxinli510/puffin
+      - image: xinxinli510/puffin:latest
         auth:
           username: $DOCKER_USRN
           password: $DOCKER_PWD
@@ -32,6 +42,17 @@ jobs:
       - run:
           name: Run tests
           command: npm test
+  publishLatestToHub: 
+      executor: docker-publisher
+      steps: 
+        - checkout
+        - setup_remote_docker
+        - run: 
+            name: Publish Docker Image to Docker Hub
+            command: |
+              echo "$DOCKER_PWD" | docker login -u "$DOCKER_USRN" --password-stdin
+              docker build -t xinxinli510/puffin .
+              docker push xinxinli510/puffin:latest
 
 workflows:
   # Below is the definition of your workflow.
@@ -41,5 +62,6 @@ workflows:
   sample:
     jobs:
       - build-and-test
+      - publishLatestToHub
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
