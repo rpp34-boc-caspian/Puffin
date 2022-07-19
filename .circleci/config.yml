@@ -44,6 +44,12 @@ jobs:
           command: npm test
   publishLatestToHub: 
       executor: docker-publisher
+
+      docker:
+        - image: xinxinli510/puffin:latest
+          auth:
+            username: $DOCKER_USRN
+            password: $DOCKER_PWD
       steps: 
         - checkout
         - setup_remote_docker
