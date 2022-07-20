@@ -7,9 +7,7 @@ import App from './App';
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
 
-// eslint-disable-next-line
-// import Daily from './Daily/Daily';
-
+import {Todo} from './create-todo';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -19,6 +17,7 @@ root.render(
   <React.StrictMode>
     <App />
     {/* <Daily /> */}
+    <Todo/>
   </React.StrictMode>
 );
 
