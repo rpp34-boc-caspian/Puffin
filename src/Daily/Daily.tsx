@@ -1,78 +1,65 @@
-import React from 'react';
-import moment from 'moment';
-import events from './events';
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+// import './Daily.css';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import format from 'date-fns/format';
+import parse from 'date-fns/parse';
+import startOfWeek from 'date-fns/startOfWeek';
+import getDay from 'date-fns/getDay';
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+
+// eslint-disable-next-line
 import BigCalendar from "react-big-calendar";
-// import "react-big-calendar/lib/css/react-big-calendar.css";
+// eslint-disable-next-line
+import moment from "moment";
 
+const locales = {
+  'en-US': require('date-fns/locale/en-US')
+}
 
-moment.locale("en");
-BigCalendar.momentLocalizer(moment);
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales
+})
 
-const allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k]);
+const events = [
+  {
+    title: "Big Meeting",
+    allDay: true,
+    start: new Date(2022,6,18),
+    end: new Date(2022,6,18)
+  },
+  {
+    title: "Vacation",
+    start: new Date(2022,6,13),
+    end: new Date(2022,6,20)
+  },
+  {
+    title: "Conference",
+    start: new Date(2022,6,20),
+    end: new Date(2022,6,23)
+  },
+]
+
 
 function Daily() {
+  const [newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
+  const [allEvents, setAllEvents] = useState(events)
+
+  // function handleAddEvent() {
+  //   setAllEvents([...allEvents, newEvent])
+  // }
+
   return (
     <div className="Daily">
-      <h1>Hello World!</h1>
-      <h2>This is the Daily View of the To-Do List</h2>
-      <div style={{ height: 700 }}>
-        <button onClick={() => this.setState({ view: "day" })}>Day</button>
-        <button onClick={() => this.setState({ view: "month" })}>Month</button>
-        <BigCalendar
-          style={{ height: 500, width: this.state.width }}
-          toolbar={false}
-          events={events}
-          step={60}
-          views={allViews}
-          view={this.state.view}
-          onView={() => { }}
-          date={this.state.date}
-          onNavigate={date => this.setState({ date })}
-        />
-      </div>
+      <h1>Test</h1>
+      <Calendar localizer={localizer} events={allEvents} startAccessor="start" endAccessor="end" style={{height: 500, margin: "50px"}} />
     </div>
   );
 }
 
 export default Daily;
-
-
-
-
-// class App extends Component {
-//   state = {
-//     view: "day",
-//     date: new Date(2015, 3, 12),
-//     width: 500
-//   };
-
-//   componentDidMount() {
-//     window.addEventListener("resize", () => {
-//       /*this.setState({
-//         width: window.innerWidth,
-//         height: window.innerHeight
-//       });*/
-//     });
-//   }
-
-//   render() {
-//     return (
-//       <div style={{ height: 700 }}>
-//         <button onClick={() => this.setState({ view: "day" })}>Day</button>
-//         <button onClick={() => this.setState({ view: "month" })}>Month</button>
-//         <BigCalendar
-//           style={{ height: 500, width: this.state.width }}
-//           toolbar={false}
-//           events={events}
-//           step={60}
-//           views={allViews}
-//           view={this.state.view}
-//           onView={() => {}}
-//           date={this.state.date}
-//           onNavigate={date => this.setState({ date })}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
