@@ -4,6 +4,7 @@ import './index.css';
 
 // eslint-disable-next-line
 import App from './App';
+import Login from './login/login';
 
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
@@ -13,9 +14,11 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <App />
+    <Login />
     {/* <Daily /> */}
   </React.StrictMode>
 );
