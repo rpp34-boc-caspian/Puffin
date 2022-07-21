@@ -19,7 +19,9 @@ const theme = createTheme({
         main: grey[300],
         dark: grey[400],
         contrastText: '#000'
-      }
+      },
+      white: '#fff',
+      black: '#000'
     },
 });
 
