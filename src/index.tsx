@@ -10,6 +10,9 @@ import Signup from './authentication/signup';
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
 
+// eslint-disable-next-line
+// import Daily from './Daily/Daily';
+
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(

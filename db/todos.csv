@@ -1,0 +1,11 @@
+id,user_id,cat_id,title,descript,start_d,end_d,complete
+1,1,1,Eat Veggies,Broccoli,6/22/16 19:10,6/22/16 19:45,FALSE
+2,1,2,Exercise,Press ups,6/22/16 19:10,6/23/16 19:45,TRUE
+3,2,3,Watch movie,Thor,6/22/16 19:10,6/24/16 19:45,TRUE
+4,2,3,Call mom,Ask about Dad,,,TRUE
+5,3,4,Call dad,Ask about Mom,,,FALSE
+6,3,4,Homework,Math,,,FALSE
+7,4,5,Treat myself,Don't know yet,,,TRUE
+8,4,5,Groceries,Costco,6/23/16 19:10,6/29/16 19:45,FALSE
+9,5,8,Study,Russian,6/24/16 19:10,6/30/16 19:45,TRUE
+10,5,8,Read,Tolstoy,6/25/16 19:10,7/1/16 19:45,TRUE
