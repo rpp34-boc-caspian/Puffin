@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 function Login() {
@@ -13,7 +13,27 @@ function Login() {
       password: password
     })
     .then((res) => {
-      console.log(res.data);
+      if (res.data.exist) {
+        setUsername('');
+        setPassword('');
+
+        // redirect to home / (???)
+
+      } else {
+        setUsername('');
+        setPassword('');
+
+        // MATERIAL UI: display "Username or password was incorrect." in red, make inputs red
+
+      }
+
+    })
+    .catch((err) => {
+      setUsername('');
+      setPassword('');
+
+      // MATERIAL UI: display "Oops, something went wrong, please try again."
+
     });
 
   };

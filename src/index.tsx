@@ -4,7 +4,8 @@ import './index.css';
 
 // eslint-disable-next-line
 import App from './App';
-import Login from './login/login';
+import Login from './authentication/login';
+import Signup from './authentication/signup';
 
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
