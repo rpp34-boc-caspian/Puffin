@@ -6,7 +6,7 @@ import './index.css';
 import App from './App';
 
 // eslint-disable-next-line
-import Daily from './Daily/Daily';
+// import Daily from './Daily/Daily';
 
 import reportWebVitals from './reportWebVitals';
 
