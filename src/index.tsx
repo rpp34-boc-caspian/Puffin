@@ -10,9 +10,7 @@ import SignUp from './authentication/signup';
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
 
-// eslint-disable-next-line
-// import Daily from './Daily/Daily';
-
+import {Todo} from './create-todo';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -25,6 +23,7 @@ root.render(
     <SignUp />
     <Login />
     {/* <Daily /> */}
+    <Todo/>
   </React.StrictMode>
 );
 
