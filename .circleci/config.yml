@@ -34,24 +34,13 @@ jobs:
           command: npm test
 
   publishLatestToHub: 
-      #machine:
-        #image: ubuntu-2204:2022.04.2
-      docker:
-      - image: xinxinli510/puffin:latest
-        auth:
-          username: $DOCKER_USRN
-          password: $DOCKER_PWD  
+      machine:
+        image: ubuntu-2204:2022.04.2
       steps: 
         - checkout
-        - setup_remote_docker:
-            version: 20.10.14
-            docker_layer_caching: true
-      
-        #- run: |
-            # echo "$DOCKER_PWD" | docker login --username $DOCKER_USRN --password-stdin
-        - node/install-packages:
-            # If you are using yarn, change the line below from "npm" to "yarn"
-            pkg-manager: npm
+
+        - run: |
+            echo "$DOCKER_PWD" | docker login --username $DOCKER_USRN --password-stdin
 
         # build the application image
         - run: docker build -t  xinxinli510/puffin .
