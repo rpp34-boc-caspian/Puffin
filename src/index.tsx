@@ -4,9 +4,11 @@ import './index.css';
 
 // eslint-disable-next-line
 import App from './App';
-
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
+
+// eslint-disable-next-line
+// import Daily from './Daily/Daily';
 
 import reportWebVitals from './reportWebVitals';
 
