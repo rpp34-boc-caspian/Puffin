@@ -41,6 +41,9 @@ jobs:
 
         - run: |
             echo "$DOCKER_PWD" | docker login --username $DOCKER_USRN --password-stdin
+        - node/install-packages:
+            # If you are using yarn, change the line below from "npm" to "yarn"
+            pkg-manager: npm
 
         # build the application image
         - run: docker build -t  xinxinli510/puffin .
