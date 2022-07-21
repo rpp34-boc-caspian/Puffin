@@ -24,3 +24,5 @@ yarn-error.log*
 
 *.cer
 *.sh
+
+postgres.sql

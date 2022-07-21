@@ -6,6 +6,9 @@ import './index.css';
 import App from './App';
 // eslint-disable-next-line
 import Daily from './Daily/Daily';
+import Login from './authentication/login';
+import SignUp from './authentication/signup';
+
 
 import {Todo} from './create-todo';
 import reportWebVitals from './reportWebVitals';
@@ -16,6 +19,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <App />
+    <SignUp />
+    <Login />
     {/* <Daily /> */}
     <Todo/>
   </React.StrictMode>
