@@ -17,11 +17,11 @@ app.post('/signup', (req, res) => {
 
   // OR
 
-  // Query the database for the username
-  // If it exists, send back that the username is taken
+  // Query the database for the username and email
+  // If it exists, send back that the username is taken in a reason object
   // If it doesn't, do the signup stuff
 
-  res.json(req.body);
+  res.json({created: false, reason: 'email'});
 });
 
 app.post('/login', (req, res) => {
