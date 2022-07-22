@@ -13,8 +13,19 @@ function SignUp() {
   const [emailError, setEmailError] = useState({ status: false, reason: '' });
   const [passwordError, setPasswordError] = useState(false);
 
+  function validateEmail(email: string) {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
+
   function handleSignUp() {
     console.log(`Email ${email}, username ${username}, password ${password}, confirmation ${confirmationPassword}`);
+
+    if (!validateEmail(email)) {
+      setEmailError({ status: true, reason: 'format' });
+      return;
+
+    };
 
     if (password !== confirmationPassword) {
       setPasswordError(true);
@@ -34,7 +45,6 @@ function SignUp() {
     .then((res) => {
       console.log('RESPONSE', res);
       if (res.data.created) {
-        console.log('true')
         setEmail('');
         setUsername('');
         setPassword('');
@@ -43,7 +53,6 @@ function SignUp() {
         // redirect to home / (React Router)
 
       } else {
-        console.log('not true')
         res.data.reason === 'username' ? setUserError(true) : setEmailError({ status: true, reason: 'exists' });
         // MATERIAL UI: Flash username or email, check res.data.result.reason. Flash red around inputs
       }
