@@ -1,5 +1,5 @@
 import React from 'react';
-import { Metrics } from './components/Metrics/Metrics';
+import { Metrics } from './Metrics/Metrics';
 
 const todoTemplate = {
   title: 'Clean Up',
