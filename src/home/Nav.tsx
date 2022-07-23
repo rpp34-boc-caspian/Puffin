@@ -154,7 +154,7 @@ const Nav: React.FC<Props> = ({date, setDate, setToggleUnscheduledTodo}) => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        <MenuItem onClick={handleUserClose}>Report</MenuItem>
+                        <MenuItem onClick={handleUserClose} >Report</MenuItem>
                         <MenuItem onClick={handleUserClose}>Profile</MenuItem>
                         <MenuItem onClick={handleUserClose}>Log out</MenuItem>
                     </Menu>
