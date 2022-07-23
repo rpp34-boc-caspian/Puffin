@@ -1,12 +1,18 @@
 import { useState } from 'react';
+import TextField from "@mui/material/TextField";
+import Button from '@mui/material/Button';
 import axios from 'axios';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const [loginError, setLoginError] = useState(false);
+
   function handleLogin() {
     console.log(`Username is '${username}'. Password is '${password}'.`);
+
+    setLoginError(false);
 
     axios.post('/login', {
       username: username,
@@ -18,17 +24,13 @@ function Login() {
         setPassword('');
 
         // redirect to home / (???)
+        return;
+      };
 
-      } else {
-        setUsername('');
-        setPassword('');
-
-        // MATERIAL UI: display "Username or password was incorrect." in red, make inputs red
-
-      }
+      setLoginError(true);
 
     })
-    .catch((err) => {
+    .catch(() => {
       setUsername('');
       setPassword('');
 
@@ -41,19 +43,33 @@ function Login() {
   return (
     <>
       <div>
-        <label>
-          Username:
-          <input type="text" value={ username } onChange={ (e) => { setUsername(e.target.value) } } />
-        </label>
+        <TextField
+          error={ loginError }
+          id="login-username"
+          label="Username"
+          type="text"
+          value={ username }
+          onChange={ (e) => { setUsername(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ loginError ? "Username or password is incorrect" : '' }
+        />
       </div>
       <div>
-        <label>
-          Password:
-          <input type="password" value={ password } onChange={ (e) => { setPassword(e.target.value) } }/>
-        </label>
+        <TextField
+          error={ loginError }
+          id="login-password"
+          label="Password"
+          type="password"
+          value={ password }
+          onChange={ (e) => { setPassword(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ loginError ? "Username or password is incorrect" : '' }
+        />
       </div>
 
-      <input type="button" value="Login" onClick={ () => { handleLogin() } } />
+      <Button variant="contained" onClick={ () => { handleLogin() } }>Login</Button>
 
     </>
   );
