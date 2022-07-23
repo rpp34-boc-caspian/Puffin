@@ -10,10 +10,6 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@fontsource/roboto": "^4.5.7",
-<<<<<<< HEAD
-    "@material-ui/core": "^5.0.0-beta.5",
-=======
->>>>>>> 34ce523c6b5ef9f04631991dd59717d71eaf90ae
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.1",
     "@mui/x-date-pickers": "^5.0.0-beta.1",
