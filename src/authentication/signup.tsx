@@ -43,7 +43,6 @@ function SignUp() {
       password: password
     })
     .then((res) => {
-      console.log('RESPONSE', res);
       if (res.data.created) {
         setEmail('');
         setUsername('');
@@ -51,11 +50,10 @@ function SignUp() {
         setConfirmation('');
 
         // redirect to home / (React Router)
+        return;
+      };
 
-      } else {
-        res.data.reason === 'username' ? setUserError(true) : setEmailError({ status: true, reason: 'exists' });
-        // MATERIAL UI: Flash username or email, check res.data.result.reason. Flash red around inputs
-      }
+      res.data.reason === 'username' ? setUserError(true) : setEmailError({ status: true, reason: 'exists' });
 
     })
     .catch(() => {
@@ -88,7 +86,7 @@ function SignUp() {
       <div>
         <TextField
           error={ userError }
-          id="username"
+          id="signup-username"
           label="Username"
           type="text"
           value={ username }
@@ -101,7 +99,7 @@ function SignUp() {
       <div>
         <TextField
           error={ passwordError }
-          id="password"
+          id="signup-password"
           label="Password"
           type="password"
           value={ password }
