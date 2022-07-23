@@ -8,7 +8,6 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <h1>Hello World</h1>
         <Nav />
         <Metrics todos={[
           {
