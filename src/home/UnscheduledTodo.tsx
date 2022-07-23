@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import {colorMap} from '../theme';
 
 const drawerBleeding = 56;
 
@@ -24,6 +25,34 @@ const Puller = styled(Box)(() => ({
   top: 8,
   left: 'calc(50% - 15px)',
 }));
+
+const unscheduledList = [
+    {
+        title: 'UI/UX conference',
+        color: 1,
+        complete: false
+    },
+    {
+        title: 'go to gym',
+        color: 2,
+        complete: false
+    },
+    {
+        title: 'learning TypeScript',
+        color: 3,
+        complete: false
+    },
+    {
+        title: 'learning TypeScript in React',
+        color: 3,
+        complete: false
+    },
+    {
+        title: 'learning MUI',
+        color: 3,
+        complete: false
+    },
+]
 
 export default function UnscheduledTodo(props: Props) {
     const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo } = props;
