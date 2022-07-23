@@ -7,7 +7,7 @@ import startOfWeek from 'date-fns/startOfWeek'
 import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography } from '@mui/material';
 
 const initialEvents = [
@@ -134,7 +134,6 @@ export default function DailyCalendar({date}) {
             defaultDate={defaultDate}
             date={date}
             view='day' 
-            // views={allViews}
             events={myEvents}
             localizer={localizer}
             onEventDrop={moveEvent}
@@ -143,9 +142,8 @@ export default function DailyCalendar({date}) {
             resizable
             step={60}
             toolbar={false}
-            style={{marginTop: '20px'}}
+            // style={{marginTop: '20px'}}
         />
-
     </div>
   )
 }
