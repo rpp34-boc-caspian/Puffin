@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState } from 'react'
-import { Calendar, Views, dateFnsLocalizer } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
 import parse from 'date-fns/parse'
@@ -133,7 +133,9 @@ export default function DailyCalendar({date}) {
         <DragAndDropCalendar
             defaultDate={defaultDate}
             date={date}
+            onNavigate={() => {}}
             view='day' 
+            onView={() => {}}
             events={myEvents}
             localizer={localizer}
             onEventDrop={moveEvent}
