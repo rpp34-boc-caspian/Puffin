@@ -69,7 +69,7 @@ function Login() {
         />
       </div>
 
-      <Button variant="contained" onClick={ () => { handleLogin() } }>Sign Up</Button>
+      <Button variant="contained" onClick={ () => { handleLogin() } }>Login</Button>
 
     </>
   );
