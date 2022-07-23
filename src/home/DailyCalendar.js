@@ -132,7 +132,6 @@ export default function DailyCalendar({date}) {
         <Typography>{date}</Typography>
         <DragAndDropCalendar
             defaultDate={defaultDate}
-            defaultView={Views.MONTH}
             date={date}
             view='day' 
             // views={allViews}

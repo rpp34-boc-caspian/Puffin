@@ -5,10 +5,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Metrics } from './Metrics/Metrics';
 import DailyCalendar from './home/DailyCalendar';
 import UnscheduledTodo from './home/UnscheduledTodo';
+import {getDate} from './home/utils/helper';
 
 
 const App: React.FC = () => {
-  const now = new Date().toLocaleDateString()
+  const now = getDate(new Date());
   const [date, setDate] = React.useState<string>(now);
   const [toggleUnscheduledTodo, setToggleUnscheduledTodo] = React.useState(false);
   return (

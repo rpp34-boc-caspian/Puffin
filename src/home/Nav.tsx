@@ -4,6 +4,7 @@ import {MdAdd, MdOutlineIosShare, MdPerson} from 'react-icons/md';
 import {BsCalendar4Week} from 'react-icons/bs';
 import {MdChecklist} from 'react-icons/md';
 import MonthlyCalendar from './MonthlyCalendar';
+import {getDate} from './utils/helper';
 
 interface Props {
     date: string;
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const Nav: React.FC<Props> = ({date, setDate, setToggleUnscheduledTodo}) => {
-    const now = new Date().toLocaleDateString()
+    const now = getDate(new Date());
     const [anchorUserEl, setAnchorUserEl] = React.useState<null | HTMLElement>(null);
     const [anchorCalEl, setAnchorCalEl] = React.useState<null | HTMLElement>(null);
     
@@ -41,6 +42,7 @@ const Nav: React.FC<Props> = ({date, setDate, setToggleUnscheduledTodo}) => {
                     variant="contained" 
                     color='info' 
                     onClick={() => setDate(now)}
+                    sx={{mr: 2}}
                 >
                     Today
                 </Button>
@@ -152,6 +154,7 @@ const Nav: React.FC<Props> = ({date, setDate, setToggleUnscheduledTodo}) => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
+                        <MenuItem onClick={handleUserClose}>Report</MenuItem>
                         <MenuItem onClick={handleUserClose}>Profile</MenuItem>
                         <MenuItem onClick={handleUserClose}>Log out</MenuItem>
                     </Menu>

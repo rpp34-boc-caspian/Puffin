@@ -11,10 +11,6 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 const drawerBleeding = 56;
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
   toggleUnscheduledTodo: boolean;
   setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>
@@ -42,11 +38,6 @@ const Puller = styled(Box)(({ theme }) => ({
 
 export default function UnscheduledTodo(props: Props) {
   const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo } = props;
-//   const [open, setOpen] = React.useState(false);
-
-//   const toggleDrawer = (newOpen: boolean) => () => {
-//     setOpen(newOpen);
-//   };
 
   // This is used only for the example
   const container = window !== undefined ? () => window().document.body : undefined;
