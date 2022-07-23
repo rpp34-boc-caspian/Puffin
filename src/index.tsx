@@ -19,10 +19,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <App />
-    <SignUp />
-    <Login />
+    {/* <SignUp />
+    <Login /> */}
     {/* <Daily /> */}
-    <Todo/>
+    {/* <Todo/> */}
   </React.StrictMode>
 );
 

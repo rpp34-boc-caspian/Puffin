@@ -2,13 +2,20 @@ import React from 'react';
 import {Box, Button, IconButton, Menu, MenuItem, AppBar, Toolbar, Tooltip, Typography} from '@mui/material';
 import {MdAdd, MdOutlineIosShare, MdPerson} from 'react-icons/md';
 import {BsCalendar4Week} from 'react-icons/bs';
+import {MdChecklist} from 'react-icons/md';
 import MonthlyCalendar from './MonthlyCalendar';
 
-const Nav = () => {
+interface Props {
+    date: string;
+    setDate: React.Dispatch<React.SetStateAction<string>>;
+    setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Nav: React.FC<Props> = ({date, setDate, setToggleUnscheduledTodo}) => {
     const now = new Date().toLocaleDateString()
-    const [date, setDate] = React.useState<string>(now);
     const [anchorUserEl, setAnchorUserEl] = React.useState<null | HTMLElement>(null);
     const [anchorCalEl, setAnchorCalEl] = React.useState<null | HTMLElement>(null);
+    
 
     const handleCalMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorCalEl(event.currentTarget);
@@ -85,8 +92,12 @@ const Nav = () => {
                             <MonthlyCalendar date={date} setDate={setDate} handleCalClose={handleCalClose}/>
                         </MenuItem>
                     </Menu>
-                    <Typography variant='subtitle2' component='span'>{date}</Typography>
                 </Box>
+                <Tooltip title="Unscheduled todo list">
+                    <IconButton sx={{color: '#fff'}} aria-label="unscheduled todo list" onClick={()=>setToggleUnscheduledTodo(true)}>
+                        <MdChecklist size={30}/>
+                    </IconButton>
+                </Tooltip>
                 <Tooltip title="Add a todo">
                     <IconButton sx={{color: '#fff'}} aria-label="add todo">
                         <MdAdd size={30}/>
