@@ -3,12 +3,18 @@ import Nav from './home/Nav';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { Metrics } from './Metrics/Metrics';
+import DailyCalendar from './home/DailyCalendar';
+import UnscheduledTodo from './home/UnscheduledTodo';
+import {getDate} from './home/utils/helper';
+
 
 const App: React.FC = () => {
+  const now = getDate(new Date());
+  const [date, setDate] = React.useState<string>(now);
+  const [toggleUnscheduledTodo, setToggleUnscheduledTodo] = React.useState(false);
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <Nav />
         <Metrics todos={[
           {
             title: 'Clean Room',
@@ -19,6 +25,10 @@ const App: React.FC = () => {
             category: 'School'
           }
         ]}/>
+        <Nav date={date} setDate={setDate} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>
+        <DailyCalendar date={date}/>
+        <UnscheduledTodo toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>
+        
       </div>
     </ThemeProvider>
   );

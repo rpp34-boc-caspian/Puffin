@@ -2,13 +2,21 @@ import React from 'react';
 import {Box, Button, IconButton, Menu, MenuItem, AppBar, Toolbar, Tooltip, Typography} from '@mui/material';
 import {MdAdd, MdOutlineIosShare, MdPerson} from 'react-icons/md';
 import {BsCalendar4Week} from 'react-icons/bs';
+import {MdChecklist} from 'react-icons/md';
 import MonthlyCalendar from './MonthlyCalendar';
+import {getDate} from './utils/helper';
 
-const Nav = () => {
-    const now = new Date().toLocaleDateString()
-    const [date, setDate] = React.useState<string>(now);
+interface Props {
+    date: string;
+    setDate: React.Dispatch<React.SetStateAction<string>>;
+    setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Nav: React.FC<Props> = ({date, setDate, setToggleUnscheduledTodo}) => {
+    const now = getDate(new Date());
     const [anchorUserEl, setAnchorUserEl] = React.useState<null | HTMLElement>(null);
     const [anchorCalEl, setAnchorCalEl] = React.useState<null | HTMLElement>(null);
+    
 
     const handleCalMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorCalEl(event.currentTarget);
@@ -34,6 +42,7 @@ const Nav = () => {
                     variant="contained" 
                     color='info' 
                     onClick={() => setDate(now)}
+                    sx={{mr: 2}}
                 >
                     Today
                 </Button>
@@ -85,8 +94,12 @@ const Nav = () => {
                             <MonthlyCalendar date={date} setDate={setDate} handleCalClose={handleCalClose}/>
                         </MenuItem>
                     </Menu>
-                    <Typography variant='subtitle2' component='span'>{date}</Typography>
                 </Box>
+                <Tooltip title="Unscheduled todo list">
+                    <IconButton sx={{color: '#fff'}} aria-label="unscheduled todo list" onClick={()=>setToggleUnscheduledTodo(true)}>
+                        <MdChecklist size={30}/>
+                    </IconButton>
+                </Tooltip>
                 <Tooltip title="Add a todo">
                     <IconButton sx={{color: '#fff'}} aria-label="add todo">
                         <MdAdd size={30}/>
@@ -141,6 +154,7 @@ const Nav = () => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
+                        <MenuItem onClick={handleUserClose} >Report</MenuItem>
                         <MenuItem onClick={handleUserClose}>Profile</MenuItem>
                         <MenuItem onClick={handleUserClose}>Log out</MenuItem>
                     </Menu>

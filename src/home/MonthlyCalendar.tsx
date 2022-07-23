@@ -3,6 +3,7 @@ import {TextField} from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import {getDate} from './utils/helper';
 
 interface Props {
     date: string;
@@ -19,7 +20,7 @@ const MonthlyCalendar: React.FC<Props> = ({date, setDate, handleCalClose}) => {
                 openTo="year"
                 value={date}
                 onChange={(newDate: Date | null) => {
-                var date = newDate?.toLocaleDateString();
+                var date = getDate(newDate);
                 if (date) setDate(date);
                 handleCalClose();
                 }}

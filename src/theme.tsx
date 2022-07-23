@@ -20,9 +20,7 @@ const theme = createTheme({
         dark: grey[400],
         contrastText: '#000'
       },
-      white: '#fff',
-      black: '#000'
     },
 });
-
+export type ExactTheme = typeof theme;
 export default theme;
