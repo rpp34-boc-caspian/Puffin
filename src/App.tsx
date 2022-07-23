@@ -28,6 +28,7 @@ const App: React.FC = () => {
         <Nav date={date} setDate={setDate} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>
         <DailyCalendar date={date}/>
         <UnscheduledTodo toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>
+        
       </div>
     </ThemeProvider>
   );
