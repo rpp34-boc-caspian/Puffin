@@ -8,6 +8,9 @@ import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import {colorMap} from '../theme';
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, IconButton, Stack, Button, Snackbar} from '@mui/material';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import {MdOutlineDelete} from 'react-icons/md';
 
 const drawerBleeding = 56;
 
@@ -28,38 +31,75 @@ const Puller = styled(Box)(() => ({
 
 const unscheduledList = [
     {
+        id: 1,
         title: 'UI/UX conference',
-        color: 1,
+        color: '1',
         complete: false
     },
     {
+        id: 2,
         title: 'go to gym',
-        color: 2,
+        color: '2',
         complete: false
     },
     {
+        id: 3,
         title: 'learning TypeScript',
-        color: 3,
+        color: '3',
         complete: false
     },
     {
+        id: 4,
         title: 'learning TypeScript in React',
-        color: 3,
+        color: '3',
         complete: false
     },
     {
+        id: 5,
         title: 'learning MUI',
-        color: 3,
+        color: '3',
         complete: false
     },
 ]
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+        props,
+        ref,
+    ) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 export default function UnscheduledTodo(props: Props) {
     const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo } = props;
-
+    const [checked, setChecked] = React.useState([1]);
+    const [openSuccessDelete, setOpenSuccessDelete] = React.useState(false);
   // This is used only for the example
     const container = window !== undefined ? () => window().document.body : undefined;
+    const handleToggleMarkAsCompleted = (todoId: number) => () => {
+        const currentIndex = checked.indexOf(todoId);
+        const newChecked = [...checked];
+    
+        if (currentIndex === -1) {
+          newChecked.push(todoId);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+    
+        setChecked(newChecked);
+    };
 
+    const handleDeleteTodoClick = () => {
+        setOpenSuccessDelete(true);
+      };
+    
+      const handleSuccessDeleteInfoClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenSuccessDelete(false);
+      };
+    
     return (
         <div>
         <CssBaseline />
@@ -96,7 +136,7 @@ export default function UnscheduledTodo(props: Props) {
             }}
             >
             <Puller sx={{backgroundColor: toggleUnscheduledTodo? grey[300] : '#fff'}}/>
-            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>51 results</Typography>
+            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>{unscheduledList.length} Unscheduled todos</Typography>
             </Box>
             <Box
             sx={{
@@ -106,7 +146,49 @@ export default function UnscheduledTodo(props: Props) {
                 overflow: 'auto',
             }}
             >
-            <Skeleton variant="rectangular" height="100%" />
+               <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
+                {unscheduledList.map((todo) => {
+                    return (
+                    <>
+                        <ListItem
+                            key={todo.id}
+                            secondaryAction={
+                                <IconButton edge="end" aria-label="delete an unscheduled todo">
+                                    <MdOutlineDelete onClick={handleDeleteTodoClick}/>
+                                </IconButton>
+                            }
+                            disablePadding
+                        >
+                            <ListItemButton role={undefined} onClick={handleToggleMarkAsCompleted(todo.id)} dense>
+                            <ListItemIcon>
+                                <Checkbox
+                                edge="start"
+                                checked={checked.indexOf(todo.id) !== -1}
+                                tabIndex={-1}
+                                disableRipple
+                                />
+                            </ListItemIcon>
+                            <ListItemText 
+                                primary={todo.title} 
+                                sx={{
+                                    textDecorationLine: checked.indexOf(todo.id) === -1 ? 'none' : 'line-through',
+                                    borderLeft: 5,
+                                    borderRadius: '2px',
+                                    borderColor: `${colorMap[todo.color]}`,
+                                    pl: 2
+                                }}
+                            />
+                            </ListItemButton>
+                        </ListItem>
+                        <Snackbar open={openSuccessDelete} autoHideDuration={2000} onClose={handleSuccessDeleteInfoClose}>
+                            <Alert onClose={handleSuccessDeleteInfoClose} severity="success" sx={{ width: '100%' }}>
+                            Successfully deleted this todo!
+                            </Alert>
+                        </Snackbar>
+                    </>
+                    );
+                })}
+                </List> 
             </Box>
         </SwipeableDrawer>
         </div>
