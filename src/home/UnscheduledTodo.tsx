@@ -180,15 +180,16 @@ export default function UnscheduledTodo(props: Props) {
                             />
                             </ListItemButton>
                         </ListItem>
-                        <Snackbar open={openSuccessDelete} autoHideDuration={2000} onClose={handleSuccessDeleteInfoClose}>
-                            <Alert onClose={handleSuccessDeleteInfoClose} severity="success" sx={{ width: '100%' }}>
-                            Successfully deleted this todo!
-                            </Alert>
-                        </Snackbar>
+
                     </>
                     );
                 })}
                 </List> 
+                <Snackbar open={openSuccessDelete} autoHideDuration={2000} onClose={handleSuccessDeleteInfoClose}>
+                            <Alert onClose={handleSuccessDeleteInfoClose} severity="success" sx={{ width: '100%' }}>
+                            Successfully deleted this todo!
+                            </Alert>
+                        </Snackbar>
             </Box>
         </SwipeableDrawer>
         </div>
