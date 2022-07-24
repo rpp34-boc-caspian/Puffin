@@ -102,10 +102,6 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
 
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
-  const handleDisplayDragItemInCell = useCallback(
-    () => setDisplayDragItemInCell((prev) => !prev),
-    []
-  )
 
   const newEvent = useCallback(
     (event) => {
@@ -118,8 +114,9 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
 
   const onDropFromOutside = useCallback(
     ({ start, end, allDay: isAllDay }) => {
-      const { title } = draggedEvent;
+      const { id, title } = draggedEvent;
       const event = {
+        id,
         title,
         start,
         end,
