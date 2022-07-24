@@ -9,6 +9,7 @@ import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography } from '@mui/material';
+import UnscheduledTodo from './UnscheduledTodo';
 
 const initialEvents = [
     {
@@ -94,8 +95,43 @@ const localizer = dateFnsLocalizer({
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
-export default function DailyCalendar({date}) {
+export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
   const [myEvents, setMyEvents] = useState(initialEvents);
+  const [draggedEvent, setDraggedEvent] = useState();
+  const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true)
+
+
+  const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
+  const handleDisplayDragItemInCell = useCallback(
+    () => setDisplayDragItemInCell((prev) => !prev),
+    []
+  )
+
+  const newEvent = useCallback(
+    (event) => {
+      setMyEvents((prev) => {
+        return [...prev, event]
+      })
+    },
+    [setMyEvents]
+  )
+
+  const onDropFromOutside = useCallback(
+    ({ start, end, allDay: isAllDay }) => {
+      const { title } = draggedEvent;
+      const event = {
+        title,
+        start,
+        end,
+        isAllDay,
+      }
+      setDraggedEvent(null)
+      newEvent(event)
+    },
+    [draggedEvent, setDraggedEvent, newEvent]
+  )
+
+
 
   const moveEvent = useCallback(
     ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
@@ -144,7 +180,17 @@ export default function DailyCalendar({date}) {
             resizable
             step={60}
             toolbar={false}
-            // style={{marginTop: '20px'}}
+            dragFromOutsideItem={
+              displayDragItemInCell ? dragFromOutsideItem : null
+            }
+            onDropFromOutside={onDropFromOutside}
+            onSelectSlot={newEvent}
+            selectable
+        />
+        <UnscheduledTodo 
+          toggleUnscheduledTodo={toggleUnscheduledTodo} 
+          setToggleUnscheduledTodo={setToggleUnscheduledTodo}
+          setDraggedEvent={setDraggedEvent}
         />
     </div>
   )
