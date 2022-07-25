@@ -52,7 +52,7 @@ const names = [
     'test',
 ];
 
-export function Todo() {
+export function CreateTodo() {
 
     const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
