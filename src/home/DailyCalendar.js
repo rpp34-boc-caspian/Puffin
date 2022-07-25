@@ -10,6 +10,38 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography } from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
+import { styled } from '@mui/material/styles';
+
+const styledCalendar = styled(Calendar)`
+  .rbc-current-time-indicator {
+    background-color: #3f50b5;
+  }
+  .rbc-time-content {
+    border-top: 2px solid #ddd;
+  }
+
+  .rbc-time-content > * + * > * {
+    border-left: none;
+  }
+
+  .rbc-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #3f50b5;
+  }
+  .rbc-time-view {
+    border-top: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    width: 96%;
+    margin: 0 auto;
+  }
+
+  .rbc-today {
+    background-color: #fff;
+  }
+  
+`
 
 const initialEvents = [
     {
@@ -93,7 +125,7 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-const DragAndDropCalendar = withDragAndDrop(Calendar)
+const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
   const [myEvents, setMyEvents] = useState(initialEvents);
@@ -162,7 +194,11 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
 
   return (
     <div>
-        <Typography>{date}</Typography>
+        <Typography
+          sx={{my: 2, textAlign: 'center', color: 'primary.main', fontWeight: 900}}
+        >
+          {date}
+        </Typography>
         <DragAndDropCalendar
             defaultDate={defaultDate}
             date={date}
