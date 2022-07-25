@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RectangleIcon from '@mui/icons-material/Rectangle';
-import { useEffect, useState } from "react";
+
 
 interface userTodo {
   title: string,
@@ -14,18 +14,16 @@ interface userTodo {
 interface allTodos {
   todayTodos: userTodo[],
   categoryName: string,
-  categoryHours: number
+  categoryHours: number,
+  togglePage: React.Dispatch<React.SetStateAction<{
+    home: boolean;
+    today: boolean;
+    week: boolean;
+    month: boolean;
+  }>>
 }
 
 export const CategoryDetailed = (props: allTodos) => {
-  const [totalHours, setTotalHours] = useState(0);
-  const [details, setDetails] = useState(null);
-
-  // useEffect(() => {
-
-  // }, [totalHours, props.todayTodos])
-
-
   return (
     <Card>
       <CardContent>
@@ -41,8 +39,15 @@ export const CategoryDetailed = (props: allTodos) => {
             </Typography>
           }
           action={
-            <IconButton>
-              <InfoIcon/>
+            <IconButton  onClick={() => {
+              props.togglePage({
+                home: true,
+                today: false,
+                week: false,
+                month: false
+              })
+            }}>
+              <ArrowBackIcon/>
             </IconButton>
           }
         />
@@ -58,21 +63,20 @@ export const CategoryDetailed = (props: allTodos) => {
               todoTotal = +todoTotal.toFixed(2);
             }
             return (
-              <>
-                <ListItem
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="total-hours-for-todo">
-                      <Typography sx={{fontSize: 12}} color="text.secondary">
-                        {`${todoTotal} hrs`}
-                      </Typography>
-                    </IconButton>
-                  }>
-                </ListItem>
-                <ListItemText primary={todo.title}/>
+              <ListItem
+                key={`${todo.start_date}${todo.title}`}
+                secondaryAction={
+                  <IconButton edge="end" aria-label="total-hours-for-todo">
+                    <Typography sx={{fontSize: 12}} color="text.secondary">
+                      {`${todoTotal} hrs`}
+                    </Typography>
+                  </IconButton>
+                }>
                 <ListItemAvatar>
                   <RectangleIcon color="primary"/>
                 </ListItemAvatar>
-              </>
+                <ListItemText primary={todo.title}/>
+              </ListItem>
             )
           })}
         </List>

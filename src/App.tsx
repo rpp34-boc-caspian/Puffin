@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <Route path="/" element={<DailyCalendar date={date} />} />
             <Route path="/unscheduled" element={<UnscheduledTodo toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo} />} />
             <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path="/metrics" element={<Metrics/>}/>
+            <Route path="/metrics/*" element={<Metrics/>}/>
           </Routes>
         </BrowserRouter>
 

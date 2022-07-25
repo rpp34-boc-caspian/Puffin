@@ -1,58 +1,17 @@
-import { Card, CardContent, CardHeader, IconButton, Link, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, IconButton, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
-import { useEffect, useState } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom"
-import { TodayDetailed } from "./TodayDetailed";
 
-
-interface userTodo {
-  title: string,
-  start_date: string,
-  end_date: string,
-  complete: boolean,
-  username?: string,
-  category: string
-}
 interface allTodos {
-  todayTodos: userTodo[]
+  totalHours: number,
+  togglePage: React.Dispatch<React.SetStateAction<{
+    home: boolean;
+    today: boolean;
+    week: boolean;
+    month: boolean;
+}>>
 }
 
 export const Today = (props: allTodos) => {
-  const [totalHours, setTotalHours] = useState(0);
-  const [details, setDetails] = useState(null);
-
-  useEffect(() => {
-    let hours = 0;
-    let todaysDetails: any = {};
-    if (props.todayTodos) {
-      props.todayTodos.forEach((todo) => {
-        let beginTime = Date.parse(todo.start_date);
-        let endTime = Date.parse(todo.end_date);
-        let total = endTime - beginTime;
-        total = total / 1000;
-        total = total / 60;
-        total = total / 60;
-        hours += total
-
-        if (todaysDetails[todo.category] === undefined) {
-          todaysDetails[todo.category]  = total;
-        } else {
-          todaysDetails[todo.category] += total;
-        }
-      });
-
-      if (Number.isInteger(hours)) {
-        setTotalHours(hours);
-        setDetails(todaysDetails);
-      } else {
-        setTotalHours(+hours.toFixed(2));
-        setDetails(todaysDetails);
-      }
-      setDetails(todaysDetails);
-    }
-  }, [totalHours, props.todayTodos])
-
-
   return (
     <>
       <Card>
@@ -65,11 +24,19 @@ export const Today = (props: allTodos) => {
             }
             subheader={
               <Typography fontWeight='bold' variant="h5">
-                {totalHours} hrs
+                {props.totalHours} hrs
               </Typography>
             }
             action={
-              <IconButton>
+              <IconButton  onClick={()=> {
+                console.log('CLICKED')
+                props.togglePage({
+                  home: false,
+                  today: true,
+                  week: false,
+                  month: false
+                }
+              )}}>
                 <InfoIcon/>
               </IconButton>
             }

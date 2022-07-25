@@ -1,6 +1,4 @@
-import { Card, CardContent, CardHeader, IconButton, Stack, Typography } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
-import { useEffect, useState } from "react";
+import { Stack } from "@mui/material";
 import { Container } from "@mui/system";
 import { CategoryDetailed } from "./CatergoryDetailed";
 
@@ -15,22 +13,24 @@ interface userTodo {
 interface allTodos {
   todayTodos: userTodo[],
   todayTotalHours: number,
-  categoryHours: any
+  categoryHours: any,
+  togglePage: React.Dispatch<React.SetStateAction<{
+    home: boolean;
+    today: boolean;
+    week: boolean;
+    month: boolean;
+}>>
 }
 
 export const TodayDetailed = (props: allTodos) => {
-
-  useEffect(() => {
-
-  }, [props.todayTotalHours, props.categoryHours, props.todayTodos])
-
-
   return (
     <Container sx={{p: 2}} maxWidth='sm'>
       <h1>Today</h1>
       <Stack sx={{mx: 2}} spacing={2}>
         {Object.keys(props.categoryHours).map((category) => (
           <CategoryDetailed
+            key={`${category}`}
+            togglePage={props.togglePage}
             categoryHours={props.categoryHours[category]}
             categoryName={category}
             todayTodos={props.todayTodos}
