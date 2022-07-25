@@ -1,6 +1,9 @@
-import { Card, CardContent, CardHeader, IconButton, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, IconButton, Link, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useEffect, useState } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom"
+import { TodayDetailed } from "./TodayDetailed";
+
 
 interface userTodo {
   title: string,
@@ -37,33 +40,42 @@ export const Today = (props: allTodos) => {
           todaysDetails[todo.category] += total;
         }
       });
-      setTotalHours(hours);
+
+      if (Number.isInteger(hours)) {
+        setTotalHours(hours);
+        setDetails(todaysDetails);
+      } else {
+        setTotalHours(+hours.toFixed(2));
+        setDetails(todaysDetails);
+      }
       setDetails(todaysDetails);
     }
   }, [totalHours, props.todayTodos])
 
 
   return (
-    <Card>
-      <CardContent>
-        <CardHeader
-          title={
-            <Typography sx={{fontSize: 12}} color="text.secondary">
-              Today's Report
-            </Typography>
-          }
-          subheader={
-            <Typography fontWeight='bold' variant="h5">
-              {totalHours} hrs
-            </Typography>
-          }
-          action={
-            <IconButton>
-              <InfoIcon/>
-            </IconButton>
-          }
-        />
-      </CardContent>
-    </Card>
+    <>
+      <Card>
+        <CardContent>
+          <CardHeader
+            title={
+              <Typography sx={{fontSize: 12}} color="text.secondary">
+                Today's Report
+              </Typography>
+            }
+            subheader={
+              <Typography fontWeight='bold' variant="h5">
+                {totalHours} hrs
+              </Typography>
+            }
+            action={
+              <IconButton>
+                <InfoIcon/>
+              </IconButton>
+            }
+          />
+        </CardContent>
+      </Card>
+    </>
   )
 }
