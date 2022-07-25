@@ -15,7 +15,6 @@ interface userTodo {
 
 interface allTodos {
   todos: userTodo[],
-  closeMetrics: Function
 }
 
 export const Metrics = (props: allTodos) => {
