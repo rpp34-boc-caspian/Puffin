@@ -33,7 +33,7 @@ export const TodayDetailed = (props: allTodos) => {
             togglePage={props.togglePage}
             categoryHours={props.categoryHours[category]}
             categoryName={category}
-            todayTodos={props.todayTodos}
+            todayTodos={props.todayTodos.filter((todo) => (todo.category === category))}
           />
         ))}
       </Stack>

@@ -29,7 +29,6 @@ export const Today = (props: allTodos) => {
             }
             action={
               <IconButton  onClick={()=> {
-                console.log('CLICKED')
                 props.togglePage({
                   home: false,
                   today: true,
