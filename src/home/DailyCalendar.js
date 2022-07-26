@@ -72,7 +72,7 @@ const initialEvents = [
     complete: false
   },
     {
-      id: 0,
+      id: 1,
       title: 'All Day Event very long title',
       allDay: false,
       start: new Date(2022, 6, 25, 16, 30, 0),
@@ -167,8 +167,39 @@ const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
   const [myEvents, setMyEvents] = useState(initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
-  const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true)
+  const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(undefined)
+  const [modalState, setModalState] = useState(false)
 
+  const ToDoEditModal = () => {
+    return (
+      <>
+      <style>
+        {`
+          .modal-show {
+            background-color: white;
+            position: fixed;
+            padding: 5%;
+            right: 10%;
+            top: 30%;
+          }
+
+        `}
+      </style>
+      <div className={`modal-${modalState === true ? 'show' : 'hide'}`} >
+        <h3>{selectedEvent.title}</h3>
+        <h4>{selectedEvent.descript}</h4>
+        <p> ToDoEditModal Component for Selected Event </p>
+      </div>
+      </>
+    )
+  }
+
+
+  const handleSelectedEvent = (myEvents) => {
+    setSelectedEvent(myEvents)
+    modalState === true ? setModalState(false) : setModalState(true)
+  }
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
 
@@ -255,6 +286,7 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
             }
             onDropFromOutside={onDropFromOutside}
             onSelectSlot={newEvent}
+            onSelectEvent={(e) => handleSelectedEvent(e)}
             draggable
             eventPropGetter={(event) => {
               // backgroundColor can be set to any color we decide based on the category id of the to-do item
@@ -281,6 +313,7 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
           setToggleUnscheduledTodo={setToggleUnscheduledTodo}
           setDraggedEvent={setDraggedEvent}
         />
+        {selectedEvent && <ToDoEditModal />}
     </div>
   )
 }
