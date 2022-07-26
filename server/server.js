@@ -79,7 +79,24 @@ app.post('/login', (req, res) => {
   });*/
 
   //END of Sharing Functions
+
 });
+
+//Unscheduled todo list
+app.get('/unscheduledTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  console.log('user_id', user_id);
+  const query = 'SELECT t.id, t.title, t.descript, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = ? AND t.complete = false'
+  pool.query(query, [user_id], (err, data) => {
+    if (err) {
+      console.log('err to get all unscheduled todo list');
+      res.status(500).send(err);
+    } else {
+      console.log('all unscheduled todo list', data);
+      res.send(data);
+    }
+  })
+})
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

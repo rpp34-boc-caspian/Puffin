@@ -9,6 +9,53 @@ import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography } from '@mui/material';
+import UnscheduledTodo from './UnscheduledTodo';
+import { styled } from '@mui/material/styles';
+
+const styledCalendar = styled(Calendar)`
+  .rbc-current-time-indicator {
+    background-color: #3f50b5;
+  }
+  .rbc-time-content {
+    border-bottom: 1px solid #ddd;
+    border-top: none;
+    gap: 20px;
+  }
+
+  .rbc-time-content > * + * > * {
+    border-left: none;
+  }
+
+  .rbc-time-header {
+    gap: 20px;
+  }
+
+  .rbc-time-header-content {
+    border-left: none;
+    border-bottom: 1px solid #f44336;
+  }
+  .rbc-timeslot-group {
+    border-bottom: none;
+  }
+  .rbc-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #3f50b5;
+  }
+  .rbc-time-view {
+    border-top: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .rbc-today {
+    background-color: #fff;
+  }
+  
+`
 
 const initialEvents = [
     {
@@ -92,10 +139,42 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-const DragAndDropCalendar = withDragAndDrop(Calendar)
+const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
-export default function DailyCalendar({date}) {
+export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
   const [myEvents, setMyEvents] = useState(initialEvents);
+  const [draggedEvent, setDraggedEvent] = useState();
+  const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true)
+
+
+  const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
+
+  const newEvent = useCallback(
+    (event) => {
+      setMyEvents((prev) => {
+        return [...prev, event]
+      })
+    },
+    [setMyEvents]
+  )
+
+  const onDropFromOutside = useCallback(
+    ({ start, end, allDay: isAllDay }) => {
+      const { id, title } = draggedEvent;
+      const event = {
+        id,
+        title,
+        start,
+        end,
+        isAllDay,
+      }
+      setDraggedEvent(null)
+      newEvent(event)
+    },
+    [draggedEvent, setDraggedEvent, newEvent]
+  )
+
+
 
   const moveEvent = useCallback(
     ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
@@ -129,7 +208,11 @@ export default function DailyCalendar({date}) {
 
   return (
     <div>
-        <Typography>{date}</Typography>
+        <Typography
+          sx={{my: 2, textAlign: 'center', color: 'primary.main', fontWeight: 900}}
+        >
+          {date}
+        </Typography>
         <DragAndDropCalendar
             defaultDate={defaultDate}
             date={date}
@@ -144,7 +227,17 @@ export default function DailyCalendar({date}) {
             resizable
             step={60}
             toolbar={false}
-            // style={{marginTop: '20px'}}
+            dragFromOutsideItem={
+              displayDragItemInCell ? dragFromOutsideItem : null
+            }
+            onDropFromOutside={onDropFromOutside}
+            onSelectSlot={newEvent}
+            selectable
+        />
+        <UnscheduledTodo 
+          toggleUnscheduledTodo={toggleUnscheduledTodo} 
+          setToggleUnscheduledTodo={setToggleUnscheduledTodo}
+          setDraggedEvent={setDraggedEvent}
         />
     </div>
   )
