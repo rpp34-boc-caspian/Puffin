@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import axios from 'axios';
+
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
-import axios from 'axios';
+import Alert from '@mui/material/Alert';
 
 function SignUp() {
   const [username, setUsername] = useState('');
@@ -12,6 +14,7 @@ function SignUp() {
   const [userError, setUserError] = useState(false);
   const [emailError, setEmailError] = useState({ status: false, reason: '' });
   const [passwordError, setPasswordError] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   function validateEmail(email: string) {
     var re = /\S+@\S+\.\S+/;
@@ -36,6 +39,7 @@ function SignUp() {
     setUserError(false);
     setPasswordError(false);
     setEmailError({ status: false, reason: '' });
+    setServerError(false);
 
     axios.post('/signup', {
       email: email,
@@ -62,7 +66,7 @@ function SignUp() {
       setPassword('');
       setConfirmation('');
 
-      // MATERIAL UI: display "Oops, something went wrong, please try again."
+      setServerError(true);
 
     });
 
@@ -70,6 +74,11 @@ function SignUp() {
 
   return (
     <>
+
+      {
+        serverError ? <Alert severity="error">Oops, something went wrong, please try again</Alert> : <></>
+      }
+
       <div>
         <TextField
           error={ emailError.status }

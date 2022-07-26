@@ -11,6 +11,8 @@ import { Metrics } from './Metrics/Metrics';
 import DailyCalendar from './home/DailyCalendar';
 import { getDate } from './home/utils/helper';
 import { CreateTodo } from './Create to-do/create-todo';
+import SignUp from './authentication/signup';
+import Login from './authentication/login';
 
 
 const App: React.FC = () => {
