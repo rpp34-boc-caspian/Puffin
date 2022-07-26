@@ -65,7 +65,6 @@ export const CategoryDetailed = (props: allTodos) => {
             todoTotal = todoTotal / 60;
             if (!Number.isInteger(todoTotal)) {
               todoTotal = +(todoTotal.toFixed(2));
-              console.log(todoTotal)
             }
             return (
               <ListItem
