@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter,
   Route,
@@ -19,27 +19,21 @@ const App: React.FC = () => {
   const now = getDate(new Date());
   const [date, setDate] = React.useState<string>(now);
   const [toggleUnscheduledTodo, setToggleUnscheduledTodo] = React.useState(false);
+  const [metricsPageOpent, toggleMetrics] = useState(false);
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <BrowserRouter>
-          <Nav date={date} setDate={setDate} setToggleUnscheduledTodo={setToggleUnscheduledTodo} />
+          <Nav
+            date={date}
+            setDate={setDate}
+            setToggleUnscheduledTodo={setToggleUnscheduledTodo}
+          />
           <Routes>
             <Route path="/" element={<DailyCalendar date={date} toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>} />
             {/* <Route path="/unscheduled" element={<UnscheduledTodo  />} /> */}
             <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path="/metrics" element={<Metrics todos={[
-              {
-                title: 'Clean Room',
-                start_date: '6/25/16 19:10',
-                end_date: '7/1/16 19:45',
-                complete: true,
-                username: 'Paully',
-                category: 'School'
-              }
-            ]} />} />
-            <Route path="/login" element={ <Login /> } />
-            <Route path="/signup" element={ <SignUp /> } />
+            <Route path="/metrics/*" element={<Metrics/>}/>
           </Routes>
         </BrowserRouter>
       </div>

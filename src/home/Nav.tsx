@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Box, Button, IconButton, Menu, MenuItem, AppBar, Toolbar, Tooltip, Typography } from '@mui/material';
 import { MdAdd, MdOutlineIosShare, MdPerson } from 'react-icons/md';
@@ -9,7 +9,7 @@ import { getDate } from './utils/helper';
 interface Props {
     date: string;
     setDate: React.Dispatch<React.SetStateAction<string>>;
-    setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>
+    setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
@@ -161,7 +161,9 @@ const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
                             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         >
-                            <MenuItem onClick={handleUserClose} >Report</MenuItem>
+                            <Link to="/metrics">
+                                <MenuItem>Report</MenuItem>
+                            </Link>
                             <MenuItem onClick={handleUserClose}>Profile</MenuItem>
                             <MenuItem onClick={handleUserClose}>Log out</MenuItem>
                         </Menu>
