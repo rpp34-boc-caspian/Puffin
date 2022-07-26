@@ -17,7 +17,7 @@ const MonthlyCalendar: React.FC<Props> = ({date, setDate, handleCalClose}) => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <StaticDatePicker
                 displayStaticWrapperAs="desktop"
-                openTo="year"
+                openTo="day"
                 value={date}
                 onChange={(newDate: Date | null) => {
                 var date = getDate(newDate);
@@ -25,6 +25,7 @@ const MonthlyCalendar: React.FC<Props> = ({date, setDate, handleCalClose}) => {
                 handleCalClose();
                 }}
                 renderInput={(params) => <TextField {...params} />}
+
             />
         </LocalizationProvider>
     )

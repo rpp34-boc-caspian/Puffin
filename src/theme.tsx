@@ -23,7 +23,7 @@ const theme = createTheme({
     },
 });
 
-export const colorMap = {
+export const colorMap: {[key: string]: string} = {
   0: '#f44336', //red
   1: '#e91e63', //pink
   2: '#0276aa', //blue
