@@ -165,8 +165,8 @@ export default function UnscheduledTodo(props: Props) {
                         <ListItem
                             key={todo.id}
                             secondaryAction={
-                                <IconButton edge="end" aria-label="delete an unscheduled todo">
-                                    <MdOutlineDelete onClick={handleDeleteTodoClick}/>
+                                <IconButton edge="end" aria-label="delete an unscheduled todo" onClick={handleDeleteTodoClick}>
+                                    <MdOutlineDelete />
                                 </IconButton>
                             }
                             disablePadding

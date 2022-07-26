@@ -9,7 +9,6 @@ import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { Metrics } from './Metrics/Metrics';
 import DailyCalendar from './home/DailyCalendar';
-import UnscheduledTodo from './home/UnscheduledTodo';
 import { getDate } from './home/utils/helper';
 import { CreateTodo } from './Create to-do/create-todo';
 
@@ -24,8 +23,8 @@ const App: React.FC = () => {
         <BrowserRouter>
           <Nav date={date} setDate={setDate} setToggleUnscheduledTodo={setToggleUnscheduledTodo} />
           <Routes>
-            <Route path="/" element={<DailyCalendar date={date} />} />
-            <Route path="/unscheduled" element={<UnscheduledTodo toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo} />} />
+            <Route path="/" element={<DailyCalendar date={date} toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>} />
+            {/* <Route path="/unscheduled" element={<UnscheduledTodo  />} /> */}
             <Route path="/create_todo" element={<CreateTodo />} />
             <Route path="/metrics" element={<Metrics todos={[
               {
@@ -39,7 +38,6 @@ const App: React.FC = () => {
             ]} />} />
           </Routes>
         </BrowserRouter>
-
       </div>
     </ThemeProvider>
   );
