@@ -9,66 +9,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
 
-app.post('/signup', (req, res) => {
-  console.log('REQUEST', req.body);
-
-  // EITHER
-
-  // Do the signup stuff (encrypt password)
-  // Then send info to database (Need to find out if there is a way to make sure there are no repeats in the User table)
-
-  // OR
-
-  // Query the database for the username and email
-  // If it exists, send back that the username is taken in a reason object
-  // If it doesn't, do the signup stuff
-
-  res.json({created: false, reason: 'email'});
-});
-
-app.post('/login', async (req, res) => {
-  console.log('REQUEST', req.body);
-
+app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;
 
-  // Request to database for username provided
-  // Check for what a failed request returns
-  pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
+  let hash = await bcrypt.hash(password, 11);
+
+  pool.query(`SELECT * FROM users WHERE email = '${email}' OR username = '${username}'`)
   .then((results) => {
-    console.log(results.rows);
+    let query = results.rows[0];
 
-    // If username doesn't exist in database, return false
-    if (results.rows.length === 0) {
-      console.log('No result');
-      res.json({ exists: false });
+    if (results.rows.length > 0) {
+      query.email === email ? res.json({ created: false, reason: 'email' }) : res.json({ created: false, reason: 'username' });
 
-    };
+    } else {
 
-    if (username !== results.rows[0].username) {
-      console.log('Username');
-      res.json({ exists: false });
+      pool.query(`INSERT INTO users (email, username, hashed_pass) VALUES ('${email}', '${username}', '${hash}')`)
+      .then((result) => {
+        res.json({ created: true });
 
-    };
+      })
+      .catch(() => {
+        res.status(500).send();
 
-    if (email !== results.rows[0].email) {
-      console.log('Email');
-      res.json({ exists: false });
+      });
 
-    };
-
-    // Compare the password provided with the password retrieved
-    // Return compare's result
-
-    let match = bcrypt.compare(password, results.rows[0].password);
-
-    if (!match) {
-      console.log('Password');
-      res.json({ exists: false });
-
-    };
-
-
-    res.json({ exist: true });
+    }
 
   })
   .catch(() => {
@@ -76,7 +41,42 @@ app.post('/login', async (req, res) => {
 
   });
 
+});
 
+app.post('/login', (req, res) => {
+  let { username, email, password } = req.body;
+
+  pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
+  .then((results) => {
+    if (results.rows.length === 0) {
+      res.json({ exists: false });
+
+    };
+
+    if (username !== results.rows[0].username) {
+      res.json({ exists: false });
+
+    };
+
+    if (email !== results.rows[0].email) {
+      res.json({ exists: false });
+
+    };
+
+    let match = bcrypt.compare(password, results.rows[0].password);
+
+    if (!match) {
+      res.json({ exists: false });
+
+    };
+
+    res.json({ exists: true });
+
+  })
+  .catch(() => {
+    res.status(500).send();
+
+  });
 
 });
 
