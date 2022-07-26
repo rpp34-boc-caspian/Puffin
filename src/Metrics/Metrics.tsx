@@ -23,7 +23,7 @@ export const Metrics = (props: allTodos) => {
       {
         title: 'Study Math',
         start_date: '7/25/22 4:00',
-        end_date: '7/25/22 14:00',
+        end_date: '7/25/22 8:22',
         complete: true,
         username: 'Jimmy Bo',
         category: 'School'

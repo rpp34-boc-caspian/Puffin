@@ -24,6 +24,10 @@ interface allTodos {
 }
 
 export const CategoryDetailed = (props: allTodos) => {
+  let formatedTimeTotal = props.categoryHours;
+  if (!Number.isInteger(props.categoryHours)) {
+    formatedTimeTotal = +(props.categoryHours.toFixed(2));
+  }
   return (
     <Card>
       <CardContent>
@@ -35,7 +39,7 @@ export const CategoryDetailed = (props: allTodos) => {
           }
           subheader={
             <Typography fontWeight='bold' variant="h5">
-              {props.categoryHours} hrs
+              {formatedTimeTotal} hrs
             </Typography>
           }
           action={
@@ -60,7 +64,8 @@ export const CategoryDetailed = (props: allTodos) => {
             todoTotal = todoTotal / 60;
             todoTotal = todoTotal / 60;
             if (!Number.isInteger(todoTotal)) {
-              todoTotal = +todoTotal.toFixed(2);
+              todoTotal = +(todoTotal.toFixed(2));
+              console.log(todoTotal)
             }
             return (
               <ListItem
