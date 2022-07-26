@@ -17,13 +17,26 @@ const styledCalendar = styled(Calendar)`
     background-color: #3f50b5;
   }
   .rbc-time-content {
-    border-top: 2px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-top: none;
+    gap: 20px;
   }
 
   .rbc-time-content > * + * > * {
     border-left: none;
   }
 
+  .rbc-time-header {
+    gap: 20px;
+  }
+
+  .rbc-time-header-content {
+    border-left: none;
+    border-bottom: 1px solid #f44336;
+  }
+  .rbc-timeslot-group {
+    border-bottom: none;
+  }
   .rbc-label {
     font-size: 12px;
     font-weight: 600;
@@ -33,7 +46,8 @@ const styledCalendar = styled(Calendar)`
     border-top: 1px solid #ddd;
     border-left: none;
     border-right: none;
-    width: 96%;
+    border-bottom: none;
+    width: 90%;
     margin: 0 auto;
   }
 

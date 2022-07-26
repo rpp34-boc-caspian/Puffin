@@ -149,7 +149,7 @@ export default function UnscheduledTodo(props: Props) {
             }}
             >
             <Puller sx={{backgroundColor: toggleUnscheduledTodo? grey[300] : '#fff'}}/>
-            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>{unscheduledTodoList.length} Unscheduled todos</Typography>
+            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>You have {unscheduledTodoList.length} unscheduled todos</Typography>
             </Box>
             <Box
             sx={{
