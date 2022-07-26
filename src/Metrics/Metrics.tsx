@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Month } from "./components/Month"
 import { Today } from "./components/Today"
 import { Week } from "./components/Week"
-import { TodayDetailed } from "./components/TodayDetailed"
+import { Detailed } from "./components/Detailed"
 
 interface userTodo {
   title: string,
@@ -68,7 +68,7 @@ export const Metrics = (props: allTodos) => {
   const [weekData, updateWeekMetrics] = useState([]);
   const [weekTotalHours, setWeekTotalHours] = useState(0);
   const [weekCategoryTotalHours, setWeekCategoryHours] = useState(0);
-  const [monthData, updateMonthMetrics] = useState();
+  const [monthData, updateMonthMetrics] = useState([]);
   const [monthTotalHours, setMonthTotalHours] = useState(0);
   const [monthCategoryHours, setMonthCategoryHours] = useState(0);
   const [pageStatus, togglePage] = useState({
@@ -146,16 +146,38 @@ export const Metrics = (props: allTodos) => {
       let thisMonth: userTodo[] = [];
 
       todos.forEach((todo) => {
-        let todoDate = new Date(todo.start_date).toDateString();
-        let todayDate = new Date().toDateString();
-        if(todoDate === todayDate) {
+        let currentDate = new Date();
+        let todoDate = new Date(todo.start_date);
+        let todoMonth = todoDate.getMonth();
+        let todoYear = todoDate.getFullYear();
+        let todoDateString = todoDate.toDateString();
+        let todoDateParsed = Date.parse(todo.start_date);
+        let todayDateString = new Date().toDateString();
+        let currentDateMonth = currentDate.getMonth();
+        let currentDateYear = currentDate.getFullYear();
+
+        let firstDayString = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1)).toDateString();
+        let lastDayString = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 7)).toDateString();
+        let firstDayParsed = Date.parse(firstDayString);
+        let lastDayParsed = Date.parse(lastDayString);
+
+
+        if (todoDateString === todayDateString) {
           today.push(todo);
         }
+        if (firstDayParsed <= todoDateParsed || lastDayParsed >= todoDateParsed) {
+          thisWeek.push(todo);
+        }
+        if (todoMonth === currentDateMonth && todoYear === currentDateYear) {
+          thisMonth.push(todo);
+        }
       });
+
       if (today.length) {getHours(today, 'today')};
       if (thisWeek.length) {getHours(thisWeek, 'week')};
       if (thisMonth.length) {getHours(thisMonth, 'month')};
     }
+
     loadData(data);
   }, [data]);
 
@@ -164,22 +186,39 @@ export const Metrics = (props: allTodos) => {
       <h1>Reports</h1>
       <Stack sx={{mx: 2}} spacing={2}>
         <Today togglePage={togglePage} totalHours={todayTotalHours}></Today>
-        <Week></Week>
-        <Month></Month>
+        <Week togglePage={togglePage} totalHours={weekTotalHours}></Week>
+        <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
       </Stack>
     </Container>
   );
 
   let todayPage  = (
-    <TodayDetailed
-      todayTodos={todayData}
-      todayTotalHours={todayTotalHours}
+    <Detailed
+      todos={todayData}
+      totalHours={todayTotalHours}
       categoryHours={todayCategoryTotalHours}
       togglePage={togglePage}
-    ></TodayDetailed>
+      timeFrame="Today"
+    ></Detailed>
   );
-  let weekPage = (<Week></Week>);
-  let monthPage = (<Month></Month>);
+  let weekPage = (
+    <Detailed
+      todos={weekData}
+      totalHours={weekTotalHours}
+      categoryHours={weekCategoryTotalHours}
+      togglePage={togglePage}
+      timeFrame="This Week"
+    ></Detailed>
+  );
+  let monthPage = (
+    <Detailed
+      todos={monthData}
+      totalHours={monthTotalHours}
+      categoryHours={monthCategoryHours}
+      togglePage={togglePage}
+      timeFrame="This Month"
+    ></Detailed>
+  );
 
   if (pageStatus.home) {
     page = (
@@ -187,8 +226,8 @@ export const Metrics = (props: allTodos) => {
         <h1>Reports</h1>
         <Stack sx={{mx: 2}} spacing={2}>
           <Today togglePage={togglePage} totalHours={todayTotalHours}></Today>
-          <Week></Week>
-          <Month></Month>
+          <Week togglePage={togglePage} totalHours={weekTotalHours}></Week>
+          <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
         </Stack>
       </Container>
     );
