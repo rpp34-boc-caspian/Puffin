@@ -54,18 +54,31 @@ const styledCalendar = styled(Calendar)`
   .rbc-today {
     background-color: #fff;
   }
-  
+
 `
 
 const initialEvents = [
+  {
+    id: 0,
+    user_id: 1,
+    cat_id: 2,
+    // once data is received, need to be reformatted to display with proper links...
+    // example: title needs to be reformatted from string to add a hyperlink so can open to display to-do details
+    title: 'Petit Event',
+    descript: 'This is a modified event to include a description',
+    allDay: false,
+    start: new Date(2022, 6, 25, 3, 30, 0),
+    end: new Date(2022, 6, 25, 7, 30, 0),
+    complete: false
+  },
     {
       id: 0,
       title: 'All Day Event very long title',
-      allDay: true,
-      start: new Date(2022, 6, 22),
-      end: new Date(2022, 6, 22),
+      allDay: false,
+      start: new Date(2022, 6, 25, 16, 30, 0),
+      end: new Date(2022, 6, 25, 18, 30, 0),
     },
-  
+
     {
       id: 4,
       title: 'Some Event',
@@ -118,7 +131,7 @@ const initialEvents = [
       start: new Date(2022, 6, 23, 8, 0, 0),
       end: new Date(2022, 6, 23, 10, 30, 0),
     },
-    
+
     {
       id: 23,
       title: 'Go to the gym',
@@ -138,6 +151,16 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 })
+
+const EventComponent = (event) => {
+  return (
+    <div className='eventTitle'>
+      {event.title}
+      <a href="/" onClick={(e) => {alert('edit')}}>x</a>
+      <a href="/" onClick={(e) => {alert('edit')}}>🖊️</a>
+      <input type="checkbox" id="complete" name="complete" onClick={(e) => { alert('mark as complete') }}></input>
+    </div>)
+}
 
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
@@ -217,7 +240,7 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
             defaultDate={defaultDate}
             date={date}
             onNavigate={() => {}}
-            view='day' 
+            view='day'
             onView={() => {}}
             events={myEvents}
             localizer={localizer}
@@ -232,10 +255,29 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
             }
             onDropFromOutside={onDropFromOutside}
             onSelectSlot={newEvent}
-            selectable
+            draggable
+            eventPropGetter={(event) => {
+              // backgroundColor can be set to any color we decide based on the category id of the to-do item
+              let backgroundColor;
+              if (event.cat_id === 1) {
+                backgroundColor = 'plum';
+              }
+              if (event.cat_id === 2) {
+                backgroundColor = 'green'
+              }
+              if (event.cat_id === 3) {
+                backgroundColor = 'orange'
+              }
+              // visibility is decided based on whether the to-do item is completed or not
+              const visibility = event.complete === true ? 'hidden' : 'visible';
+              return { style: { backgroundColor, visibility } }
+            }}
+            components={{
+              event: EventComponent
+            }}
         />
-        <UnscheduledTodo 
-          toggleUnscheduledTodo={toggleUnscheduledTodo} 
+        <UnscheduledTodo
+          toggleUnscheduledTodo={toggleUnscheduledTodo}
           setToggleUnscheduledTodo={setToggleUnscheduledTodo}
           setDraggedEvent={setDraggedEvent}
         />
