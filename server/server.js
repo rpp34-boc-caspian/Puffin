@@ -47,7 +47,7 @@ app.post('/login', (req, res) => {
   let { username, email, password } = req.body;
 
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
-  .then((results) => {
+  .then( async (results) => {
     if (results.rows.length === 0) {
       res.json({ exists: false });
 
@@ -63,7 +63,7 @@ app.post('/login', (req, res) => {
 
     };
 
-    let match = bcrypt.compare(password, results.rows[0].password);
+    let match = await bcrypt.compare(password, results.rows[0].hashed_pass);
 
     if (!match) {
       res.json({ exists: false });
@@ -73,7 +73,8 @@ app.post('/login', (req, res) => {
     res.json({ exists: true });
 
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err);
     res.status(500).send();
 
   });

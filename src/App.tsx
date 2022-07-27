@@ -22,6 +22,8 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
+        <Login />
+        <SignUp />
         <BrowserRouter>
           <Nav date={date} setDate={setDate} setToggleUnscheduledTodo={setToggleUnscheduledTodo} />
           <Routes>
