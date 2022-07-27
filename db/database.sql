@@ -1,8 +1,8 @@
 CREATE DATABASE puffin;
 \c puffin;
-\i users.sql
-\i calendars.sql
-\i categories.sql
-\i todos.sql
-\i friends.sql
-\i permissions.sql
+\i db/users.sql
+\i db/calendars.sql
+\i db/categories.sql
+\i db/todos.sql
+\i db/friends.sql
+\i db/permissions.sql

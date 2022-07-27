@@ -17,6 +17,6 @@ CREATE TABLE todos (
 	      REFERENCES categories(id)
 );
 
-\copy todos(id, user_id, cat_id, title, descript, start_d, end_d, all_d, complete) from './todos.csv' delimiter ',' csv header;
+\copy todos(id, user_id, cat_id, title, descript, start_d, end_d, all_d, complete) from './db/todos.csv' delimiter ',' csv header;
 
 CREATE INDEX todo_index ON todos(id);

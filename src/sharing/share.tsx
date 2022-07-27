@@ -3,6 +3,13 @@ import { Circle } from "@mui/icons-material";
 import Categories from "./components/Categories";
 import internal from "stream";
 import { red } from "@mui/material/colors";
+import React from 'react';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 
 export const Share = () => {
   const userEx =
@@ -39,6 +46,19 @@ export const Share = () => {
     friends: ['Tim', 'Sarah']
   }
 
+  const [state, setState] = React.useState({
+    calendar: false
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    });
+  };
+
+  const { calendar } = state;
+
   return (
     <Container>
       <div>
@@ -46,10 +66,17 @@ export const Share = () => {
           Sharing With Friends
         </label>
       </div>
-      <List>
-        <ListItemText>{userEx.calendar}</ListItemText>
-        <Categories username={userEx.username} categories={userEx.categories} calendar={userEx.calendar} friends={userEx.friends}/>
-      </List>
+      <FormControl component="fieldset" variant="standard">
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox checked={calendar} onChange={handleChange} name="calendar" />
+            }
+            label={userEx.calendar}
+          />
+        </FormGroup>
+      </FormControl>
+      <Categories username={userEx.username} categories={userEx.categories} calendar={userEx.calendar} friends={userEx.friends}/>
       <div>
         <label>
           Select Calendar / Categories / Events
