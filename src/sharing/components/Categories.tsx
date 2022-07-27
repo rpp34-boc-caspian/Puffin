@@ -7,6 +7,11 @@ import Collapse from '@mui/material/Collapse';
 import Todos from "./Todos";
 import { useState } from "react";
 import React from "react";
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 
 interface todo {
   title: string,
@@ -29,23 +34,52 @@ interface user {
 const Categories: React.FC<user> = ({ username, calendar, categories, friends }) => {
   const [open, setOpen] = React.useState(true);
 
-  const handleClick = () => {
+  const handleClick = (event: any) => {
+    console.log(event.target.key);
     setOpen(!open);
   };
+
+  const [state, setState] = React.useState({
+    trust: false
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    });
+  };
+
+  const {trust} = state;
+
 
   return (
     <>
       {
         categories.map((category) => (
           <>
-            <ListItemButton onClick={handleClick}>
-              <ListItemIcon> < Circle sx={{ color: red[500] }} /> </ListItemIcon>
-              <ListItemText> {category.name} </ListItemText>
+            {/* <FormControl component="fieldset" variant="standard">
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={calendar} onChange={handleChange} name="calendar" />
+                  }
+                  label={'calendar'}
+                />
+              </FormGroup>
+            </FormControl> */}
+            <ListItemButton onClick={handleClick} key={category.name}>
+              <FormControlLabel
+                  control={
+                    <Checkbox checked={trust} onChange={handleChange} name="trust" />
+                  }
+                  label={category.name}
+                />
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <Todos name={category.name} todos={category.todos}/>
+                <Todos name={category.name} todos={category.todos} />
               </List>
             </Collapse>
           </>
