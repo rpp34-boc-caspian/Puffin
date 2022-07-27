@@ -4,6 +4,7 @@ import { Month } from "./components/Month"
 import { Today } from "./components/Today"
 import { Week } from "./components/Week"
 import { Detailed } from "./components/Detailed"
+import { todoData } from "./components/helpers/helpers"
 
 interface userTodo {
   title: string,
@@ -11,7 +12,8 @@ interface userTodo {
   end_date: string,
   complete: boolean,
   username?: string,
-  category: string
+  category: string,
+  color?: string
 }
 
 interface allTodos {
@@ -19,48 +21,7 @@ interface allTodos {
 }
 
 export const Metrics = (props: allTodos) => {
-  const todoData = [
-      {
-        title: 'Study Math',
-        start_date: '7/25/22 4:00',
-        end_date: '7/25/22 8:22',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'School'
-      },
-      {
-        title: 'Feature Update',
-        start_date: '7/25/22 4:00',
-        end_date: '7/25/22 12:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'Work'
-      },
-      {
-        title: 'Art',
-        start_date: '7/25/22 12:00',
-        end_date: '7/25/22 14:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'School'
-      },
-      {
-        title: 'Interview',
-        start_date: '7/25/22 19:00',
-        end_date: '7/25/22 20:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'Work'
-      },
-      {
-        title: 'Study History',
-        start_date: '7/22/22 14:00',
-        end_date: '7/22/22 16:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'School'
-      }
-  ]
+
   const [data, updateDataMetrics] = useState(todoData);
   const [todayData, updateTodayMetrics] = useState([]);
   const [todayTotalHours, setTodayTotalHours] = useState(0);
@@ -185,8 +146,13 @@ export const Metrics = (props: allTodos) => {
     <Container sx={{p: 2}} maxWidth='sm'>
       <h1>Reports</h1>
       <Stack sx={{mx: 2}} spacing={2}>
-        <Today togglePage={togglePage} totalHours={todayTotalHours}></Today>
-        <Week togglePage={togglePage} totalHours={weekTotalHours}></Week>
+        <Today togglePage={togglePage} totalHours={todayTotalHours} categories={todayCategoryTotalHours}></Today>
+        <Week
+          togglePage={togglePage}
+          totalHours={weekTotalHours}
+          categories={weekCategoryTotalHours}
+          todos={weekData}
+        ></Week>
         <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
       </Stack>
     </Container>
@@ -225,8 +191,13 @@ export const Metrics = (props: allTodos) => {
       <Container sx={{p: 2}} maxWidth='sm'>
         <h1>Reports</h1>
         <Stack sx={{mx: 2}} spacing={2}>
-          <Today togglePage={togglePage} totalHours={todayTotalHours}></Today>
-          <Week togglePage={togglePage} totalHours={weekTotalHours}></Week>
+          <Today togglePage={togglePage} totalHours={todayTotalHours} categories={todayCategoryTotalHours}></Today>
+          <Week
+            togglePage={togglePage}
+            totalHours={weekTotalHours}
+            categories={weekCategoryTotalHours}
+            todos={weekData}
+          ></Week>
           <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
         </Stack>
       </Container>
