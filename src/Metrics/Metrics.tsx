@@ -26,6 +26,7 @@ export const Metrics = (props: allTodos) => {
   const [todayData, updateTodayMetrics] = useState([]);
   const [todayTotalHours, setTodayTotalHours] = useState(0);
   const [todayCategoryTotalHours, setTodayCategoryHours] = useState(0);
+  const [todayCategoryColors, setTodayCategoryColors] = useState([]);
   const [weekData, updateWeekMetrics] = useState([]);
   const [weekTotalHours, setWeekTotalHours] = useState(0);
   const [weekCategoryTotalHours, setWeekCategoryHours] = useState(0);
@@ -41,7 +42,8 @@ export const Metrics = (props: allTodos) => {
 
   const getHours = (todos: any, timeFrame: string) => {
     let hours = 0;
-    let todaysDetails: any = {};
+    let details: any = {};
+    let colors: any = [];
 
     todos.forEach((todo: userTodo) => {
       let beginTime = Date.parse(todo.start_date);
@@ -52,10 +54,11 @@ export const Metrics = (props: allTodos) => {
       total = total / 60;
       hours += total
 
-      if (todaysDetails[todo.category] === undefined) {
-        todaysDetails[todo.category]  = total;
+      if (details[todo.category] === undefined) {
+        details[todo.category]  = total;
+        colors.push(todo.color);
       } else {
-        todaysDetails[todo.category] += total;
+        details[todo.category] += total;
       }
     });
 
@@ -63,12 +66,14 @@ export const Metrics = (props: allTodos) => {
       if (Number.isInteger(hours)) {
         console.log(hours)
         setTodayTotalHours(hours);
-        setTodayCategoryHours(todaysDetails);
-        updateTodayMetrics(todos)
+        setTodayCategoryHours(details);
+        updateTodayMetrics(todos);
+        setTodayCategoryColors(colors);
       } else {
         setTodayTotalHours(+hours.toFixed(2));
-        setTodayCategoryHours(todaysDetails);
+        setTodayCategoryHours(details);
         updateTodayMetrics(todos);
+        setTodayCategoryColors(colors);
       }
     }
 
@@ -76,11 +81,11 @@ export const Metrics = (props: allTodos) => {
       if (Number.isInteger(hours)) {
         console.log(hours)
         setWeekTotalHours(hours);
-        setWeekCategoryHours(todaysDetails);
+        setWeekCategoryHours(details);
         updateWeekMetrics(todos);
       } else {
         setWeekTotalHours(+hours.toFixed(2));
-        setWeekCategoryHours(todaysDetails);
+        setWeekCategoryHours(details);
         updateWeekMetrics(todos);
       }
     }
@@ -89,11 +94,11 @@ export const Metrics = (props: allTodos) => {
       if (Number.isInteger(hours)) {
         console.log(hours)
         setMonthTotalHours(hours);
-        setMonthCategoryHours(todaysDetails);
+        setMonthCategoryHours(details);
         updateMonthMetrics(todos);
       } else {
         setMonthTotalHours(+hours.toFixed(2));
-        setMonthCategoryHours(todaysDetails);
+        setMonthCategoryHours(details);
         updateMonthMetrics(todos);
       }
     }
@@ -146,7 +151,12 @@ export const Metrics = (props: allTodos) => {
     <Container sx={{p: 2}} maxWidth='sm'>
       <h1>Reports</h1>
       <Stack sx={{mx: 2}} spacing={2}>
-        <Today togglePage={togglePage} totalHours={todayTotalHours} categories={todayCategoryTotalHours}></Today>
+        <Today
+          togglePage={togglePage}
+          totalHours={todayTotalHours}
+          categories={todayCategoryTotalHours}
+          colors={todayCategoryColors}
+        ></Today>
         <Week
           togglePage={togglePage}
           totalHours={weekTotalHours}
@@ -191,7 +201,12 @@ export const Metrics = (props: allTodos) => {
       <Container sx={{p: 2}} maxWidth='sm'>
         <h1>Reports</h1>
         <Stack sx={{mx: 2}} spacing={2}>
-          <Today togglePage={togglePage} totalHours={todayTotalHours} categories={todayCategoryTotalHours}></Today>
+          <Today
+            togglePage={togglePage}
+            totalHours={todayTotalHours}
+            categories={todayCategoryTotalHours}
+            colors={todayCategoryColors}
+          ></Today>
           <Week
             togglePage={togglePage}
             totalHours={weekTotalHours}

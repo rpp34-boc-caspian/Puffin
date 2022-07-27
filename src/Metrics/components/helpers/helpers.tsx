@@ -51,8 +51,8 @@ export const buildWeekReportData = (weekTodos: any) => {
  export const todoData = [
   {
     title: 'Study CS',
-    start_date: '7/26/22 4:00',
-    end_date: '7/26/22 8:22',
+    start_date: '7/27/22 4:00',
+    end_date: '7/27/22 8:22',
     complete: true,
     username: 'Jimmy Bo',
     category: 'School',
@@ -60,8 +60,8 @@ export const buildWeekReportData = (weekTodos: any) => {
   },
   {
     title: 'Training',
-    start_date: '7/26/22 10:00',
-    end_date: '7/26/22 18:22',
+    start_date: '7/27/22 10:00',
+    end_date: '7/27/22 18:22',
     complete: true,
     username: 'Jimmy Bo',
     category: 'Work',

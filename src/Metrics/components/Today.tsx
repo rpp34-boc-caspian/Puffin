@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, IconButton, Typography } from "@mui/mate
 import InfoIcon from '@mui/icons-material/Info';
 import { useEffect, useState } from "react";
 import { DoughnutChart } from "./charts/DoughnutChart";
+import { colorMap } from "../../theme";
+import { hexToRGBA } from "./helpers/helpers";
 
 interface allTodos {
   totalHours: number,
@@ -11,7 +13,8 @@ interface allTodos {
     week: boolean;
     month: boolean;
   }>>,
-  categories: any
+  categories: any,
+  colors: string[]
 }
 
 export const Today = (props: allTodos) => {
@@ -19,24 +22,12 @@ export const Today = (props: allTodos) => {
     labels: Object.keys(props.categories),
     datasets: [
       {
-        label: '# of Votes',
+        label: 'Day Report Chart',
         data: Object.values(props.categories),
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
+        backgroundColor: props.colors.map((colorId) => {
+          let rgb = hexToRGBA(colorMap[colorId]);
+          return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+        }),
         borderWidth: 1,
       },
     ]
@@ -47,29 +38,17 @@ export const Today = (props: allTodos) => {
       labels: Object.keys(props.categories),
       datasets: [
         {
-          label: '# of Votes',
+          label: 'Day Report Chart',
           data: Object.values(props.categories),
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: props.colors.map((colorId) => {
+            let rgb = hexToRGBA(colorMap[colorId]);
+            return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+          }),
           borderWidth: 1,
         },
       ]
     });
-  }, [props.categories])
+  }, [props.categories, props.colors])
 
   return (
     <>
