@@ -12,12 +12,15 @@ import DailyCalendar from './home/DailyCalendar';
 import UnscheduledTodo from './home/UnscheduledTodo';
 import { getDate } from './home/utils/helper';
 import { CreateTodo } from './Create to-do/create-todo';
+import { Share } from './sharing/Share';
 
 
 const App: React.FC = () => {
   const now = getDate(new Date());
   const [date, setDate] = React.useState<string>(now);
   const [toggleUnscheduledTodo, setToggleUnscheduledTodo] = React.useState(false);
+  const [toggleSharing, setToggleSharing] = React.useState(false);
+
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
@@ -37,6 +40,7 @@ const App: React.FC = () => {
                 category: 'School'
               }
             ]} />} />
+            <Route path='/share' element={<Share />} />
           </Routes>
         </BrowserRouter>
 
