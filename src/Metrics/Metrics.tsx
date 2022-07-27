@@ -1,10 +1,9 @@
 import { Container, Stack } from "@mui/material"
 import { useEffect, useState } from "react"
-import { Month } from "./components/Month"
 import { TodayMonth } from "./components/TodayMonth"
 import { Week } from "./components/Week"
 import { Detailed } from "./components/Detailed"
-import { todoData } from "./components/helpers/helpers"
+import { getToDoHours, todoData } from "./components/helpers/helpers"
 import { DoughnutChart } from "./components/charts/DoughnutChart"
 
 interface userTodo {
@@ -42,19 +41,14 @@ export const Metrics = (props: allTodos) => {
     month: false
   })
 
-  const getHours = (todos: any, timeFrame: string) => {
+  const getHoursAndSetState = (todos: any, timeFrame: string) => {
     let hours = 0;
     let details: any = {};
     let colors: any = [];
 
     todos.forEach((todo: userTodo) => {
-      let beginTime = Date.parse(todo.start_date);
-      let endTime = Date.parse(todo.end_date);
-      let total = endTime - beginTime;
-      total = total / 1000;
-      total = total / 60;
-      total = total / 60;
-      hours += total
+      let total = getToDoHours(todo);
+      hours += total;
 
       if (details[todo.category] === undefined) {
         details[todo.category]  = total;
@@ -137,16 +131,15 @@ export const Metrics = (props: allTodos) => {
         }
         if (firstDayParsed <= todoDateParsed && lastDayParsed >= todoDateParsed) {
           thisWeek.push(todo);
-          console.log(thisWeek)
         }
         if (todoMonth === currentDateMonth && todoYear === currentDateYear) {
           thisMonth.push(todo);
         }
       });
 
-      if (today.length) {getHours(today, 'today')};
-      if (thisWeek.length) {getHours(thisWeek, 'week')};
-      if (thisMonth.length) {getHours(thisMonth, 'month')};
+      if (today.length) {getHoursAndSetState(today, 'today')};
+      if (thisWeek.length) {getHoursAndSetState(thisWeek, 'week')};
+      if (thisMonth.length) {getHoursAndSetState(thisMonth, 'month')};
     }
 
     loadData(data);
@@ -170,7 +163,14 @@ export const Metrics = (props: allTodos) => {
           categories={weekCategoryTotalHours}
           todos={weekData}
         ></Week>
-        <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
+        <TodayMonth
+            togglePage={togglePage}
+            totalHours={monthTotalHours}
+            categories={monthCategoryHours}
+            colors={monthCategoryColors}
+            chart={(data: any) => <DoughnutChart data={data}/>}
+            title="This Month's Report"
+          ></TodayMonth>
       </Stack>
     </Container>
   );

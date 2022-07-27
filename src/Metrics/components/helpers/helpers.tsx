@@ -48,6 +48,19 @@ export const buildWeekReportData = (weekTodos: any) => {
    return dayOfWeekData;
  }
 
+export const getToDoHours = (todo: any) => {
+  let beginTime = Date.parse(todo.start_date);
+            let endTime = Date.parse(todo.end_date);
+  let todoTotal = endTime - beginTime;
+  todoTotal = todoTotal / 1000;
+  todoTotal = todoTotal / 60;
+  todoTotal = todoTotal / 60;
+  if (!Number.isInteger(todoTotal)) {
+    todoTotal = +(todoTotal.toFixed(2));
+  }
+  return todoTotal;
+}
+
  export const todoData = [
   {
     title: 'Study CS',
