@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = 8080;
-const pool = require('../db/index.js'); //Hello
+const {pool, darianPool} = require('../db/index.js'); //Hello
 const bcrypt = require('bcrypt');
 
 app.use(express.json());
@@ -144,6 +144,69 @@ app.get('/unscheduledTodos/:userId', (req, res) => {
       console.log('all unscheduled todo list', data);
       res.send(data);
     }
+  })
+});
+
+app.get('/completedTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = (
+    `SELECT todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
+    FROM todos
+    INNER JOIN categories ON todos.cat_id=categories.id`
+  );
+  darianPool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client.query(query, (err, result) => {
+      release();
+      if (err) {
+        return console.error('Error executing query', err.stack);
+      }
+      console.log(result.rows)
+      res.send(result.rows)
+    })
+  })
+});
+
+app.post('/fakeCompletedTodo', (req, res) => {
+  let body = req.body;
+  console.log(body)
+  let {user_id,cat_id,title,descript,start_d,end_d,all_d,complete, category_name, calendar_id, color} = req.body;
+  const todoQuery = (
+    `INSERT INTO todos(user_id,cat_id,title,descript,start_d,end_d,all_d,complete)
+    values(
+      ${user_id},
+      ${cat_id},
+      '${title}',
+      '${descript}',
+      '${start_d}',
+      '${end_d}',
+      ${all_d},
+      ${complete}
+    )`
+  );
+
+  const categoryQuery = (
+    `INSERT INTO categories(category_name,calendar_id,color)
+    values(
+      '${category_name}',
+      ${calendar_id},
+      ${color}
+    )`
+  )
+
+  darianPool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client.query(todoQuery, (err, result) => {
+      release();
+      if (err) {
+        return console.error('Error executing query', err.stack);
+      }
+      console.log(result);
+    })
   })
 })
 

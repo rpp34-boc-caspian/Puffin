@@ -4,10 +4,8 @@ import { CategoryDetailed } from "./CatergoryDetailed";
 
 interface userTodo {
   title: string,
-  start_date: string,
-  end_date: string,
-  complete: boolean,
-  username?: string,
+  start_d: string,
+  end_d: string,
   category: string,
   color: string
 }

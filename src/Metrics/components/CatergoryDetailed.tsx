@@ -6,10 +6,8 @@ import { colorMap } from "../../theme";
 
 interface userTodo {
   title: string,
-  start_date: string,
-  end_date: string,
-  complete: boolean,
-  username?: string,
+  start_d: string,
+  end_d: string,
   category: string,
   color: string
 }
@@ -59,8 +57,8 @@ export const CategoryDetailed = (props: allTodos) => {
         />
         <List>
           {props.todayTodos.map((todo) => {
-            let beginTime = Date.parse(todo.start_date);
-            let endTime = Date.parse(todo.end_date);
+            let beginTime = Date.parse(todo.start_d);
+            let endTime = Date.parse(todo.end_d);
             let todoTotal = endTime - beginTime;
             todoTotal = todoTotal / 1000;
             todoTotal = todoTotal / 60;
@@ -70,7 +68,7 @@ export const CategoryDetailed = (props: allTodos) => {
             }
             return (
               <ListItem
-                key={`${todo.start_date}${todo.title}`}
+                key={`${todo.start_d}${todo.title}`}
                 secondaryAction={
                   <IconButton edge="end" aria-label="total-hours-for-todo">
                     <Typography sx={{fontSize: 12}} color="text.secondary">

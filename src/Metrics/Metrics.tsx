@@ -8,10 +8,8 @@ import { DoughnutChart } from "./components/charts/DoughnutChart"
 
 interface userTodo {
   title: string,
-  start_date: string,
-  end_date: string,
-  complete: boolean,
-  username?: string,
+  start_d: string,
+  end_d: string,
   category: string,
   color?: string
 }
@@ -111,11 +109,11 @@ export const Metrics = (props: allTodos) => {
 
       todos.forEach((todo) => {
         let currentDate = new Date();
-        let todoDate = new Date(todo.start_date);
+        let todoDate = new Date(todo.start_d);
         let todoMonth = todoDate.getMonth();
         let todoYear = todoDate.getFullYear();
         let todoDateString = todoDate.toDateString();
-        let todoDateParsed = Date.parse(todo.start_date);
+        let todoDateParsed = Date.parse(todo.start_d);
         let todayDateString = new Date().toDateString();
         let currentDateMonth = currentDate.getMonth();
         let currentDateYear = currentDate.getFullYear();
