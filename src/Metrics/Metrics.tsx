@@ -1,9 +1,10 @@
 import { Container, Stack } from "@mui/material"
 import { useEffect, useState } from "react"
-import { Month } from "./components/Month"
-import { Today } from "./components/Today"
+import { TodayMonth } from "./components/TodayMonth"
 import { Week } from "./components/Week"
 import { Detailed } from "./components/Detailed"
+import { getToDoHours, todoData } from "./components/helpers/helpers"
+import { DoughnutChart } from "./components/charts/DoughnutChart"
 
 interface userTodo {
   title: string,
@@ -11,7 +12,8 @@ interface userTodo {
   end_date: string,
   complete: boolean,
   username?: string,
-  category: string
+  category: string,
+  color?: string
 }
 
 interface allTodos {
@@ -19,58 +21,19 @@ interface allTodos {
 }
 
 export const Metrics = (props: allTodos) => {
-  const todoData = [
-      {
-        title: 'Study Math',
-        start_date: '7/25/22 4:00',
-        end_date: '7/25/22 8:22',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'School'
-      },
-      {
-        title: 'Feature Update',
-        start_date: '7/25/22 4:00',
-        end_date: '7/25/22 12:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'Work'
-      },
-      {
-        title: 'Art',
-        start_date: '7/25/22 12:00',
-        end_date: '7/25/22 14:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'School'
-      },
-      {
-        title: 'Interview',
-        start_date: '7/25/22 19:00',
-        end_date: '7/25/22 20:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'Work'
-      },
-      {
-        title: 'Study History',
-        start_date: '7/22/22 14:00',
-        end_date: '7/22/22 16:00',
-        complete: true,
-        username: 'Jimmy Bo',
-        category: 'School'
-      }
-  ]
+
   const [data, updateDataMetrics] = useState(todoData);
   const [todayData, updateTodayMetrics] = useState([]);
   const [todayTotalHours, setTodayTotalHours] = useState(0);
   const [todayCategoryTotalHours, setTodayCategoryHours] = useState(0);
+  const [todayCategoryColors, setTodayCategoryColors] = useState([]);
   const [weekData, updateWeekMetrics] = useState([]);
   const [weekTotalHours, setWeekTotalHours] = useState(0);
   const [weekCategoryTotalHours, setWeekCategoryHours] = useState(0);
   const [monthData, updateMonthMetrics] = useState([]);
   const [monthTotalHours, setMonthTotalHours] = useState(0);
   const [monthCategoryHours, setMonthCategoryHours] = useState(0);
+  const [monthCategoryColors, setMonthCategoryColors] = useState([]);
   const [pageStatus, togglePage] = useState({
     home: true,
     today: false,
@@ -78,23 +41,20 @@ export const Metrics = (props: allTodos) => {
     month: false
   })
 
-  const getHours = (todos: any, timeFrame: string) => {
+  const getHoursAndSetState = (todos: any, timeFrame: string) => {
     let hours = 0;
-    let todaysDetails: any = {};
+    let details: any = {};
+    let colors: any = [];
 
     todos.forEach((todo: userTodo) => {
-      let beginTime = Date.parse(todo.start_date);
-      let endTime = Date.parse(todo.end_date);
-      let total = endTime - beginTime;
-      total = total / 1000;
-      total = total / 60;
-      total = total / 60;
-      hours += total
+      let total = getToDoHours(todo);
+      hours += total;
 
-      if (todaysDetails[todo.category] === undefined) {
-        todaysDetails[todo.category]  = total;
+      if (details[todo.category] === undefined) {
+        details[todo.category]  = total;
+        colors.push(todo.color);
       } else {
-        todaysDetails[todo.category] += total;
+        details[todo.category] += total;
       }
     });
 
@@ -102,12 +62,14 @@ export const Metrics = (props: allTodos) => {
       if (Number.isInteger(hours)) {
         console.log(hours)
         setTodayTotalHours(hours);
-        setTodayCategoryHours(todaysDetails);
-        updateTodayMetrics(todos)
+        setTodayCategoryHours(details);
+        updateTodayMetrics(todos);
+        setTodayCategoryColors(colors);
       } else {
         setTodayTotalHours(+hours.toFixed(2));
-        setTodayCategoryHours(todaysDetails);
+        setTodayCategoryHours(details);
         updateTodayMetrics(todos);
+        setTodayCategoryColors(colors);
       }
     }
 
@@ -115,11 +77,11 @@ export const Metrics = (props: allTodos) => {
       if (Number.isInteger(hours)) {
         console.log(hours)
         setWeekTotalHours(hours);
-        setWeekCategoryHours(todaysDetails);
+        setWeekCategoryHours(details);
         updateWeekMetrics(todos);
       } else {
         setWeekTotalHours(+hours.toFixed(2));
-        setWeekCategoryHours(todaysDetails);
+        setWeekCategoryHours(details);
         updateWeekMetrics(todos);
       }
     }
@@ -128,12 +90,14 @@ export const Metrics = (props: allTodos) => {
       if (Number.isInteger(hours)) {
         console.log(hours)
         setMonthTotalHours(hours);
-        setMonthCategoryHours(todaysDetails);
+        setMonthCategoryHours(details);
         updateMonthMetrics(todos);
+        setMonthCategoryColors(colors);
       } else {
         setMonthTotalHours(+hours.toFixed(2));
-        setMonthCategoryHours(todaysDetails);
+        setMonthCategoryHours(details);
         updateMonthMetrics(todos);
+        setMonthCategoryColors(colors);
       }
     }
 
@@ -165,7 +129,7 @@ export const Metrics = (props: allTodos) => {
         if (todoDateString === todayDateString) {
           today.push(todo);
         }
-        if (firstDayParsed <= todoDateParsed || lastDayParsed >= todoDateParsed) {
+        if (firstDayParsed <= todoDateParsed && lastDayParsed >= todoDateParsed) {
           thisWeek.push(todo);
         }
         if (todoMonth === currentDateMonth && todoYear === currentDateYear) {
@@ -173,9 +137,9 @@ export const Metrics = (props: allTodos) => {
         }
       });
 
-      if (today.length) {getHours(today, 'today')};
-      if (thisWeek.length) {getHours(thisWeek, 'week')};
-      if (thisMonth.length) {getHours(thisMonth, 'month')};
+      if (today.length) {getHoursAndSetState(today, 'today')};
+      if (thisWeek.length) {getHoursAndSetState(thisWeek, 'week')};
+      if (thisMonth.length) {getHoursAndSetState(thisMonth, 'month')};
     }
 
     loadData(data);
@@ -185,9 +149,28 @@ export const Metrics = (props: allTodos) => {
     <Container sx={{p: 2}} maxWidth='sm'>
       <h1>Reports</h1>
       <Stack sx={{mx: 2}} spacing={2}>
-        <Today togglePage={togglePage} totalHours={todayTotalHours}></Today>
-        <Week togglePage={togglePage} totalHours={weekTotalHours}></Week>
-        <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
+        <TodayMonth
+          togglePage={togglePage}
+          totalHours={todayTotalHours}
+          categories={todayCategoryTotalHours}
+          colors={todayCategoryColors}
+          chart={(data: any) => <DoughnutChart data={data}/>}
+          title="Today's Report"
+        ></TodayMonth>
+        <Week
+          togglePage={togglePage}
+          totalHours={weekTotalHours}
+          categories={weekCategoryTotalHours}
+          todos={weekData}
+        ></Week>
+        <TodayMonth
+            togglePage={togglePage}
+            totalHours={monthTotalHours}
+            categories={monthCategoryHours}
+            colors={monthCategoryColors}
+            chart={(data: any) => <DoughnutChart data={data}/>}
+            title="This Month's Report"
+          ></TodayMonth>
       </Stack>
     </Container>
   );
@@ -225,9 +208,28 @@ export const Metrics = (props: allTodos) => {
       <Container sx={{p: 2}} maxWidth='sm'>
         <h1>Reports</h1>
         <Stack sx={{mx: 2}} spacing={2}>
-          <Today togglePage={togglePage} totalHours={todayTotalHours}></Today>
-          <Week togglePage={togglePage} totalHours={weekTotalHours}></Week>
-          <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
+          <TodayMonth
+            togglePage={togglePage}
+            totalHours={todayTotalHours}
+            categories={todayCategoryTotalHours}
+            colors={todayCategoryColors}
+            chart={(data: any) => <DoughnutChart data={data}/>}
+            title="Today's Report"
+          ></TodayMonth>
+          <Week
+            togglePage={togglePage}
+            totalHours={weekTotalHours}
+            categories={weekCategoryTotalHours}
+            todos={weekData}
+          ></Week>
+          <TodayMonth
+            togglePage={togglePage}
+            totalHours={monthTotalHours}
+            categories={monthCategoryHours}
+            colors={monthCategoryColors}
+            chart={(data: any) => <DoughnutChart data={data}/>}
+            title="This Month's Report"
+          ></TodayMonth>
         </Stack>
       </Container>
     );

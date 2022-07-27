@@ -1,5 +1,8 @@
 import { Card, CardContent, CardHeader, IconButton, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
+import { StackedBarChart } from "./charts/StackedBarChart";
+import { useEffect, useState } from "react";
+import { buildWeekReportData } from "./helpers/helpers";
 
 interface allTodos {
   totalHours: number,
@@ -8,10 +11,25 @@ interface allTodos {
     today: boolean;
     week: boolean;
     month: boolean;
-}>>
+  }>>,
+  categories: any,
+  todos: any
 }
 
 export const Week = (props: allTodos) => {
+  const [weekChartData, updateChartData] = useState({
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+    datasets: []
+  });
+
+  useEffect(() => {
+    let newDataset: any = {
+      labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+      datasets: buildWeekReportData(props.todos)
+    };
+    updateChartData(newDataset)
+  }, [props.todos])
+
   return (
     <>
       <Card>
@@ -40,6 +58,7 @@ export const Week = (props: allTodos) => {
               </IconButton>
             }
           />
+          <StackedBarChart data={weekChartData}/>
         </CardContent>
       </Card>
     </>
