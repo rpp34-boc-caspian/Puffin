@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RectangleIcon from '@mui/icons-material/Rectangle';
+import { colorMap } from "../../theme";
 
 
 interface userTodo {
@@ -9,7 +10,8 @@ interface userTodo {
   end_date: string,
   complete: boolean,
   username?: string,
-  category: string
+  category: string,
+  color: string
 }
 interface allTodos {
   todayTodos: userTodo[],
@@ -77,7 +79,7 @@ export const CategoryDetailed = (props: allTodos) => {
                   </IconButton>
                 }>
                 <ListItemAvatar>
-                  <RectangleIcon color="primary"/>
+                  <RectangleIcon htmlColor={colorMap[todo.color]}/>
                 </ListItemAvatar>
                 <ListItemText primary={todo.title}/>
               </ListItem>

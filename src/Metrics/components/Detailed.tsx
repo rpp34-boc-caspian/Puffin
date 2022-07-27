@@ -8,7 +8,8 @@ interface userTodo {
   end_date: string,
   complete: boolean,
   username?: string,
-  category: string
+  category: string,
+  color: string
 }
 interface allTodos {
   todos: userTodo[],

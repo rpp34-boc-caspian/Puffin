@@ -1,5 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 import { grey } from '@mui/material/colors'
+
+
+
 const theme = createTheme({
     palette: {
       primary: {
@@ -7,6 +10,7 @@ const theme = createTheme({
         main: '#3f50b5',
         dark: '#002884',
         contrastText: '#fff',
+
       },
       secondary: {
         light: '#ff7961',
@@ -35,6 +39,12 @@ export const colorMap: {[key: string]: string} = {
   8: '#76ff03', //lightGreen
   9: '#00838f', //cyan
 }
+
+// export const colorMapTheme = createTheme({
+//   custom: {
+
+//   }
+// })
 
 export type ExactTheme = typeof theme;
 export default theme;
