@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, IconButton, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useEffect, useState } from "react";
-import { DoughnutChart } from "./charts/DoughnutChart";
 import { colorMap } from "../../theme";
 import { hexToRGBA } from "./helpers/helpers";
 
@@ -14,10 +13,12 @@ interface allTodos {
     month: boolean;
   }>>,
   categories: any,
-  colors: string[]
+  colors: string[],
+  chart: Function,
+  title: string
 }
 
-export const Today = (props: allTodos) => {
+export const TodayMonth = (props: allTodos) => {
   const [todayChartData, updateChartData] = useState({
     labels: Object.keys(props.categories),
     datasets: [
@@ -57,7 +58,7 @@ export const Today = (props: allTodos) => {
           <CardHeader
             title={
               <Typography sx={{fontSize: 12}} color="text.secondary">
-                Today's Report
+                {props.title}
               </Typography>
             }
             subheader={
@@ -67,18 +68,28 @@ export const Today = (props: allTodos) => {
             }
             action={
               <IconButton  onClick={()=> {
-                props.togglePage({
-                  home: false,
-                  today: true,
-                  week: false,
-                  month: false
+                if(props.title === 'Today\'s Report') {
+                  props.togglePage({
+                    home: false,
+                    today: true,
+                    week: false,
+                    month: false
+                  })
                 }
-              )}}>
+                if (props.title === 'This Month\'s Report') {
+                  props.togglePage({
+                    home: false,
+                    today: false,
+                    week: false,
+                    month: true
+                  })
+                }
+              }}>
                 <InfoIcon/>
               </IconButton>
             }
           />
-          <DoughnutChart data={todayChartData}/>
+          {props.chart(todayChartData)}
         </CardContent>
       </Card>
     </>

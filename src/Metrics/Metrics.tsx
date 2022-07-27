@@ -1,10 +1,11 @@
 import { Container, Stack } from "@mui/material"
 import { useEffect, useState } from "react"
 import { Month } from "./components/Month"
-import { Today } from "./components/Today"
+import { TodayMonth } from "./components/TodayMonth"
 import { Week } from "./components/Week"
 import { Detailed } from "./components/Detailed"
 import { todoData } from "./components/helpers/helpers"
+import { DoughnutChart } from "./components/charts/DoughnutChart"
 
 interface userTodo {
   title: string,
@@ -33,6 +34,7 @@ export const Metrics = (props: allTodos) => {
   const [monthData, updateMonthMetrics] = useState([]);
   const [monthTotalHours, setMonthTotalHours] = useState(0);
   const [monthCategoryHours, setMonthCategoryHours] = useState(0);
+  const [monthCategoryColors, setMonthCategoryColors] = useState([]);
   const [pageStatus, togglePage] = useState({
     home: true,
     today: false,
@@ -96,10 +98,12 @@ export const Metrics = (props: allTodos) => {
         setMonthTotalHours(hours);
         setMonthCategoryHours(details);
         updateMonthMetrics(todos);
+        setMonthCategoryColors(colors);
       } else {
         setMonthTotalHours(+hours.toFixed(2));
         setMonthCategoryHours(details);
         updateMonthMetrics(todos);
+        setMonthCategoryColors(colors);
       }
     }
 
@@ -131,8 +135,9 @@ export const Metrics = (props: allTodos) => {
         if (todoDateString === todayDateString) {
           today.push(todo);
         }
-        if (firstDayParsed <= todoDateParsed || lastDayParsed >= todoDateParsed) {
+        if (firstDayParsed <= todoDateParsed && lastDayParsed >= todoDateParsed) {
           thisWeek.push(todo);
+          console.log(thisWeek)
         }
         if (todoMonth === currentDateMonth && todoYear === currentDateYear) {
           thisMonth.push(todo);
@@ -151,12 +156,14 @@ export const Metrics = (props: allTodos) => {
     <Container sx={{p: 2}} maxWidth='sm'>
       <h1>Reports</h1>
       <Stack sx={{mx: 2}} spacing={2}>
-        <Today
+        <TodayMonth
           togglePage={togglePage}
           totalHours={todayTotalHours}
           categories={todayCategoryTotalHours}
           colors={todayCategoryColors}
-        ></Today>
+          chart={(data: any) => <DoughnutChart data={data}/>}
+          title="Today's Report"
+        ></TodayMonth>
         <Week
           togglePage={togglePage}
           totalHours={weekTotalHours}
@@ -201,19 +208,28 @@ export const Metrics = (props: allTodos) => {
       <Container sx={{p: 2}} maxWidth='sm'>
         <h1>Reports</h1>
         <Stack sx={{mx: 2}} spacing={2}>
-          <Today
+          <TodayMonth
             togglePage={togglePage}
             totalHours={todayTotalHours}
             categories={todayCategoryTotalHours}
             colors={todayCategoryColors}
-          ></Today>
+            chart={(data: any) => <DoughnutChart data={data}/>}
+            title="Today's Report"
+          ></TodayMonth>
           <Week
             togglePage={togglePage}
             totalHours={weekTotalHours}
             categories={weekCategoryTotalHours}
             todos={weekData}
           ></Week>
-          <Month togglePage={togglePage} totalHours={monthTotalHours}></Month>
+          <TodayMonth
+            togglePage={togglePage}
+            totalHours={monthTotalHours}
+            categories={monthCategoryHours}
+            colors={monthCategoryColors}
+            chart={(data: any) => <DoughnutChart data={data}/>}
+            title="This Month's Report"
+          ></TodayMonth>
         </Stack>
       </Container>
     );

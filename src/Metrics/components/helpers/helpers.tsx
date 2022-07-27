@@ -111,5 +111,40 @@ export const buildWeekReportData = (weekTodos: any) => {
     username: 'Jimmy Bo',
     category: 'School',
     color: '2'
+  },
+  {
+    title: 'Clean Yard',
+    start_date: '7/02/22 14:00',
+    end_date: '7/02/22 16:00',
+    complete: true,
+    username: 'Jimmy Bo',
+    category: 'Chores',
+    color: '5'
+  },
+  {
+    title: 'Mow Lawn',
+    start_date: '7/02/22 14:00',
+    end_date: '7/02/22 17:00',
+    complete: true,
+    username: 'Jimmy Bo',
+    category: 'Chores',
+    color: '5'
+  },
+  {
+    title: 'Trim Bushes',
+    start_date: '7/01/22 14:00',
+    end_date: '7/01/22 20:00',
+    complete: true,
+    username: 'Jimmy Bo',
+    category: 'Chores',
+    color: '5'
+  },{
+    title: 'Do Dishes',
+    start_date: '7/26/22 14:00',
+    end_date: '7/26/22 15:00',
+    complete: true,
+    username: 'Jimmy Bo',
+    category: 'Chores',
+    color: '5'
   }
 ]
