@@ -62,9 +62,12 @@ export const Share = () => {
   return (
     <Container>
       <div>
-        <label>
+        <h1>
           Sharing With Friends
-        </label>
+        </h1>
+        <h2>
+          Select Calendar / Categories / Events
+        </h2>
       </div>
       <FormControl component="fieldset" variant="standard">
         <FormGroup>
@@ -76,13 +79,7 @@ export const Share = () => {
           />
         </FormGroup>
       </FormControl>
-      <Categories username={userEx.username} categories={userEx.categories} calendar={userEx.calendar} friends={userEx.friends}/>
-      <div>
-        <label>
-          Select Calendar / Categories / Events
-        </label>
-
-      </div>
+      <Categories calendarChecked={calendar} username={userEx.username} categories={userEx.categories} calendar={userEx.calendar} friends={userEx.friends}/>
       <div>
         <label>
           Share With Friends

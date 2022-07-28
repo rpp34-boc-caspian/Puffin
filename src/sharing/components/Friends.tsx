@@ -10,8 +10,6 @@ import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import { toEditorSettings } from "typescript";
 
 
 interface todo {
@@ -21,44 +19,39 @@ interface todo {
 }
 
 interface category {
-  check: boolean,
   name: string,
   todos: todo[]
 }
 
-const Todos: React.FC<category> = ({ name, todos }) => {
-  const todoState : any = {
-    categoryChecked: false
-  };
-  for (var i = 0; i < todos.length; i++) {
-    todoState[todos[i].title] = todoState.categoryChecked ? true : false;
-  }
-
-  const [state, setState] = React.useState(todoState);
+const Friends: React.FC<category> = ({ name, todos }) => {
+  const [state, setState] = React.useState({
+    calendar: false
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      [event.target.name]: !state[event.target.name] // {key: [string]: string }
+      [event.target.name]: event.target.checked,
     });
   };
 
+  const { calendar } = state;
   return (
     <FormControl component="fieldset" variant="standard" sx={{ pl: 4 }}>
+      <FormGroup>
       {
         todos.map((todo) => (
-              <FormGroup key={todo.title}>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={state[todo.title]} onChange={handleChange} name={todo.title} />
+                    <Checkbox checked={calendar} onChange={handleChange} name={todo.title} />
                   }
                   label={todo.title}
                 />
-              </FormGroup>
         ))
       }
+      </FormGroup>
     </FormControl>
   );
 }
 
-export default Todos;
+export default Friends;

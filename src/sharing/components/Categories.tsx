@@ -5,7 +5,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import Todos from "./Todos";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import React from "react";
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
@@ -27,37 +27,42 @@ interface category {
 interface user {
   username: string,
   calendar: string,
+  calendarChecked: Boolean,
   categories: category[],
   friends: string[]
 }
 
-const Categories: React.FC<user> = ({ username, calendar, categories, friends }) => {
+const Categories: React.FC<user> = ({ calendarChecked, username, calendar, categories, friends }) => {
   const [open, setOpen] = React.useState(true);
 
   const handleClick = (event: any) => {
-    console.log(event.target.key);
     setOpen(!open);
   };
 
-  const [state, setState] = React.useState({
-    trust: false
-  });
+  const catState : any = {
+    calendarChecked: false
+  };
+
+  for (var i = 0; i < categories.length; i++) {
+    catState[categories[i].name] = catState.calendarChecked ? true : false;
+  }
+
+  const [state, setState] = React.useState(catState);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      [event.target.name]: event.target.checked,
+      [event.target.name]: !state[event.target.name] // {key: [string]: string }
     });
   };
 
-  const {trust} = state;
 
 
   return (
     <>
       {
         categories.map((category) => (
-          <>
+          <Fragment key={category.name}>
             {/* <FormControl component="fieldset" variant="standard">
               <FormGroup>
                 <FormControlLabel
@@ -68,10 +73,10 @@ const Categories: React.FC<user> = ({ username, calendar, categories, friends })
                 />
               </FormGroup>
             </FormControl> */}
-            <ListItemButton onClick={handleClick} key={category.name}>
+            <ListItemButton onClick={handleClick}>
               <FormControlLabel
                   control={
-                    <Checkbox checked={trust} onChange={handleChange} name="trust" />
+                    <Checkbox checked={state[category.name]} onChange={handleChange} name={category.name} />
                   }
                   label={category.name}
                 />
@@ -79,10 +84,10 @@ const Categories: React.FC<user> = ({ username, calendar, categories, friends })
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <Todos name={category.name} todos={category.todos} />
+                <Todos check={state[category.name]} name={category.name} todos={category.todos} />
               </List>
             </Collapse>
-          </>
+          </Fragment>
         ))
       }
     </>
