@@ -3,59 +3,84 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const pool = require('../db/index.js');
+const bcrypt = require('bcrypt');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
 
-app.post('/signup', (req, res) => {
-  console.log('REQUEST', req.body);
+app.post('/signup', async (req, res) => {
+  let { username, email, password } = req.body;
 
-  // EITHER
+  let hash = await bcrypt.hash(password, 11);
 
-  // Do the signup stuff (encrypt password)
-  // Then send info to database (Need to find out if there is a way to make sure there are no repeats in the User table)
+  pool.query(`SELECT * FROM users WHERE email = '${email}' OR username = '${username}'`)
+  .then((results) => {
+    let query = results.rows[0];
 
-  // OR
+    if (results.rows.length > 0) {
+      query.email === email ? res.json({ created: false, reason: 'email' }) : res.json({ created: false, reason: 'username' });
 
-  // Query the database for the username and email
-  // If it exists, send back that the username is taken in a reason object
-  // If it doesn't, do the signup stuff
+    } else {
 
-  res.json({created: false, reason: 'email'});
+      pool.query(`INSERT INTO users (email, username, hashed_pass) VALUES ('${email}', '${username}', '${hash}')`)
+      .then((result) => {
+        res.json({ created: true });
+
+      })
+      .catch(() => {
+        res.status(500).send();
+
+      });
+
+    }
+
+  })
+  .catch(() => {
+    res.status(500).send();
+
+  });
+
 });
 
 app.post('/login', (req, res) => {
-  console.log('REQUEST', req.body);
+  let { username, email, password } = req.body;
 
-  // Request to database for username provided
-  // Check for what a failed request returns
+  pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
+  .then((results) => {
+    if (results.rows.length === 0) {
+      res.json({ exists: false });
 
-  // If username doesn't exist in database, return false
+    };
 
-  // Compare the password provided with the password retrieved
+    if (username !== results.rows[0].username) {
+      res.json({ exists: false });
 
-  // Return compare's result
+    };
 
-  res.json({ exist: true });
+    if (email !== results.rows[0].email) {
+      res.json({ exists: false });
+
+    };
+
+    let match = bcrypt.compare(password, results.rows[0].password);
+
+    if (!match) {
+      res.json({ exists: false });
+
+    };
+
+    res.json({ exists: true });
 
   //Sharing Functions
 
-  app.get('calendar', (req, res) => {
+  app.get('calendar_todos', (req, res) => {
     const user_id = req.params.user_id;
     pool.query(`SELECT cal_name FROM calendars WHERE user_id = ${user_id}`)
       .then(output => {
         res.send(output);
       });
   })
-
-  app.get('/friends', (req, res) => {
-    const user_id = req.params.user_id;
-    pool.query(`SELECT friend_id FROM friends WHERE user_id = ${user_id}`)
-      .then(output => {
-        res.send(output);
-      });
-  });
 
   app.get('/share_todos_info', (req, res) => {
     const user_id = req.params.user_id;
@@ -66,6 +91,27 @@ app.post('/login', (req, res) => {
   });
 
   /*
+  app.post('/friends', (req, res) => {
+  const query = `INSERT INTO friends(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
+  pool.query(query, (err, data) => {
+  if (err) {
+    console.log('err1: ', err);
+    res.status(500).send(err);
+  } else {
+    query.push([friend_id]);
+  }});
+
+  app.post('/share', (req, res) => {
+    const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
+    pool.query(query, (err, data) => {
+    if (err) {
+      console.log('err1: ', err);
+      res.status(500).send(err);
+    } else {
+      query.push([friend_id]);
+    }});
+
+
   app.post('/share', (req, res) => {
       const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
       pool.query(query, (err, data) => {
@@ -77,8 +123,63 @@ app.post('/login', (req, res) => {
       };
   });*/
 
-  //END of Sharing Functions
-});
+//END of Sharing Functions
+
+//Unscheduled todo list
+app.get('/unscheduledTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = 'SELECT t.id, t.title, t.descript, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false;'
+  pool.query(query, [user_id])
+  .then(({rows}) => {
+    res.send(rows);
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  })
+})
+
+app.put('/unscheduledTodos/:todoId', (req, res) => {
+  const todo_id = req.params.todoId;
+  const searchQuery = 'SELECT t.complete FROM todos t WHERE id = $1';
+  const updateTrueQuery = 'UPDATE todos SET complete = true WHERE id = $1';
+  const updateFalseQuery = 'UPDATE todos SET complete = false WHERE id = $1';
+  pool.query(searchQuery, [todo_id])
+  .then(({rows}) => {
+    return rows[0].complete;
+  })
+  .then(complete => {
+    console.log('complete', complete);
+    if (complete) {
+      return pool.query(updateFalseQuery, [todo_id])
+    } else {
+      return pool.query(updateTrueQuery, [todo_id])
+    }
+  })
+  .then(({rowCount}) => {
+    if (rowCount > 0) {
+      res.status(204).json({status:"updated"});
+    }
+  })
+  .catch(err => {
+    console.log('err', err);
+    res.status(500).send(err);
+  })
+})
+
+app.delete('/unscheduledTodos/:todoId', (req, res) => {
+  const todo_id = req.params.todoId;
+  const query = 'DELETE FROM todos WHERE id = $1;';
+  pool.query(query, [todo_id])
+  .then(({rowCount}) => {
+    if (rowCount > 0) {
+      res.status(204).json({status:"deleted"});
+    }
+  })
+  .catch(err => {
+    console.log('err', err);
+    res.status(500).send(err);
+  })
+})
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

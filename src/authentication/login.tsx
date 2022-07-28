@@ -1,18 +1,22 @@
 import { useState } from 'react';
+import axios from 'axios';
+
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
-import axios from 'axios';
+import Alert from '@mui/material/Alert';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const [loginError, setLoginError] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   function handleLogin() {
     console.log(`Username is '${username}'. Password is '${password}'.`);
 
     setLoginError(false);
+    setServerError(false);
 
     axios.post('/login', {
       username: username,
@@ -23,7 +27,7 @@ function Login() {
         setUsername('');
         setPassword('');
 
-        // redirect to home / (???)
+        // redirect to home / (React Router)
         return;
       };
 
@@ -34,7 +38,7 @@ function Login() {
       setUsername('');
       setPassword('');
 
-      // MATERIAL UI: display "Oops, something went wrong, please try again."
+      setServerError(true);
 
     });
 
@@ -42,6 +46,11 @@ function Login() {
 
   return (
     <>
+
+      {
+        serverError ? <Alert severity="error">Oops, something went wrong, please try again</Alert> : <></>
+      }
+
       <div>
         <TextField
           error={ loginError }

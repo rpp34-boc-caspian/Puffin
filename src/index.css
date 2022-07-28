@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.modal-show {
+  display: block;
+  background-color: lightpink;
+  transform: translate(-0%, -0%) scale(1);
+}
+
+.modal-hide {
+  display: none;
+}

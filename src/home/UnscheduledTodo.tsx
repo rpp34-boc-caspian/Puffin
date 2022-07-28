@@ -2,19 +2,22 @@ import * as React from 'react';
 import { Global } from '@emotion/react';
 import { styled, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { grey, red} from '@mui/material/colors';
+import { grey} from '@mui/material/colors';
 import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import {colorMap} from '../theme';
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, IconButton, Stack, Button, Snackbar} from '@mui/material';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import {MdOutlineDelete} from 'react-icons/md';
 
 const drawerBleeding = 56;
 
 interface Props {
   window?: () => Window;
   toggleUnscheduledTodo: boolean;
-  setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>
+  setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>;
+  setDraggedEvent: React.Dispatch<React.SetStateAction<object>>
 }
 
 const Puller = styled(Box)(() => ({
@@ -28,37 +31,89 @@ const Puller = styled(Box)(() => ({
 
 const unscheduledList = [
     {
+        id: 100,
         title: 'UI/UX conference',
-        color: 1,
+        color: '1',
         complete: false
     },
     {
+        id: 102,
         title: 'go to gym',
-        color: 2,
+        color: '2',
         complete: false
     },
     {
+        id: 103,
         title: 'learning TypeScript',
-        color: 3,
+        color: '3',
         complete: false
     },
     {
+        id: 104,
         title: 'learning TypeScript in React',
-        color: 3,
+        color: '3',
         complete: false
     },
     {
+        id: 105,
         title: 'learning MUI',
-        color: 3,
+        color: '3',
         complete: false
     },
 ]
 
-export default function UnscheduledTodo(props: Props) {
-    const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo } = props;
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+        props,
+        ref,
+    ) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
-  // This is used only for the example
+export default function UnscheduledTodo(props: Props) {
+    const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo, setDraggedEvent } = props;
+    const [unscheduledTodoList, setUnscheduledTodoList] = React.useState(unscheduledList);
+    const [checked, setChecked] = React.useState([0]);
+    const [openSuccessDelete, setOpenSuccessDelete] = React.useState(false);
     const container = window !== undefined ? () => window().document.body : undefined;
+
+    //mark an unscheduled todo as completed
+    const handleToggleMarkAsCompleted = (todoId: number) => () => {
+        const currentIndex = checked.indexOf(todoId);
+        const newChecked = [...checked];
+    
+        if (currentIndex === -1) {
+          newChecked.push(todoId);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+    
+        setChecked(newChecked);
+        setUnscheduledTodoList(pre => pre.map(todo => todo.id === todoId ? {...todo, complete: !todo.complete} : todo))
+    };
+
+    //delete an unscheduled todo
+    const handleDeleteTodoClick = (todoId: number) => {
+        setOpenSuccessDelete(true);
+        setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== todoId))
+      };
+    
+    const handleSuccessDeleteInfoClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+
+    setOpenSuccessDelete(false);
+    };
+
+    //drag and drop an unscheduled todo
+    const handleDragStart = React.useCallback((todo: any) => {
+        setDraggedEvent(todo);
+    }, [])
+
+    const handleDragOver = (id: number) => {
+        setToggleUnscheduledTodo(false);
+        setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== id));
+    }
 
     return (
         <div>
@@ -67,7 +122,7 @@ export default function UnscheduledTodo(props: Props) {
             styles={{
             '.MuiDrawer-root > .MuiPaper-root': {
                 height: `calc(50% - ${drawerBleeding}px)`,
-                overflow: 'visible',
+                overflow: 'visible'
             },
             }}
         />
@@ -96,7 +151,7 @@ export default function UnscheduledTodo(props: Props) {
             }}
             >
             <Puller sx={{backgroundColor: toggleUnscheduledTodo? grey[300] : '#fff'}}/>
-            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>51 results</Typography>
+            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>You have {unscheduledTodoList.length} unscheduled todos</Typography>
             </Box>
             <Box
             sx={{
@@ -106,7 +161,57 @@ export default function UnscheduledTodo(props: Props) {
                 overflow: 'auto',
             }}
             >
-            <Skeleton variant="rectangular" height="100%" />
+               <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
+                {unscheduledTodoList.map((todo) => {
+                    return (
+                        <ListItem
+                            key={todo.id}
+                            secondaryAction={
+                                <IconButton edge="end" aria-label="delete an unscheduled todo" onClick={() => handleDeleteTodoClick(todo.id)}>
+                                    <MdOutlineDelete />
+                                </IconButton>
+                            }
+                            disablePadding
+                            >
+                            <ListItemButton role={undefined} onClick={handleToggleMarkAsCompleted(todo.id)} dense>
+                            <ListItemIcon>
+                                <Checkbox
+                                edge="start"
+                                checked={checked.indexOf(todo.id) !== -1}
+                                tabIndex={-1}
+                                disableRipple
+                                />
+                            </ListItemIcon>
+                            <ListItemText 
+                                draggable={checked.indexOf(todo.id) === -1 ? true : false}
+                                onDragStart={() => {
+                                        handleDragStart(todo);
+                                    }
+                                }
+                                onDragOver={() => {
+                                        handleDragOver(todo.id);
+                                    }
+                                }
+
+                                primary={todo.title} 
+                                sx={{
+                                    textDecorationLine: checked.indexOf(todo.id) === -1 ? 'none' : 'line-through',
+                                    borderLeft: 5,
+                                    borderRadius: '2px',
+                                    borderColor: `${colorMap[todo.color]}`,
+                                    pl: 2
+                                }}
+                            />
+                            </ListItemButton>
+                        </ListItem>
+                    );
+                })}
+                </List> 
+                <Snackbar open={openSuccessDelete} autoHideDuration={2000} onClose={handleSuccessDeleteInfoClose}>
+                    <Alert onClose={handleSuccessDeleteInfoClose} severity="success" sx={{ width: '100%' }}>
+                    Successfully deleted this todo!
+                    </Alert>
+                </Snackbar>
             </Box>
         </SwipeableDrawer>
         </div>
