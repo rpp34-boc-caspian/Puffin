@@ -4,10 +4,18 @@ const app = express();
 const port = 8080;
 const pool = require('../db/index.js'); //Hello
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
+app.use(cookieParser());
+
+app.get('/verify/:token', (req, res) => {
+  res.json(jwt.verify(req.params.token, 'teamPuffin'));
+
+});
 
 app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;
@@ -44,6 +52,7 @@ app.post('/signup', async (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+  console.log(req.cookies);
   let { username, email, password } = req.body;
 
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
@@ -70,7 +79,9 @@ app.post('/login', (req, res) => {
 
     };
 
-    res.json({ exists: true });
+    let token = jwt.sign({ id: results.rows[0].id, user: username }, 'teamPuffin');
+
+    res.cookie('token', token).json({ exists: true });
 
   })
   .catch((err) => {

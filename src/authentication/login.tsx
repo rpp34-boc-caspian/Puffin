@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import TextField from "@mui/material/TextField";
@@ -6,18 +7,29 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('JIT');
+  const [email, setEmail] = useState('amplesample@email.com');
+  const [password, setPassword] = useState('password123');
 
   const [loginError, setLoginError] = useState(false);
   const [serverError, setServerError] = useState(false);
+
+  function eatCookies() {
+    let cooked = Cookies.get('token');
+
+    axios.get(`/verify/${cooked}`)
+    .then((uncooked) => {
+      console.log(uncooked.data);
+    })
+  };
 
   function handleLogin() {
     console.log(`Username is '${username}'. Email is ${email} Password is '${password}'.`);
 
     setLoginError(false);
     setServerError(false);
+
+    eatCookies();
 
     axios.post('/login', {
       username: username,
