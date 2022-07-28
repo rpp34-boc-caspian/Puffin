@@ -30,8 +30,10 @@ const App: React.FC = () => {
             setToggleUnscheduledTodo={setToggleUnscheduledTodo}
           />
           <Routes>
-            <Route path="/" element={<DailyCalendar date={date} toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>} />
-            {/* <Route path="/unscheduled" element={<UnscheduledTodo  />} /> */}
+            <Route path="/" element={<DailyCalendar date={date} 
+                                        toggleUnscheduledTodo={toggleUnscheduledTodo} 
+                                        setToggleUnscheduledTodo={setToggleUnscheduledTodo}
+                                      />} />
             <Route path="/create_todo" element={<CreateTodo />} />
             <Route path="/metrics/*" element={<Metrics/>}/>
           </Routes>
