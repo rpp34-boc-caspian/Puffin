@@ -134,16 +134,56 @@ app.post('/share', (req, res) => {
 //Unscheduled todo list
 app.get('/unscheduledTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
-  console.log('user_id', user_id);
-  const query = 'SELECT t.id, t.title, t.descript, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = ? AND t.complete = false'
-  pool.query(query, [user_id], (err, data) => {
-    if (err) {
-      console.log('err to get all unscheduled todo list');
-      res.status(500).send(err);
+  const query = 'SELECT t.id, t.title, t.descript, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false;'
+  pool.query(query, [user_id])
+  .then(({rows}) => {
+    res.send(rows);
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  })
+})
+
+app.put('/unscheduledTodos/:todoId', (req, res) => {
+  const todo_id = req.params.todoId;
+  const searchQuery = 'SELECT t.complete FROM todos t WHERE id = $1';
+  const updateTrueQuery = 'UPDATE todos SET complete = true WHERE id = $1';
+  const updateFalseQuery = 'UPDATE todos SET complete = false WHERE id = $1';
+  pool.query(searchQuery, [todo_id])
+  .then(({rows}) => {
+    return rows[0].complete;
+  })
+  .then(complete => {
+    console.log('complete', complete);
+    if (complete) {
+      return pool.query(updateFalseQuery, [todo_id])
     } else {
-      console.log('all unscheduled todo list', data);
-      res.send(data);
+      return pool.query(updateTrueQuery, [todo_id])
     }
+  })
+  .then(({rowCount}) => {
+    if (rowCount > 0) {
+      res.status(204).json({status:"updated"});
+    }
+  })
+  .catch(err => {
+    console.log('err', err);
+    res.status(500).send(err);
+  })
+})
+
+app.delete('/unscheduledTodos/:todoId', (req, res) => {
+  const todo_id = req.params.todoId;
+  const query = 'DELETE FROM todos WHERE id = $1;';
+  pool.query(query, [todo_id])
+  .then(({rowCount}) => {
+    if (rowCount > 0) {
+      res.status(204).json({status:"deleted"});
+    }
+  })
+  .catch(err => {
+    console.log('err', err);
+    res.status(500).send(err);
   })
 })
 
