@@ -2,12 +2,14 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = 8080;
-const pool = require('../db/index.js');
+const cors = require('cors');
+const {pool, darianPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
+app.use(cors())
 
 app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;
@@ -177,16 +179,39 @@ app.delete('/unscheduledTodos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
   const query = 'DELETE FROM todos WHERE id = $1;';
   pool.query(query, [todo_id])
-    .then(({ rowCount }) => {
-      if (rowCount > 0) {
-        res.status(204).json({ status: "deleted" });
+  .then(({rowCount}) => {
+    if (rowCount > 0) {
+      res.status(204).json({status:"deleted"});
+    }
+  })
+  .catch(err => {
+    console.log('err', err);
+    res.status(500).send(err);
+  })
+});
+
+app.get('/completedTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = (
+    `SELECT todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
+    FROM todos
+    INNER JOIN categories ON todos.cat_id=categories.id
+    WHERE user_id=${user_id} AND complete=true`
+  );
+  darianPool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client.query(query, (err, result) => {
+      release();
+      if (err) {
+        return console.error('Error executing query', err.stack);
       }
+      console.log(result.rows)
+      res.send(result.rows)
     })
-    .catch(err => {
-      console.log('err', err);
-      res.status(500).send(err);
-    })
-})
+  })
+});
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

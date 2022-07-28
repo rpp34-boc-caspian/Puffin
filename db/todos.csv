@@ -6,6 +6,19 @@ id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 5,3,4,Call dad,Ask about Mom,,,FALSE,FALSE
 6,3,4,Homework,Math,,,FALSE,FALSE
 7,4,5,Treat myself,Don't know yet,,,FALSE,TRUE
-8,4,5,Groceries,Costco,2022-07-15,2022-07-22,TRUE,FALSE
-9,5,8,Study,Russian,2022-07-15,2022-07-22,TRUE,TRUE
-10,5,8,Read,Tolstoy,2022-07-15,2022-07-15,TRUE,TRUE
+8,4,5,Groceries,Costco,6/23/16,6/29/16,TRUE,FALSE
+9,5,8,Study,Russian,6/24/16,6/24/16,TRUE,TRUE
+10,5,8,Read,Tolstoy,6/25/16,7/1/16,TRUE,TRUE
+11,3,9,Clean Dishes,,7/3/22 10:00,7/3/22 12:00,FALSE,TRUE
+12,3,9,Clean Room,,7/3/22 10:00,7/3/22 12:00,FALSE,TRUE
+13,3,9,Clean Garage,,7/27/22 10:00,7/27/22 12:00,FALSE,TRUE
+14,3,9,Clean Gutters,,7/3/22 10:00,7/3/22 12:00,FALSE,TRUE
+15,3,9,Clean Dishes Again,,7/6/22 10:00,7/6/22 12:00,FALSE,TRUE
+16,3,9,Mow Lawn,,7/3/22 12:00,7/3/22 13:00,FALSE,TRUE
+17,3,9,Paint House,,7/28/22 11:00, 7/28/22 14:00,FALSE,TRUE
+18,3,10,Interview,SWE Canidate,7/24/22 9:00,7/24/22 11:00,FALSE,TRUE
+19,3,10,Client Meeting (Jim),,7/25/22 10:00,7/25/22 12:00,FALSE,TRUE
+20,3,10,Client Meeting (Leah),,7/26/22 10:00,7/26/22 13:00,FALSE,TRUE
+21,3,10,Client Meeting (Peter),,7/27/22 10:00,7/27/22 12:00,FALSE,TRUE
+22,3,10,Client Meeting (Janet),,7/28/22 10:00,7/28/22 12:00,FALSE,TRUE
+23,3,10,Feautre Update 123.0,,7/28/22 10:00,7/28/22 16:00,FALSE,TRUE
