@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
@@ -11,6 +11,9 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography } from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
+import {colorMap} from '../theme';
+
 
 const styledCalendar = styled(Calendar)`
   .rbc-current-time-indicator {
@@ -21,15 +24,12 @@ const styledCalendar = styled(Calendar)`
     border-top: none;
     gap: 20px;
   }
-
   .rbc-time-content > * + * > * {
     border-left: none;
   }
-
   .rbc-time-header {
     gap: 20px;
   }
-
   .rbc-time-header-content {
     border-left: none;
     border-bottom: 1px solid #f44336;
@@ -50,11 +50,9 @@ const styledCalendar = styled(Calendar)`
     width: 90%;
     margin: 0 auto;
   }
-
   .rbc-today {
     background-color: #fff;
   }
-
 `
 
 const initialEvents = [
@@ -67,78 +65,38 @@ const initialEvents = [
     title: 'Petit Event',
     descript: 'This is a modified event to include a description',
     allDay: false,
-    start: new Date(2022, 6, 25, 3, 30, 0),
-    end: new Date(2022, 6, 25, 7, 30, 0),
+    start: new Date(2022, 6, 27, 3, 30, 0),
+    end: new Date(2022, 6, 27, 7, 30, 0),
     complete: false
   },
-    {
-      id: 1,
-      title: 'All Day Event very long title',
-      allDay: false,
-      start: new Date(2022, 6, 25, 16, 30, 0),
-      end: new Date(2022, 6, 25, 18, 30, 0),
-    },
+  {
+    id: 1,
+    user_id: 1,
+    cat_id: 1,
+    title: 'All Day Event very long title',
+    allDay: false,
+    start: new Date(2022, 6, 27, 16, 30, 0),
+    end: new Date(2022, 6, 27, 18, 30, 0),
+  },
 
-    {
-      id: 4,
-      title: 'Some Event',
-      start: new Date(2022, 6, 22, 0, 0, 0),
-      end: new Date(2015, 3, 10, 0, 0, 0),
-    },
-    {
-      id: 5,
-      title: 'Conference',
-      start: new Date(2022, 6, 22),
-      end: new Date(2022, 6, 22),
-      desc: 'Big conference for important people',
-    },
-    {
-      id: 6,
-      title: 'Meeting',
-      start: new Date(2022, 6, 22, 10, 30, 0, 0),
-      end: new Date(2022, 6, 22, 12, 30, 0, 0),
-      desc: 'Pre-meeting meeting, to prepare for the meeting',
-    },
-    {
-      id: 7,
-      title: 'Lunch',
-      start: new Date(2022, 6, 22, 12, 0, 0, 0),
-      end: new Date(2022, 6, 22, 13, 0, 0, 0),
-      desc: 'Power lunch',
-    },
-    {
-      id: 8,
-      title: 'Meeting',
-      start: new Date(2022, 6, 22, 14, 0, 0, 0),
-      end: new Date(2022, 6, 22, 15, 0, 0, 0),
-    },
-    {
-      id: 9,
-      title: 'Happy Hour',
-      start: new Date(2022, 6, 22, 17, 0, 0, 0),
-      end: new Date(2022, 6, 22, 17, 30, 0, 0),
-      desc: 'Most important meal of the day',
-    },
-    {
-      id: 10,
-      title: 'Dinner',
-      start: new Date(2022, 6, 23, 20, 0, 0, 0),
-      end: new Date(2022, 6, 23, 21, 0, 0, 0),
-    },
-    {
-      id: 11,
-      title: 'Planning Meeting with Paige',
-      start: new Date(2022, 6, 23, 8, 0, 0),
-      end: new Date(2022, 6, 23, 10, 30, 0),
-    },
-
-    {
-      id: 23,
-      title: 'Go to the gym',
-      start: new Date(2022, 6, 23, 18, 30, 0),
-      end: new Date(2022, 6, 23, 20, 0, 0),
-    },
-  ]
+  {
+    id: 4,
+    user_id: 1,
+    cat_id: 3,
+    title: 'Some Event',
+    start: new Date(2022, 6, 27, 0, 0, 0),
+    end: new Date(2022, 9, 10, 0, 0, 0),
+  },
+  {
+    id: 5,
+    title: 'Conference',
+    user_id: 1,
+    cat_id: 5,
+    start: new Date(2022, 6, 27),
+    end: new Date(2022, 6, 27),
+    desc: 'Big conference for important people',
+  }
+]
 
 const locales = {
   'en-US': enUS,
@@ -156,44 +114,42 @@ const EventComponent = (event) => {
   return (
     <div className='eventTitle'>
       {event.title}
-      <a href="/" onClick={(e) => {alert('edit')}}>x</a>
-      <a href="/" onClick={(e) => {alert('edit')}}>🖊️</a>
+      <a href="/" onClick={(e) => { alert('edit') }}>x</a>
+      <a href="/" onClick={(e) => { alert('edit') }}>🖊️</a>
       <input type="checkbox" id="complete" name="complete" onClick={(e) => { alert('mark as complete') }}></input>
     </div>)
 }
 
+
+
+const CustomToolbar = () => {
+  return (
+    <div className='rbc-toolbar'>
+    <div className="customView">
+    <form method="GET" action="/">
+      <select name="calendar-view" id="calendar-view">
+        <option value="/">My Calendar</option>
+        <option value="/tam">Tam</option>
+        <option value="/school">School</option>
+        <option value="/holidays">Holidays</option>
+      </select>
+    </form>
+    </div>
+  </div>
+  )
+}
+
+
+
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
-export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
+export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUnscheduledTodo }) {
   const [myEvents, setMyEvents] = useState(initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
   const [modalState, setModalState] = useState(false)
 
-  const ToDoEditModal = () => {
-    return (
-      <>
-      <style>
-        {`
-          .modal-show {
-            background-color: white;
-            position: fixed;
-            padding: 5%;
-            right: 10%;
-            top: 30%;
-          }
-
-        `}
-      </style>
-      <div className={`modal-${modalState === true ? 'show' : 'hide'}`} >
-        <h3>{selectedEvent.title}</h3>
-        <h4>{selectedEvent.descript}</h4>
-        <p> ToDoEditModal Component for Selected Event </p>
-      </div>
-      </>
-    )
-  }
 
 
   const handleSelectedEvent = (myEvents) => {
@@ -262,58 +218,50 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
 
   return (
     <div>
-        <Typography
-          sx={{my: 2, textAlign: 'center', color: 'primary.main', fontWeight: 900}}
-        >
-          {date}
-        </Typography>
-        <DragAndDropCalendar
-            defaultDate={defaultDate}
-            date={date}
-            onNavigate={() => {}}
-            view='day'
-            onView={() => {}}
-            events={myEvents}
-            localizer={localizer}
-            onEventDrop={moveEvent}
-            onEventResize={resizeEvent}
-            popup
-            resizable
-            step={60}
-            toolbar={false}
-            dragFromOutsideItem={
-              displayDragItemInCell ? dragFromOutsideItem : null
-            }
-            onDropFromOutside={onDropFromOutside}
-            onSelectSlot={newEvent}
-            onSelectEvent={(e) => handleSelectedEvent(e)}
-            draggable
-            eventPropGetter={(event) => {
-              // backgroundColor can be set to any color we decide based on the category id of the to-do item
-              let backgroundColor;
-              if (event.cat_id === 1) {
-                backgroundColor = 'plum';
-              }
-              if (event.cat_id === 2) {
-                backgroundColor = 'green'
-              }
-              if (event.cat_id === 3) {
-                backgroundColor = 'orange'
-              }
-              // visibility is decided based on whether the to-do item is completed or not
-              const visibility = event.complete === true ? 'hidden' : 'visible';
-              return { style: { backgroundColor, visibility } }
-            }}
-            components={{
-              event: EventComponent
-            }}
-        />
-        <UnscheduledTodo
-          toggleUnscheduledTodo={toggleUnscheduledTodo}
-          setToggleUnscheduledTodo={setToggleUnscheduledTodo}
-          setDraggedEvent={setDraggedEvent}
-        />
-        {selectedEvent && <ToDoEditModal />}
+      <Typography
+        sx={{ my: 2, textAlign: 'center', color: 'primary.main', fontWeight: 900 }}
+      >
+        {date}
+      </Typography>
+      <DragAndDropCalendar
+        defaultDate={defaultDate}
+        date={date}
+        onNavigate={() => { }}
+        view='day'
+        onView={() => { }}
+        events={myEvents}
+        localizer={localizer}
+        onEventDrop={moveEvent}
+        onEventResize={resizeEvent}
+        popup
+        resizable
+        step={60}
+        dragFromOutsideItem={
+          displayDragItemInCell ? dragFromOutsideItem : null
+        }
+        onDropFromOutside={onDropFromOutside}
+        onSelectSlot={newEvent}
+        onSelectEvent={(e) => handleSelectedEvent(e)}
+        draggable
+        eventPropGetter={(event) => {
+          // backgroundColor can be set to any color we decide based on the category id of the to-do item
+          let backgroundColor = colorMap[event.cat_id]
+          console.log(backgroundColor)
+          // visibility is decided based on whether the to-do item is completed or not
+          const visibility = event.complete === true ? 'hidden' : 'visible';
+          return { style: { backgroundColor, visibility } }
+        }}
+        components={{
+          event: EventComponent,
+          toolbar: CustomToolbar
+        }}
+      />
+      <UnscheduledTodo
+        toggleUnscheduledTodo={toggleUnscheduledTodo}
+        setToggleUnscheduledTodo={setToggleUnscheduledTodo}
+        setDraggedEvent={setDraggedEvent}
+      />
+      {/* {selectedEvent && <ToDoEditModal />} */}
     </div>
   )
 }
