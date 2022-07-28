@@ -3,17 +3,15 @@ import { useEffect, useState } from "react"
 import { TodayMonth } from "./components/TodayMonth"
 import { Week } from "./components/Week"
 import { Detailed } from "./components/Detailed"
-import { getToDoHours, todoData } from "./components/helpers/helpers"
+import { getToDoHours } from "./components/helpers/helpers"
 import { DoughnutChart } from "./components/charts/DoughnutChart"
 
 interface userTodo {
   title: string,
-  start_date: string,
-  end_date: string,
-  complete: boolean,
-  username?: string,
-  category: string,
-  color?: string
+  start_d: string,
+  end_d: string,
+  category_name: string,
+  color: number
 }
 
 interface allTodos {
@@ -22,7 +20,7 @@ interface allTodos {
 
 export const Metrics = (props: allTodos) => {
 
-  const [data, updateDataMetrics] = useState(todoData);
+  const [data, updateDataMetrics] = useState([]);
   const [todayData, updateTodayMetrics] = useState([]);
   const [todayTotalHours, setTodayTotalHours] = useState(0);
   const [todayCategoryTotalHours, setTodayCategoryHours] = useState(0);
@@ -50,17 +48,16 @@ export const Metrics = (props: allTodos) => {
       let total = getToDoHours(todo);
       hours += total;
 
-      if (details[todo.category] === undefined) {
-        details[todo.category]  = total;
+      if (details[todo.category_name] === undefined) {
+        details[todo.category_name]  = total;
         colors.push(todo.color);
       } else {
-        details[todo.category] += total;
+        details[todo.category_name] += total;
       }
     });
 
     if (timeFrame === 'today') {
       if (Number.isInteger(hours)) {
-        console.log(hours)
         setTodayTotalHours(hours);
         setTodayCategoryHours(details);
         updateTodayMetrics(todos);
@@ -75,7 +72,6 @@ export const Metrics = (props: allTodos) => {
 
     if (timeFrame === 'week') {
       if (Number.isInteger(hours)) {
-        console.log(hours)
         setWeekTotalHours(hours);
         setWeekCategoryHours(details);
         updateWeekMetrics(todos);
@@ -88,7 +84,6 @@ export const Metrics = (props: allTodos) => {
 
     if (timeFrame === 'month') {
       if (Number.isInteger(hours)) {
-        console.log(hours)
         setMonthTotalHours(hours);
         setMonthCategoryHours(details);
         updateMonthMetrics(todos);
@@ -100,6 +95,7 @@ export const Metrics = (props: allTodos) => {
         setMonthCategoryColors(colors);
       }
     }
+    updateDataMetrics(todos);
 
   }
 
@@ -111,11 +107,11 @@ export const Metrics = (props: allTodos) => {
 
       todos.forEach((todo) => {
         let currentDate = new Date();
-        let todoDate = new Date(todo.start_date);
+        let todoDate = new Date(todo.start_d);
         let todoMonth = todoDate.getMonth();
         let todoYear = todoDate.getFullYear();
         let todoDateString = todoDate.toDateString();
-        let todoDateParsed = Date.parse(todo.start_date);
+        let todoDateParsed = Date.parse(todo.start_d);
         let todayDateString = new Date().toDateString();
         let currentDateMonth = currentDate.getMonth();
         let currentDateYear = currentDate.getFullYear();
@@ -141,9 +137,11 @@ export const Metrics = (props: allTodos) => {
       if (thisWeek.length) {getHoursAndSetState(thisWeek, 'week')};
       if (thisMonth.length) {getHoursAndSetState(thisMonth, 'month')};
     }
+    if (props.todos) {
+      loadData(props.todos);
+    }
 
-    loadData(data);
-  }, [data]);
+  }, [props.todos]);
 
   let page = (
     <Container sx={{p: 2}} maxWidth='sm'>

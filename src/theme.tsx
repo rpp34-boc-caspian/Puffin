@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { grey } from '@mui/material/colors'
+
+
 const theme = createTheme({
     palette: {
       primary: {
@@ -7,6 +9,7 @@ const theme = createTheme({
         main: '#3f50b5',
         dark: '#002884',
         contrastText: '#fff',
+
       },
       secondary: {
         light: '#ff7961',
