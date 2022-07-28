@@ -72,7 +72,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 export default function UnscheduledTodo(props: Props) {
     const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo, setDraggedEvent } = props;
     const [unscheduledTodoList, setUnscheduledTodoList] = React.useState(unscheduledList);
-    const [checked, setChecked] = React.useState([1]);
+    const [checked, setChecked] = React.useState([0]);
     const [openSuccessDelete, setOpenSuccessDelete] = React.useState(false);
     const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -88,11 +88,13 @@ export default function UnscheduledTodo(props: Props) {
         }
     
         setChecked(newChecked);
+        setUnscheduledTodoList(pre => pre.map(todo => todo.id === todoId ? {...todo, complete: !todo.complete} : todo))
     };
 
     //delete an unscheduled todo
-    const handleDeleteTodoClick = () => {
+    const handleDeleteTodoClick = (todoId: number) => {
         setOpenSuccessDelete(true);
+        setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== todoId))
       };
     
     const handleSuccessDeleteInfoClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -165,7 +167,7 @@ export default function UnscheduledTodo(props: Props) {
                         <ListItem
                             key={todo.id}
                             secondaryAction={
-                                <IconButton edge="end" aria-label="delete an unscheduled todo" onClick={handleDeleteTodoClick}>
+                                <IconButton edge="end" aria-label="delete an unscheduled todo" onClick={() => handleDeleteTodoClick(todo.id)}>
                                     <MdOutlineDelete />
                                 </IconButton>
                             }

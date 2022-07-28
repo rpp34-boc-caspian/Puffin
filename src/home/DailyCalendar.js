@@ -55,11 +55,6 @@ const styledCalendar = styled(Calendar)`
   }
 `
 
-async function fetchEvents()  {
-  const response = await axios('/scheduledTodos/1');
-  console.log(response)
-}
-
 
 const initialEvents = [
   {
@@ -157,23 +152,18 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
 
-  useEffect(() => {
-      async function fetchData() {
-        const response = await axios.get('/scheduledTodos');
-        setMyEvents(response.data)
-      }
-      fetchData();
-    }, []); // Or [] if effect doesn't need props or state
+  // useEffect(() => {
+  //   let params = 3;
 
+  //   axios.get(`scheduledTodos/${params}`)
+  //     .then((data) => {
+  //       setMyEvents(data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log('Error:', err);
+  //     })
+  // },[])
 
-
-  // useEffect(async () => {
-  //   const result = await axios(
-  //     'scheduledTodos/1',
-  //   );
-
-  //   setData(result.data);
-  // });
 
 
   const handleSelectedEvent = (myEvents) => {

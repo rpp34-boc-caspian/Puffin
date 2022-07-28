@@ -38,29 +38,24 @@ const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
         <>
             <AppBar position="static" sx={{ py: 2 }}>
                 <Toolbar>
-                    <Link to="/">
-                        <Button
-                            variant="contained"
-                            color='info'
-                            onClick={() => setDate(now)}
-                            sx={{ mr: 2 }}
-                        >
-                            Today
-                        </Button>
-                    </Link>
+                    <Button
+                        variant="contained"
+                        color='info'
+                        onClick={() => setDate(now)}
+                        sx={{ mr: 2 }}
+                    >
+                        Today
+                    </Button>
                     <Box sx={{ flexGrow: 1 }}>
-                        <Link to="/unscheduled">
-
-                            <IconButton
-                                aria-label="monthly calendar"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleCalMenu}
-                                color='info'
-                            >
-                                <BsCalendar4Week size={30} />
-                            </IconButton>
-                        </Link>
+                        <IconButton
+                            aria-label="monthly calendar"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleCalMenu}
+                            color='info'
+                        >
+                            <BsCalendar4Week size={30} />
+                        </IconButton>
                         <Menu
                             id="account-menu"
                             anchorEl={anchorCalEl}
