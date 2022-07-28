@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
@@ -54,6 +54,12 @@ const styledCalendar = styled(Calendar)`
     background-color: #fff;
   }
 `
+
+async function fetchEvents()  {
+  const response = await axios('/scheduledTodos/1');
+  console.log(response)
+}
+
 
 const initialEvents = [
   {
@@ -144,17 +150,34 @@ const CustomToolbar = () => {
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUnscheduledTodo }) {
-  const [myEvents, setMyEvents] = useState(initialEvents);
+  // const [myEvents, setMyEvents] = useState(initialEvents);
+  const [myEvents, setMyEvents] = useState([]);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
-  const [modalState, setModalState] = useState(false)
 
+
+  useEffect(() => {
+      async function fetchData() {
+        const response = await axios.get('/scheduledTodos');
+        setMyEvents(response.data)
+      }
+      fetchData();
+    }, []); // Or [] if effect doesn't need props or state
+
+
+
+  // useEffect(async () => {
+  //   const result = await axios(
+  //     'scheduledTodos/1',
+  //   );
+
+  //   setData(result.data);
+  // });
 
 
   const handleSelectedEvent = (myEvents) => {
     setSelectedEvent(myEvents)
-    modalState === true ? setModalState(false) : setModalState(true)
   }
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
@@ -183,7 +206,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
     },
     [draggedEvent, setDraggedEvent, newEvent]
   )
-
 
 
   const moveEvent = useCallback(
@@ -216,6 +238,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
   const defaultDate = useMemo(() => new Date(), [])
 
 
+
   return (
     <div>
       <Typography
@@ -246,7 +269,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
         eventPropGetter={(event) => {
           // backgroundColor can be set to any color we decide based on the category id of the to-do item
           let backgroundColor = colorMap[event.cat_id]
-          console.log(backgroundColor)
+          console.log(myEvents)
           // visibility is decided based on whether the to-do item is completed or not
           const visibility = event.complete === true ? 'hidden' : 'visible';
           return { style: { backgroundColor, visibility } }
