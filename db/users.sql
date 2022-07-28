@@ -7,6 +7,6 @@ CREATE TABLE users (
   sesh_id varchar(80)
 );
 
-\copy users(id, username, email, friend_code, hashed_pass, sesh_id) from '/Users/xinxinli/hackreactor/Puffin/db/users.csv' delimiter ',' csv header;
+\copy users(id, username, email, friend_code, hashed_pass, sesh_id) from './db/users.csv' delimiter ',' csv header;
 
 CREATE INDEX user_index ON users(id);

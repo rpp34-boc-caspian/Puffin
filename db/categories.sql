@@ -9,6 +9,6 @@ CREATE TABLE categories (
 	      REFERENCES calendars(id)
 );
 
-\copy categories(id, category_name, calendar_id, color) from './categories.csv' delimiter ',' csv header;
+\copy categories(id, category_name, calendar_id, color) from './db/categories.csv' delimiter ',' csv header;
 
 CREATE INDEX category_index ON categories(id);

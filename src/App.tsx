@@ -9,6 +9,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Metrics } from './Metrics/Metrics';
 import Home from './home/Home';
 import { CreateTodo } from './Create to-do/create-todo';
+import { Share } from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
 import axios from 'axios';
@@ -44,6 +45,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create_todo" element={<CreateTodo />} />
+            <Route path='/share' element={<Share />} />
             <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
           </Routes>
         </BrowserRouter>

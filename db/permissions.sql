@@ -16,6 +16,6 @@ CREATE TABLE permissions (
 	      REFERENCES todos(id)
 );
 
-\copy permissions(id, user_id, friend_id, todo_id, permission) from './permissions.csv' delimiter ',' csv header;
+\copy permissions(id, user_id, friend_id, todo_id, permission) from './db/permissions.csv' delimiter ',' csv header;
 
 CREATE INDEX permission_index ON permissions(id);

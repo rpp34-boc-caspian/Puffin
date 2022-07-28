@@ -46,6 +46,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "db": "psql postgres -f db/database.sql",
     "server-dev": "nodemon server/server.js"
   },
   "eslintConfig": {
