@@ -1,4 +1,6 @@
 const express = require('express');
+var bodyParser = require('body-parser')
+
 const path = require('path');
 const app = express();
 const port = 8080;
@@ -10,6 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(cors())
+
+// https://create-react-app.dev/docs/proxying-api-requests-in-development/
+app.post('/api/createtodo', (req, res) => {
+  const { title, description } = req.body;
+  console.log(req.body)
+
+  res.json({ data: 'hello' })
+})
 
 app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;
