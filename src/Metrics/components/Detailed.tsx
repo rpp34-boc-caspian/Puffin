@@ -6,8 +6,8 @@ interface userTodo {
   title: string,
   start_d: string,
   end_d: string,
-  category: string,
-  color: string
+  category_name: string,
+  color: number
 }
 interface allTodos {
   todos: userTodo[],
@@ -40,7 +40,7 @@ export const Detailed = (props: allTodos) => {
           togglePage={props.togglePage}
           categoryHours={props.categoryHours[category]}
           categoryName={category}
-          todayTodos={props.todos.filter((todo) => (todo.category === category))}
+          todayTodos={props.todos.filter((todo) => (todo.category_name === category))}
         />
       ))
     )

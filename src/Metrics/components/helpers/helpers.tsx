@@ -31,106 +31,121 @@ export const buildWeekReportData = (weekTodos: any) => {
     let dayOfWeek = new Date(todo.start_d).getDay();
     let todoTotal = getToDoHours(todo);
 
-    if (dataSetStorage[todo.category] === undefined) {
+    if (dataSetStorage[todo.category_name] === undefined) {
        let rgb = hexToRGBA(colorMap[todo.color]);
-       dataSetStorage[todo.category] = {
-         label: todo.category,
+       dataSetStorage[todo.category_name] = {
+         label: todo.category_name,
          data: [],
          backgroundColor: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
        }
-       dataSetStorage[todo.category].data[dayOfWeek] = todoTotal;
+       dataSetStorage[todo.category_name].data[dayOfWeek] = todoTotal;
      } else {
-       if (dataSetStorage[todo.category].data[dayOfWeek]) {
-         dataSetStorage[todo.category].data[dayOfWeek] += todoTotal;
+       if (dataSetStorage[todo.category_name].data[dayOfWeek]) {
+         dataSetStorage[todo.category_name].data[dayOfWeek] += todoTotal;
        } else {
-         dataSetStorage[todo.category].data[dayOfWeek] = todoTotal;
+         dataSetStorage[todo.category_name].data[dayOfWeek] = todoTotal;
        }
      }
    });
 
-   for (let cateegory in dataSetStorage) {
-     let dataSetObj = dataSetStorage[cateegory];
+   for (let category in dataSetStorage) {
+     let dataSetObj = dataSetStorage[category];
      dayOfWeekData.push(dataSetObj);
    }
 
    return dayOfWeekData;
  }
 
- export const todoData = [
+ export const FakeTodoData = [
   {
-    title: 'Study CS',
-    start_d: '7/27/22 4:00',
-    end_d: '7/27/22 8:22',
-    category: 'School',
-    color: '2'
-  },
-  {
-    title: 'Training',
-    start_d: '7/27/22 10:00',
-    end_d: '7/27/22 18:22',
-    category: 'Work',
-    color: '1'
-  },
-  {
-    title: 'Study Math',
-    start_d: '7/25/22 4:00',
-    end_d: '7/25/22 8:22',
-    category: 'School',
-    color: '2'
-  },
-  {
-    title: 'Feature Update',
-    start_d: '7/25/22 4:00',
-    end_d: '7/25/22 12:00',
-    category: 'Work',
-    color: '1'
-  },
-  {
-    title: 'Art',
-    start_d: '7/25/22 12:00',
-    end_d: '7/25/22 14:00',
-    category: 'School',
-    color: '2'
-  },
-  {
-    title: 'Interview',
-    start_d: '7/25/22 19:00',
-    end_d: '7/25/22 20:00',
-    category: 'Work',
-    color: '1'
-  },
-  {
-    title: 'Study History',
-    start_d: '7/22/22 14:00',
-    end_d: '7/22/22 16:00',
-    category: 'School',
-    color: '2'
-  },
-  {
-    title: 'Clean Yard',
-    start_d: '7/02/22 14:00',
-    end_d: '7/02/22 16:00',
-    category: 'Chores',
-    color: '5'
+    title: 'Paint House',
+    start_d: '2022-07-28T15:00:00.000Z',
+    end_d: '2022-07-28T18:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
   },
   {
     title: 'Mow Lawn',
-    start_d: '7/02/22 14:00',
-    end_d: '7/02/22 17:00',
-    category: 'Chores',
-    color: '5'
+    start_d: '2022-07-03T16:00:00.000Z',
+    end_d: '2022-07-03T17:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
   },
   {
-    title: 'Trim Bushes',
-    start_d: '7/01/22 14:00',
-    end_d: '7/01/22 20:00',
-    category: 'Chores',
-    color: '5'
-  },{
-    title: 'Do Dishes',
-    start_d: '7/26/22 14:00',
-    end_d: '7/26/22 15:00',
-    category: 'Chores',
-    color: '5'
+    title: 'Clean Dishes Again',
+    start_d: '2022-07-06T14:00:00.000Z',
+    end_d: '2022-07-06T16:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
+  },
+  {
+    title: 'Clean Gutters',
+    start_d: '2022-07-03T14:00:00.000Z',
+    end_d: '2022-07-03T16:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
+  },
+  {
+    title: 'Clean Garage',
+    start_d: '2022-07-27T14:00:00.000Z',
+    end_d: '2022-07-27T16:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
+  },
+  {
+    title: 'Clean Room',
+    start_d: '2022-07-03T14:00:00.000Z',
+    end_d: '2022-07-03T16:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
+  },
+  {
+    title: 'Clean Dishes',
+    start_d: '2022-07-03T14:00:00.000Z',
+    end_d: '2022-07-03T16:00:00.000Z',
+    category_name: 'Chores',
+    color: 8
+  },
+  {
+    title: 'Feautre Update 123.0',
+    start_d: '2022-07-28T14:00:00.000Z',
+    end_d: '2022-07-28T20:00:00.000Z',
+    category_name: 'Work',
+    color: 3
+  },
+  {
+    title: 'Client Meeting (Janet)',
+    start_d: '2022-07-28T14:00:00.000Z',
+    end_d: '2022-07-28T16:00:00.000Z',
+    category_name: 'Work',
+    color: 3
+  },
+  {
+    title: 'Client Meeting (Peter)',
+    start_d: '2022-07-27T14:00:00.000Z',
+    end_d: '2022-07-27T16:00:00.000Z',
+    category_name: 'Work',
+    color: 3
+  },
+  {
+    title: 'Client Meeting (Leah)',
+    start_d: '2022-07-26T14:00:00.000Z',
+    end_d: '2022-07-26T17:00:00.000Z',
+    category_name: 'Work',
+    color: 3
+  },
+  {
+    title: 'Client Meeting (Jim)',
+    start_d: '2022-07-25T14:00:00.000Z',
+    end_d: '2022-07-25T16:00:00.000Z',
+    category_name: 'Work',
+    color: 3
+  },
+  {
+    title: 'Interview',
+    start_d: '2022-07-24T13:00:00.000Z',
+    end_d: '2022-07-24T15:00:00.000Z',
+    category_name: 'Work',
+    color: 3
   }
 ]

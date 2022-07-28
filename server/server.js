@@ -2,12 +2,14 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = 8080;
+const cors = require('cors');
 const {pool, darianPool} = require('../db/index.js'); //Hello
 const bcrypt = require('bcrypt');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
+app.use(cors())
 
 app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;
@@ -152,7 +154,8 @@ app.get('/completedTodos/:userId', (req, res) => {
   const query = (
     `SELECT todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
     FROM todos
-    INNER JOIN categories ON todos.cat_id=categories.id`
+    INNER JOIN categories ON todos.cat_id=categories.id
+    WHERE user_id=${user_id} AND complete=true`
   );
   darianPool.connect((err, client, release) => {
     if (err) {

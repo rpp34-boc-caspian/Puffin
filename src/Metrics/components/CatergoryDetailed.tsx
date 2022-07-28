@@ -8,8 +8,8 @@ interface userTodo {
   title: string,
   start_d: string,
   end_d: string,
-  category: string,
-  color: string
+  category_name: string,
+  color: number
 }
 interface allTodos {
   todayTodos: userTodo[],
