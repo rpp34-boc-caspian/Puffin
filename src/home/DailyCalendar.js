@@ -164,7 +164,7 @@ const EventComponent = (event) => {
 
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
-export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
+export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList}) {
   const [myEvents, setMyEvents] = useState(initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
@@ -312,6 +312,8 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
           toggleUnscheduledTodo={toggleUnscheduledTodo}
           setToggleUnscheduledTodo={setToggleUnscheduledTodo}
           setDraggedEvent={setDraggedEvent}
+          unscheduledTodoList={unscheduledTodoList}
+          setUnscheduledTodoList={setUnscheduledTodoList}
         />
         {selectedEvent && <ToDoEditModal />}
     </div>
