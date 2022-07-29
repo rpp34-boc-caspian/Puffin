@@ -8,11 +8,15 @@ import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { Typography } from '@mui/material';
+import { Typography, Tooltip, IconButton } from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import {colorMap} from '../theme';
+import { colorMap } from '../theme';
+import { MdOutlineMode } from 'react-icons/md';
+import { Link } from "react-router-dom";
+
+
 
 
 const styledCalendar = styled(Calendar)`
@@ -55,7 +59,6 @@ const styledCalendar = styled(Calendar)`
   }
 `
 
-
 const initialEvents = [
   {
     id: 0,
@@ -66,8 +69,8 @@ const initialEvents = [
     title: 'Petit Event',
     descript: 'This is a modified event to include a description',
     allDay: false,
-    start: new Date(2022, 6, 27, 3, 30, 0),
-    end: new Date(2022, 6, 27, 7, 30, 0),
+    start: new Date(2022, 6, 29, 3, 30, 0),
+    end: new Date(2022, 6, 29, 7, 30, 0),
     complete: false
   },
   {
@@ -76,8 +79,8 @@ const initialEvents = [
     cat_id: 1,
     title: 'All Day Event very long title',
     allDay: false,
-    start: new Date(2022, 6, 27, 16, 30, 0),
-    end: new Date(2022, 6, 27, 18, 30, 0),
+    start: new Date(2022, 6, 29, 16, 30, 0),
+    end: new Date(2022, 6, 29, 18, 30, 0),
   },
 
   {
@@ -85,16 +88,16 @@ const initialEvents = [
     user_id: 1,
     cat_id: 3,
     title: 'Some Event',
-    start: new Date(2022, 6, 27, 0, 0, 0),
-    end: new Date(2022, 9, 10, 0, 0, 0),
+    start: new Date(2022, 6, 29, 0, 0, 0),
+    end: new Date(2022, 6, 29, 0, 0, 0),
   },
   {
     id: 5,
     title: 'Conference',
     user_id: 1,
     cat_id: 5,
-    start: new Date(2022, 6, 27),
-    end: new Date(2022, 6, 27),
+    start: new Date(2022, 6, 29),
+    end: new Date(2022, 6, 29),
     desc: 'Big conference for important people',
   }
 ]
@@ -111,12 +114,20 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
+
 const EventComponent = (event) => {
+
   return (
     <div className='eventTitle'>
       {event.title}
       <a href="/" onClick={(e) => { alert('edit') }}>x</a>
-      <a href="/" onClick={(e) => { alert('edit') }}>🖊️</a>
+      <Link to="/edit_todo">
+      <Tooltip title='Edit Event'>
+        <IconButton sx={{ color: 'white' }} aria-label="todo item" onClick={(e) => { alert('mark as complete') }}>
+          <MdOutlineMode size={15} />
+        </IconButton>
+      </Tooltip>
+      </Link>
       <input type="checkbox" id="complete" name="complete" onClick={(e) => { alert('mark as complete') }}></input>
     </div>)
 }
@@ -126,17 +137,17 @@ const EventComponent = (event) => {
 const CustomToolbar = () => {
   return (
     <div className='rbc-toolbar'>
-    <div className="customView">
-    <form method="GET" action="/">
-      <select name="calendar-view" id="calendar-view">
-        <option value="/">My Calendar</option>
-        <option value="/tam">Tam</option>
-        <option value="/school">School</option>
-        <option value="/holidays">Holidays</option>
-      </select>
-    </form>
+      <div className="customView">
+        <form method="GET" action="/">
+          <select name="calendar-view" id="calendar-view">
+            <option value="/">My Calendar</option>
+            <option value="/tam">Tam</option>
+            <option value="/school">School</option>
+            <option value="/holidays">Holidays</option>
+          </select>
+        </form>
+      </div>
     </div>
-  </div>
   )
 }
 
@@ -144,26 +155,26 @@ const CustomToolbar = () => {
 
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
+
 export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUnscheduledTodo }) {
-  // const [myEvents, setMyEvents] = useState(initialEvents);
-  const [myEvents, setMyEvents] = useState([]);
+  const [myEvents, setMyEvents] = useState(initialEvents);
+  // const [myEvents, setMyEvents] = useState([] || initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
 
-  // useEffect(() => {
-  //   let params = 3;
+  useEffect(() => {
+    let params = 3;
 
-  //   axios.get(`scheduledTodos/${params}`)
-  //     .then((data) => {
-  //       setMyEvents(data.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log('Error:', err);
-  //     })
-  // },[])
-
+    axios.get(`scheduledTodos/${params}`)
+      .then((data) => {
+        setMyEvents(data.data);
+      })
+      .catch((err) => {
+        console.log('Error:', err);
+      })
+  }, [])
 
 
   const handleSelectedEvent = (myEvents) => {
@@ -181,6 +192,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
     [setMyEvents]
   )
 
+  // need to carry over event.color in order to render colors
   const onDropFromOutside = useCallback(
     ({ start, end, allDay: isAllDay }) => {
       const { id, title } = draggedEvent;
@@ -189,7 +201,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
         title,
         start,
         end,
-        isAllDay,
+        isAllDay
       }
       setDraggedEvent(null)
       newEvent(event)
@@ -258,8 +270,8 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
         draggable
         eventPropGetter={(event) => {
           // backgroundColor can be set to any color we decide based on the category id of the to-do item
-          let backgroundColor = colorMap[event.cat_id]
-          console.log(myEvents)
+          let color = event.cat_id;
+          let backgroundColor = colorMap[color]
           // visibility is decided based on whether the to-do item is completed or not
           const visibility = event.complete === true ? 'hidden' : 'visible';
           return { style: { backgroundColor, visibility } }
