@@ -147,7 +147,7 @@ app.post('/share', (req, res) => {
 //Unscheduled todo list
 app.get('/unscheduledTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
-  const query = 'SELECT t.id, t.title, t.descript, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false;'
+  const query = 'SELECT t.id, t.title, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
       res.send(rows);
@@ -167,16 +167,15 @@ app.put('/unscheduledTodos/:todoId', (req, res) => {
       return rows[0].complete;
     })
     .then(complete => {
-      console.log('complete', complete);
       if (complete) {
         return pool.query(updateFalseQuery, [todo_id])
       } else {
         return pool.query(updateTrueQuery, [todo_id])
       }
     })
-    .then(({ rowCount }) => {
+    .then(({rowCount}) => {
       if (rowCount > 0) {
-        res.status(204).json({ status: "updated" });
+        res.json({ message: 'updated' });
       }
     })
     .catch(err => {
@@ -191,7 +190,7 @@ app.delete('/unscheduledTodos/:todoId', (req, res) => {
   pool.query(query, [todo_id])
   .then(({rowCount}) => {
     if (rowCount > 0) {
-      res.status(204).json({status:"deleted"});
+      res.json({ message: 'deleted' });
     }
   })
   .catch(err => {
@@ -208,7 +207,7 @@ app.get('/completedTodos/:userId', (req, res) => {
     INNER JOIN categories ON todos.cat_id=categories.id
     WHERE user_id=${user_id} AND complete=true`
   );
-  darianPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       return console.error('Error acquiring client', err.stack);
     }

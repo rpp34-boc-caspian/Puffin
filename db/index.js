@@ -14,12 +14,13 @@ const { Pool } = require('pg')
     port: 5432,
   });
 
-const darianPool = new Pool({
-  user: 'darianhogue',
-  host: 'localhost',
-  database: 'puffin',
-  port: 5432,
-});
+// const darianPool = new Pool({
+//   user: 'darianhogue',
+//   host: 'localhost',
+//   database: 'puffin',
+//   port: 5432,
+// });
 
 
-module.exports = {pool, darianPool};
+// module.exports = {pool, darianPool};
+module.exports = {pool};
