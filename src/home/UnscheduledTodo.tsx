@@ -11,7 +11,6 @@ import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, Ic
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import {MdOutlineDelete} from 'react-icons/md';
 import {UnscheduledTodoList} from '../App';
-import Axios from 'axios';
 import axios from 'axios';
 
 const drawerBleeding = 56;
@@ -51,13 +50,13 @@ export default function UnscheduledTodo(props: Props) {
     const handleToggleMarkAsCompleted = (todoId: number) => () => {
         const currentIndex = checked.indexOf(todoId);
         const newChecked = [...checked];
-    
+
         if (currentIndex === -1) {
           newChecked.push(todoId);
         } else {
           newChecked.splice(currentIndex, 1);
         }
-    
+
         setChecked(newChecked);
         axios.put(`http://127.0.0.1:8080/unscheduledTodos/${todoId}`)
         .then(({data}) => {
@@ -75,12 +74,12 @@ export default function UnscheduledTodo(props: Props) {
         axios.delete(`http://127.0.0.1:8080/unscheduledTodos/${todoId}`)
         .then(({data}) => {
             if (data.message === 'deleted') {
-                setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== todoId)) 
+                setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== todoId))
             }
         })
         .catch(err => console.log(err))
       };
-    
+
     const handleSuccessDeleteInfoClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
         return;
@@ -166,7 +165,7 @@ export default function UnscheduledTodo(props: Props) {
                                 disableRipple
                                 />
                             </ListItemIcon>
-                            <ListItemText 
+                            <ListItemText
                                 draggable={checked.indexOf(todo.id!) === -1 ? true : false}
                                 onDragStart={() => {
                                         handleDragStart(todo);
@@ -177,7 +176,7 @@ export default function UnscheduledTodo(props: Props) {
                                     }
                                 }
 
-                                primary={todo.title} 
+                                primary={todo.title}
                                 sx={{
                                     textDecorationLine: checked.indexOf(todo.id!) === -1 ? 'none' : 'line-through',
                                     borderLeft: 5,
@@ -190,7 +189,7 @@ export default function UnscheduledTodo(props: Props) {
                         </ListItem>
                     );
                 })}
-                </List> 
+                </List>
                 <Snackbar open={openSuccessDelete} autoHideDuration={800} onClose={handleSuccessDeleteInfoClose}>
                     <Alert severity="success" sx={{ width: '100%' }}>
                     Successfully deleted this todo!
