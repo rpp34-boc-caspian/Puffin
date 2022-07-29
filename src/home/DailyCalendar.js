@@ -129,7 +129,7 @@ const EventComponent = (event) => {
   }
 
   const handleCompleteEvent = (event) => {
-    console.log('mark this event as complete and re-render to display event with text crossed out', event.title)
+    console.log('mark this event as complete and re-render to display event with text crossed out', <event className="title"></event>)
   }
 
   return (
