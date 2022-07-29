@@ -45,7 +45,6 @@ const App: React.FC = () => {
         setUnscheduledTodoList(allData[1].data);
       }))
       .catch((err) => {
-        console.log('Error:', err);
         setMetricsData(FakeTodoData)
       })
   },[userId])
