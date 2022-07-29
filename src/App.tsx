@@ -41,7 +41,6 @@ const App: React.FC = () => {
 
     axios.all([requestCompletedTodos, requestUnscheduledTodos])
       .then(axios.spread((...allData) => {
-        console.log('fetch multiple routes', allData);
         setMetricsData(allData[0].data);
         setUnscheduledTodoList(allData[1].data);
       }))
