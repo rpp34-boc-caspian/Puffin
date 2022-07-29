@@ -13,8 +13,9 @@ import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { colorMap } from '../theme';
-import { MdOutlineMode } from 'react-icons/md';
+import { MdOutlineMode, MdDeleteOutline } from 'react-icons/md';
 import { Link } from "react-router-dom";
+
 
 
 
@@ -117,19 +118,35 @@ const localizer = dateFnsLocalizer({
 
 const EventComponent = (event) => {
 
+  const handleTodoEdit = (event) => {
+    // pass along current event to edit
+    console.log(event)
+  }
+
+
+
   return (
+
     <div className='eventTitle'>
       {event.title}
-      <a href="/" onClick={(e) => { alert('edit') }}>x</a>
       <Link to="/edit_todo">
       <Tooltip title='Edit Event'>
-        <IconButton sx={{ color: 'white' }} aria-label="todo item" onClick={(e) => { alert('mark as complete') }}>
+        <IconButton sx={{ color: 'white' }} aria-label="edit event" onClick={(e) => {handleTodoEdit(event)}}>
           <MdOutlineMode size={15} />
         </IconButton>
       </Tooltip>
       </Link>
+      <Tooltip title='Mark as Complete'>
       <input type="checkbox" id="complete" name="complete" onClick={(e) => { alert('mark as complete') }}></input>
-    </div>)
+      </Tooltip>
+      <Link to="/">
+      <Tooltip title='Delete Event'>
+        <IconButton sx={{ color: 'white' }} aria-label="delete item" onClick={(e) => { alert('mark as complete') }}>
+          <MdDeleteOutline size={15} />
+        </IconButton>
+      </Tooltip>
+      </Link>
+      </div>)
 }
 
 
@@ -158,7 +175,6 @@ const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUnscheduledTodo }) {
   const [myEvents, setMyEvents] = useState(initialEvents);
-  // const [myEvents, setMyEvents] = useState([] || initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
