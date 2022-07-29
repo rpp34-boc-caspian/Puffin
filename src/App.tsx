@@ -15,6 +15,13 @@ import Login from './authentication/login';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
 
+export interface UnscheduledTodoList {
+  id?: number,
+  title?: string,
+  complete?: boolean, 
+  color?: number
+}
+
 
 const App: React.FC = () => {
   const [metricsPageOpent, toggleMetrics] = useState(false);
@@ -26,12 +33,18 @@ const App: React.FC = () => {
     color: number
   }[]>([]);
   const [userId, setUserId] = useState(3) //gave default val until signin uses it
+  const [unscheduledTodoList, setUnscheduledTodoList] = React.useState<UnscheduledTodoList[]>([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8080/completedTodos/3')
-      .then((data: any) => {
-        setMetricsData(data.data);
-      })
+    let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
+    let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
+
+    axios.all([requestCompletedTodos, requestUnscheduledTodos])
+      .then(axios.spread((...allData) => {
+        console.log('fetch multiple routes', allData);
+        setMetricsData(allData[0].data);
+        setUnscheduledTodoList(allData[1].data);
+      }))
       .catch((err) => {
         console.log('Error:', err);
         setMetricsData(FakeTodoData)
@@ -43,7 +56,7 @@ const App: React.FC = () => {
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList}/>} />
             <Route path="/create_todo" element={<CreateTodo />} />
             <Route path='/share' element={<Share />} />
             <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
