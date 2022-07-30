@@ -88,6 +88,7 @@ export function CreateTodo() {
     const [categories, setCategory] = React.useState<string[]>([]);
     const [isOpenModal, setIsModalOpen] = React.useState(false);
     const [newCategory, addCategory] = React.useState('');
+    const [friend, setFriend] = React.useState('');
 
 
     const save = React.useCallback(async () => {
@@ -139,7 +140,7 @@ export function CreateTodo() {
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                 <TextField
                     id="standard-textarea"
-                    label="TITLE"
+                    label="Title"
                     placeholder="Enter Title"
                     multiline
                     variant="standard"
@@ -151,7 +152,7 @@ export function CreateTodo() {
             <Grid container item xs={12}>
                 <TextField
                     id="outlined-multiline-static"
-                    label="DESCRIPTION"
+                    label="Description"
                     fullWidth
                     multiline
                     rows={6}
@@ -232,16 +233,28 @@ export function CreateTodo() {
             }
             <div>
                 <StyledPeopleIcon />Share with friends<Switch {...label} defaultChecked />
+                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <TextField
+                        id="standard-textarea"
+                        label="Friends"
+                        placeholder="Enter Friend's name"
+                        multiline
+                        variant="standard"
+                        fullWidth
+                        value={friend}
+                        onChange={({ target: { value } }) => setFriend(value)}
+                    />
+                </Box>
             </div>
             <FormControl sx={{ m: 1, width: '-webkit-fill-available' }}>
-                <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+                <InputLabel id="demo-multiple-checkbox-label">Categories</InputLabel>
                 <Select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
                     value={categories}
                     onChange={handleCategoryChange}
-                    input={<OutlinedInput label="Tag" />}
+                    input={<OutlinedInput label="Categories" />}
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}
                 >
