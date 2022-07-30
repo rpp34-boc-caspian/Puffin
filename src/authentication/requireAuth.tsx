@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 function RequireAuth({ children, user }: { children: JSX.Element, user: Function }) {
   let authCookie = Cookies.get('token');

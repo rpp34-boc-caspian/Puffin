@@ -20,7 +20,7 @@ function Login({ user }: { user: Function }) {
     setLoginError(false);
     setServerError(false);
 
-    axios.post('/login', {
+    axios.post('http://localhost:8080/login', {
       username: username,
       email: email,
       password: password
@@ -31,7 +31,8 @@ function Login({ user }: { user: Function }) {
         setEmail('');
         setPassword('');
 
-        // set user to id
+        user(res.data.id);
+
         <Navigate to="/" state={{ from: location }} />
 
         return;
