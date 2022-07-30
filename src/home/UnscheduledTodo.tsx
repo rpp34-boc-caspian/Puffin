@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Global } from '@emotion/react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { grey} from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import {colorMap} from '../theme';
-import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, IconButton, Stack, Button, Snackbar} from '@mui/material';
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, IconButton, Snackbar} from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import {MdOutlineDelete} from 'react-icons/md';
+import {UnscheduledTodoList} from '../App';
+import axios from 'axios';
 
 const drawerBleeding = 56;
 
@@ -18,6 +20,8 @@ interface Props {
   toggleUnscheduledTodo: boolean;
   setToggleUnscheduledTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setDraggedEvent: React.Dispatch<React.SetStateAction<object>>
+  unscheduledTodoList?: UnscheduledTodoList[];
+  setUnscheduledTodoList: React.Dispatch<React.SetStateAction<UnscheduledTodoList[]>>;
 }
 
 const Puller = styled(Box)(() => ({
@@ -29,39 +33,6 @@ const Puller = styled(Box)(() => ({
   left: 'calc(50% - 15px)',
 }));
 
-const unscheduledList = [
-    {
-        id: 100,
-        title: 'UI/UX conference',
-        color: '1',
-        complete: false
-    },
-    {
-        id: 102,
-        title: 'go to gym',
-        color: '2',
-        complete: false
-    },
-    {
-        id: 103,
-        title: 'learning TypeScript',
-        color: '3',
-        complete: false
-    },
-    {
-        id: 104,
-        title: 'learning TypeScript in React',
-        color: '3',
-        complete: false
-    },
-    {
-        id: 105,
-        title: 'learning MUI',
-        color: '3',
-        complete: false
-    },
-]
-
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
         props,
         ref,
@@ -70,9 +41,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   });
 
 export default function UnscheduledTodo(props: Props) {
-    const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo, setDraggedEvent } = props;
-    const [unscheduledTodoList, setUnscheduledTodoList] = React.useState(unscheduledList);
-    const [checked, setChecked] = React.useState([1]);
+    const { window, toggleUnscheduledTodo, setToggleUnscheduledTodo, setDraggedEvent, unscheduledTodoList, setUnscheduledTodoList} = props;
+    const [checked, setChecked] = React.useState([0]);
     const [openSuccessDelete, setOpenSuccessDelete] = React.useState(false);
     const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -80,21 +50,36 @@ export default function UnscheduledTodo(props: Props) {
     const handleToggleMarkAsCompleted = (todoId: number) => () => {
         const currentIndex = checked.indexOf(todoId);
         const newChecked = [...checked];
-    
+
         if (currentIndex === -1) {
           newChecked.push(todoId);
         } else {
           newChecked.splice(currentIndex, 1);
         }
-    
+
         setChecked(newChecked);
+        axios.put(`http://127.0.0.1:8080/unscheduledTodos/${todoId}`)
+        .then(({data}) => {
+            if (data.message === 'updated') {
+                console.log('here');
+                setUnscheduledTodoList(pre => pre.map(todo => todo.id === todoId ? {...todo, complete: !todo.complete} : todo));
+            }
+        })
+        .catch(err => console.log(err))
     };
 
     //delete an unscheduled todo
-    const handleDeleteTodoClick = () => {
+    const handleDeleteTodoClick = (todoId: number) => {
         setOpenSuccessDelete(true);
+        axios.delete(`http://127.0.0.1:8080/unscheduledTodos/${todoId}`)
+        .then(({data}) => {
+            if (data.message === 'deleted') {
+                setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== todoId))
+            }
+        })
+        .catch(err => console.log(err))
       };
-    
+
     const handleSuccessDeleteInfoClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
         return;
@@ -149,7 +134,7 @@ export default function UnscheduledTodo(props: Props) {
             }}
             >
             <Puller sx={{backgroundColor: toggleUnscheduledTodo? grey[300] : '#fff'}}/>
-            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>You have {unscheduledTodoList.length} unscheduled todos</Typography>
+            <Typography sx={{ p: 2, color: toggleUnscheduledTodo ? 'text.secondary' : '#fff' }}>You have {unscheduledTodoList?.length} unscheduled todos</Typography>
             </Box>
             <Box
             sx={{
@@ -160,43 +145,43 @@ export default function UnscheduledTodo(props: Props) {
             }}
             >
                <List sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}>
-                {unscheduledTodoList.map((todo) => {
+                {unscheduledTodoList?.map((todo) => {
                     return (
                         <ListItem
                             key={todo.id}
                             secondaryAction={
-                                <IconButton edge="end" aria-label="delete an unscheduled todo" onClick={handleDeleteTodoClick}>
+                                <IconButton edge="end" aria-label="delete an unscheduled todo" onClick={() => handleDeleteTodoClick(todo.id!)}>
                                     <MdOutlineDelete />
                                 </IconButton>
                             }
                             disablePadding
                             >
-                            <ListItemButton role={undefined} onClick={handleToggleMarkAsCompleted(todo.id)} dense>
+                            <ListItemButton role={undefined} onClick={handleToggleMarkAsCompleted(todo.id!)} dense>
                             <ListItemIcon>
                                 <Checkbox
                                 edge="start"
-                                checked={checked.indexOf(todo.id) !== -1}
+                                checked={checked.indexOf(todo.id!) !== -1}
                                 tabIndex={-1}
                                 disableRipple
                                 />
                             </ListItemIcon>
-                            <ListItemText 
-                                draggable={checked.indexOf(todo.id) === -1 ? true : false}
+                            <ListItemText
+                                draggable={checked.indexOf(todo.id!) === -1 ? true : false}
                                 onDragStart={() => {
                                         handleDragStart(todo);
                                     }
                                 }
                                 onDragOver={() => {
-                                        handleDragOver(todo.id);
+                                        handleDragOver(todo.id!);
                                     }
                                 }
 
-                                primary={todo.title} 
+                                primary={todo.title}
                                 sx={{
-                                    textDecorationLine: checked.indexOf(todo.id) === -1 ? 'none' : 'line-through',
+                                    textDecorationLine: checked.indexOf(todo.id!) === -1 ? 'none' : 'line-through',
                                     borderLeft: 5,
                                     borderRadius: '2px',
-                                    borderColor: `${colorMap[todo.color]}`,
+                                    borderColor: `${colorMap[todo.color!]}`,
                                     pl: 2
                                 }}
                             />
@@ -204,9 +189,9 @@ export default function UnscheduledTodo(props: Props) {
                         </ListItem>
                     );
                 })}
-                </List> 
-                <Snackbar open={openSuccessDelete} autoHideDuration={2000} onClose={handleSuccessDeleteInfoClose}>
-                    <Alert onClose={handleSuccessDeleteInfoClose} severity="success" sx={{ width: '100%' }}>
+                </List>
+                <Snackbar open={openSuccessDelete} autoHideDuration={800} onClose={handleSuccessDeleteInfoClose}>
+                    <Alert severity="success" sx={{ width: '100%' }}>
                     Successfully deleted this todo!
                     </Alert>
                 </Snackbar>

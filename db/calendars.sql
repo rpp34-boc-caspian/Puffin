@@ -8,6 +8,6 @@ CREATE TABLE calendars (
 	      REFERENCES users(id)
 );
 
-\copy calendars(id, cal_name, user_id) from './calendars.csv' DELIMITER ',' CSV HEADER;
+\copy calendars(id, cal_name, user_id) from './db/calendars.csv' DELIMITER ',' CSV HEADER;
 
 CREATE INDEX cal_index ON calendars(id);

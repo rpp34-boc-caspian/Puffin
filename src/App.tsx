@@ -1,47 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Route,
   Routes,
 } from "react-router-dom";
-import Nav from './home/Nav';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { Metrics } from './Metrics/Metrics';
-import DailyCalendar from './home/DailyCalendar';
-import { getDate } from './home/utils/helper';
+import Home from './home/Home';
 import { CreateTodo } from './Create to-do/create-todo';
+import Share from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
+import axios from 'axios';
+import { FakeTodoData } from './Metrics/components/helpers/helpers';
+
+export interface UnscheduledTodoList {
+  id?: number,
+  title?: string,
+  complete?: boolean,
+  color?: number
+}
 
 
 const App: React.FC = () => {
-  const now = getDate(new Date());
-  const [date, setDate] = React.useState<string>(now);
-  const [toggleUnscheduledTodo, setToggleUnscheduledTodo] = React.useState(false);
+  const [metricsPageOpent, toggleMetrics] = useState(false);
+  const [metricsData, setMetricsData] = useState<{
+    title: string,
+    start_d: string,
+    end_d: string,
+    category_name: string,
+    color: number
+  }[]>([]);
+  const [userId, setUserId] = useState(3) //gave default val until signin uses it
+  const [unscheduledTodoList, setUnscheduledTodoList] = React.useState<UnscheduledTodoList[]>([]);
+
+  useEffect(() => {
+    let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
+    let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
+
+    axios.all([requestCompletedTodos, requestUnscheduledTodos])
+      .then(axios.spread((...allData) => {
+        setMetricsData(allData[0].data);
+        setUnscheduledTodoList(allData[1].data);
+      }))
+      .catch((err) => {
+        setMetricsData(FakeTodoData)
+      })
+  },[userId])
+
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <Login />
         <SignUp />
         <BrowserRouter>
-          <Nav date={date} setDate={setDate} setToggleUnscheduledTodo={setToggleUnscheduledTodo} />
           <Routes>
-            <Route path="/" element={<DailyCalendar date={date} toggleUnscheduledTodo={toggleUnscheduledTodo} setToggleUnscheduledTodo={setToggleUnscheduledTodo}/>} />
-            {/* <Route path="/unscheduled" element={<UnscheduledTodo  />} /> */}
+            <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList}/>} />
             <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path="/metrics" element={<Metrics todos={[
-              {
-                title: 'Clean Room',
-                start_date: '6/25/16 19:10',
-                end_date: '7/1/16 19:45',
-                complete: true,
-                username: 'Paully',
-                category: 'School'
-              }
-            ]} />} />
-            <Route path="/login" element={ <Login /> } />
-            <Route path="/signup" element={ <SignUp /> } />
+            <Route path='/share' element={<Share />} />
+            <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
           </Routes>
         </BrowserRouter>
       </div>

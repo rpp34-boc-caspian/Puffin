@@ -1,18 +1,25 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-  // Get token cookie
+  let authCookie = Cookies.get('token');
+  let location = useLocation();
 
+  if (authCookie === undefined) {
+    return (
+      <Navigate to="/login" state={{ from: location }} />
+    );
+  };
   // Declare variable for response from verification route
-
-  // if no token cookie, route to login
-
-
+  let userInfo: object;
   // send cookies to verification route
-
+  axios.get(`/verify/${authCookie}`)
+  .then((cookieInfo) => {
     // apply response.data to declared variable
+    userInfo = cookieInfo.data;
+  })
 
 
   // if verification response has no username, id, or iat. route to login

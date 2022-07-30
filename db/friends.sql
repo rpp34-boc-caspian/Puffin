@@ -11,6 +11,6 @@ CREATE TABLE friends (
 	      REFERENCES users(id)
 );
 
-\copy friends(id, user_id, friend_id) from './friends.csv' delimiter ',' csv header;
+\copy friends(id, user_id, friend_id) from './db/friends.csv' delimiter ',' csv header;
 
 CREATE INDEX friend_index ON friends(id);

@@ -16,6 +16,7 @@ function Login() {
 
   function eatCookies() {
     let cooked = Cookies.get('token');
+    console.log(cooked);
 
     axios.get(`/verify/${cooked}`)
     .then((uncooked) => {
