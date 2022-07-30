@@ -15,10 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(cookieParser());
 
-app.get('/verify/:token', (req, res) => {
-  res.json(jwt.verify(req.params.token, 'teamPuffin'));
-
-});
 app.use(cors())
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
@@ -28,6 +24,29 @@ app.post('/api/createtodo', (req, res) => {
 
   res.json({ data: 'hello' })
 })
+
+app.get('/verify/:token', (req, res) => {
+  let tokenResults = jwt.verify(req.params.token, 'teamPuffin');
+
+  pool.query(`SELECT * FROM users WHERE id = ${tokenResults.id}`)
+  .then((results) => {
+    if (results.rows[0].username === tokenResults.user) {
+      tokenResults['correct'] = true;
+      return res.json(tokenResults);
+
+    }
+
+    tokenResults['correct'] = false;
+
+    res.json(tokenResults);
+
+  })
+  .catch(() => {
+    res.status(500).json({ correct: false });
+
+  });
+
+});
 
 app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;

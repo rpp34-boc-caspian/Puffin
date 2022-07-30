@@ -2,8 +2,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+interface userInfo {
+  id: string;
+  user: string;
+  iat: number;
+  correct: boolean;
+}
 
-function RequireAuth({ children }: { children: JSX.Element }) {
+function RequireAuth({ children, user }: { children: JSX.Element, user: Function }) {
   let authCookie = Cookies.get('token');
   let location = useLocation();
 
@@ -12,21 +18,28 @@ function RequireAuth({ children }: { children: JSX.Element }) {
       <Navigate to="/login" state={{ from: location }} />
     );
   };
-  // Declare variable for response from verification route
-  let userInfo: object;
-  // send cookies to verification route
+  console.log('cookie', authCookie);
+  let userInfo = {
+    id: 0,
+    user: '',
+    iat: 1,
+    correct: false
+  }
+
   axios.get(`/verify/${authCookie}`)
   .then((cookieInfo) => {
-    // apply response.data to declared variable
     userInfo = cookieInfo.data;
-  })
+  });
 
+  if (!userInfo.correct) {
+    return (
+      <Navigate to="/login" state={{ from: location }} />
+    );
+  }
 
-  // if verification response has no username, id, or iat. route to login
-  // maybe pass in username from app component and verify that way as well
+  user(userInfo.id);
 
-
-  // return children;
+  return children;
 };
 
 export default RequireAuth;

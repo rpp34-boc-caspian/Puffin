@@ -12,6 +12,7 @@ import { CreateTodo } from './Create to-do/create-todo';
 import Share from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
+import RequireAuth from './authentication/requireAuth';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
 
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     color: number
   }[]>([]);
   const [userId, setUserId] = useState(3) //gave default val until signin uses it
-  const [unscheduledTodoList, setUnscheduledTodoList] = React.useState<UnscheduledTodoList[]>([]);
+  const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
 
   useEffect(() => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
@@ -52,14 +53,30 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <Login />
-        <SignUp />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList}/>} />
-            <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path='/share' element={<Share />} />
-            <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
+            <Route path="/" element={
+              <RequireAuth user={setUserId} >
+                <Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList}/>
+              </RequireAuth>
+            } />
+            <Route path="/create_todo" element={
+              <RequireAuth user={setUserId} >
+                <CreateTodo />
+              </RequireAuth>
+              } />
+            <Route path='/share' element={
+              <RequireAuth user={setUserId} >
+                <Share />
+              </RequireAuth>
+            } />
+            <Route path="/metrics/*" element={
+              <RequireAuth user={setUserId} >
+                <Metrics todos={metricsData} />
+              </RequireAuth>
+            }/>
+            <Route path="/login" element={ <Login /> } />
+            <Route path="/signup" element={ <SignUp /> } />
           </Routes>
         </BrowserRouter>
       </div>

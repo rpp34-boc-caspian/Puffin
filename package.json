@@ -78,5 +78,5 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/react-big-calendar": "^0.38.1"
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8080/"
 }
