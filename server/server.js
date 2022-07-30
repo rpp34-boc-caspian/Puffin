@@ -7,10 +7,14 @@ const port = 8080;
 const cors = require('cors');
 const {pool, darianPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
+app.use(cookieParser());
+
 app.use(cors())
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
@@ -20,6 +24,29 @@ app.post('/api/createtodo', (req, res) => {
 
   res.json({ data: 'hello' })
 })
+
+app.get('/verify/:token', (req, res) => {
+  let tokenResults = jwt.verify(req.params.token, 'teamPuffin');
+
+  pool.query(`SELECT * FROM users WHERE id = ${tokenResults.id}`)
+  .then((results) => {
+    if (results.rows[0].username === tokenResults.user) {
+      tokenResults['correct'] = true;
+      return res.json(tokenResults);
+
+    }
+
+    tokenResults['correct'] = false;
+
+    res.json(tokenResults);
+
+  })
+  .catch(() => {
+    res.status(500).json({ correct: false });
+
+  });
+
+});
 
 app.post('/signup', async (req, res) => {
   let { username, email, password } = req.body;
@@ -59,9 +86,9 @@ app.post('/login', (req, res) => {
   let { username, email, password } = req.body;
 
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
-    .then((results) => {
-      if (results.rows.length === 0) {
-        res.json({ exists: false });
+  .then( async (results) => {
+    if (results.rows.length === 0) {
+      res.json({ exists: false });
 
       };
 
@@ -75,18 +102,21 @@ app.post('/login', (req, res) => {
 
       };
 
-      let match = bcrypt.compare(password, results.rows[0].password);
+    let match = await bcrypt.compare(password, results.rows[0].hashed_pass);
 
       if (!match) {
         res.json({ exists: false });
 
       };
 
-      res.json({ exists: true });
+    let token = jwt.sign({ id: results.rows[0].id, user: username }, 'teamPuffin');
 
-    })
-    .catch(() => {
-      res.status(500).send();
+    res.cookie('token', token).json({ exists: true });
+
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).send();
 
     });
 

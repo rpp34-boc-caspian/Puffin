@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import TextField from "@mui/material/TextField";
@@ -6,25 +7,40 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('JIT');
+  const [email, setEmail] = useState('amplesample@email.com');
+  const [password, setPassword] = useState('password123');
 
   const [loginError, setLoginError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
+  function eatCookies() {
+    let cooked = Cookies.get('token');
+    console.log(cooked);
+
+    axios.get(`/verify/${cooked}`)
+    .then((uncooked) => {
+      console.log(uncooked.data);
+    })
+  };
+
   function handleLogin() {
-    console.log(`Username is '${username}'. Password is '${password}'.`);
+    console.log(`Username is '${username}'. Email is ${email} Password is '${password}'.`);
 
     setLoginError(false);
     setServerError(false);
 
+    eatCookies();
+
     axios.post('/login', {
       username: username,
+      email: email,
       password: password
     })
     .then((res) => {
-      if (res.data.exist) {
+      if (res.data.exists) {
         setUsername('');
+        setEmail('');
         setPassword('');
 
         // redirect to home / (React Router)
@@ -34,8 +50,9 @@ function Login() {
       setLoginError(true);
 
     })
-    .catch(() => {
+    .catch((err) => {
       setUsername('');
+      setEmail('');
       setPassword('');
 
       setServerError(true);
@@ -61,7 +78,20 @@ function Login() {
           onChange={ (e) => { setUsername(e.target.value) } }
           autoComplete="current-password"
           variant="standard"
-          helperText={ loginError ? "Username or password is incorrect" : '' }
+          helperText={ loginError ? "Username, email, or password is incorrect" : '' }
+        />
+      </div>
+      <div>
+        <TextField
+          error={ loginError }
+          id="login-email"
+          label="Email"
+          type="text"
+          value={ email }
+          onChange={ (e) => { setEmail(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ loginError ? "Username, email, or password is incorrect" : '' }
         />
       </div>
       <div>
@@ -74,7 +104,7 @@ function Login() {
           onChange={ (e) => { setPassword(e.target.value) } }
           autoComplete="current-password"
           variant="standard"
-          helperText={ loginError ? "Username or password is incorrect" : '' }
+          helperText={ loginError ? "Username, email, or password is incorrect" : '' }
         />
       </div>
 

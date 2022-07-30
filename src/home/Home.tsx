@@ -21,8 +21,8 @@ const Home = (props: Props) => {
                 setDate={setDate}
                 setToggleUnscheduledTodo={setToggleUnscheduledTodo}
             />
-            <DailyCalendar date={date} 
-                toggleUnscheduledTodo={toggleUnscheduledTodo} 
+            <DailyCalendar date={date}
+                toggleUnscheduledTodo={toggleUnscheduledTodo}
                 setToggleUnscheduledTodo={setToggleUnscheduledTodo}
                 unscheduledTodoList={unscheduledTodoList}
                 setUnscheduledTodoList={setUnscheduledTodoList}

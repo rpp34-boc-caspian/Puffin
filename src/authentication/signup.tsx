@@ -7,8 +7,8 @@ import Alert from '@mui/material/Alert';
 
 function SignUp() {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmation] = useState('');
 
   const [userError, setUserError] = useState(false);
