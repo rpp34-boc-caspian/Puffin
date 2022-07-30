@@ -14,15 +14,6 @@ function Login() {
   const [loginError, setLoginError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
-  function eatCookies() {
-    let cooked = Cookies.get('token');
-    console.log(cooked);
-
-    axios.get(`/verify/${cooked}`)
-    .then((uncooked) => {
-      console.log(uncooked.data);
-    })
-  };
 
   function handleLogin() {
     console.log(`Username is '${username}'. Email is ${email} Password is '${password}'.`);
@@ -30,9 +21,7 @@ function Login() {
     setLoginError(false);
     setServerError(false);
 
-    eatCookies();
-
-    axios.post('/login', {
+    axios.post('http://127.0.0.1:8080/login', {
       username: username,
       email: email,
       password: password
@@ -42,7 +31,7 @@ function Login() {
         setUsername('');
         setEmail('');
         setPassword('');
-
+        Cookies.set('token', res.data.cookie, { path: '/' });
         // redirect to home / (React Router)
         return;
       };

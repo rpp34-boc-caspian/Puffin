@@ -82,11 +82,15 @@ app.post('/signup', async (req, res) => {
 
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
-
+  let test = await bcrypt.hash('darian3', 11);
+    console.log({test})
+    let testMatach = await bcrypt.compare('darian3', '$2b$11$.lFxzOJB0Uk2P5BqsbcQCOausgR4kdJs7ZjnvIzd0.ZLqf6vY7FD6');
+    console.log({testMatach})
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
+    console.log('RESULTS:', results.rows)
     if (results.rows.length === 0) {
       res.json({ exists: false });
 
@@ -110,8 +114,9 @@ app.post('/login', (req, res) => {
       };
 
     let token = jwt.sign({ id: results.rows[0].id, user: username }, 'teamPuffin');
+    console.log({token})
 
-    res.cookie('token', token).json({ exists: true });
+    res.json({ exists: true, id: results.rows[0].id, cookie: token });
 
   })
   .catch((err) => {
