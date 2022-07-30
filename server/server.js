@@ -18,10 +18,32 @@ app.use(cors())
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
 app.post('/api/createtodo', (req, res) => {
-  const { title, description, start, end, allDay } = req.body;
-  console.log(req.body)
+  const { 
+    title, 
+    userId,
+    categoryId,
+    description, 
+    start, 
+    end, 
+    allDay
+  } = req.body;
+  
+  pool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`INSERT INTO todos (title, user_id, cat_id, descript, start_d, end_d, all_d) VALUES ('${title}', ${userId}, ${categoryId}, '${description}', now(), now(), ${allDay})`,
+    (err, result) => {
+      release();
+      if (err) {
+        res.status(500).json({ err });
+        return;
+      }
 
-  res.json({ data: 'hello' })
+      res.status(200).json(result);
+    })
+  })
 })
 
 app.get('/verify/:token', (req, res) => {
