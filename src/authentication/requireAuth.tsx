@@ -2,13 +2,6 @@ import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-interface userInfo {
-  id: string;
-  user: string;
-  iat: number;
-  correct: boolean;
-}
-
 function RequireAuth({ children, user }: { children: JSX.Element, user: Function }) {
   let authCookie = Cookies.get('token');
   let location = useLocation();
@@ -18,7 +11,7 @@ function RequireAuth({ children, user }: { children: JSX.Element, user: Function
       <Navigate to="/login" state={{ from: location }} />
     );
   };
-  console.log('cookie', authCookie);
+
   let userInfo = {
     id: 0,
     user: '',
