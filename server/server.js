@@ -63,19 +63,30 @@ app.post('/signup', async (req, res) => {
       } else {
 
         pool.query(`INSERT INTO users (email, username, hashed_pass) VALUES ('${email}', '${username}', '${hash}')`)
-          .then((result) => {
-            res.json({ created: true });
-
-          })
-          .catch(() => {
+          .catch((err) => {
+            console.log(err);
             res.status(500).send();
 
           });
 
+          pool.query(`SELECT * FROM users WHERE username = '${username}'`)
+            .then((result) => {
+              console.log(result);
+              let token = jwt.sign({ id: result.rows[0].id, user: username }, 'teamPuffin');
+              res.cookie('token', token).json({ created: true, id: result.rows[0].id });
+
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(500).send();
+
+            });
+
       }
 
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).send();
 
     });
@@ -111,7 +122,7 @@ app.post('/login', (req, res) => {
 
     let token = jwt.sign({ id: results.rows[0].id, user: username }, 'teamPuffin');
 
-    res.cookie('token', token).json({ exists: true });
+    res.cookie('token', token).json({ exists: true, id: results.rows[0].id });
 
   })
   .catch((err) => {

@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-import TextField from "@mui/material/TextField";
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 
-function SignUp() {
+function SignUp({ user }: { user: Function }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,14 +17,14 @@ function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
+  const location = useLocation();
+
   function validateEmail(email: string) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
   function handleSignUp() {
-    console.log(`Email ${email}, username ${username}, password ${password}, confirmation ${confirmationPassword}`);
-
     if (!validateEmail(email)) {
       setEmailError({ status: true, reason: 'format' });
       return;
@@ -53,7 +54,10 @@ function SignUp() {
         setPassword('');
         setConfirmation('');
 
-        // redirect to home / (React Router)
+        user(res.data.id);
+
+        <Navigate to="/" state={{ from: location }} />
+
         return;
       };
 

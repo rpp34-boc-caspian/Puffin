@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import Cookies from 'js-cookie';
+import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-import TextField from "@mui/material/TextField";
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 
-function Login() {
+function Login({ user }: { user: Function }) {
   const [username, setUsername] = useState('JIT');
   const [email, setEmail] = useState('amplesample@email.com');
   const [password, setPassword] = useState('password123');
@@ -14,23 +14,11 @@ function Login() {
   const [loginError, setLoginError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
-  function eatCookies() {
-    let cooked = Cookies.get('token');
-    console.log(cooked);
-
-    axios.get(`/verify/${cooked}`)
-    .then((uncooked) => {
-      console.log(uncooked.data);
-    })
-  };
+  const location = useLocation();
 
   function handleLogin() {
-    console.log(`Username is '${username}'. Email is ${email} Password is '${password}'.`);
-
     setLoginError(false);
     setServerError(false);
-
-    eatCookies();
 
     axios.post('/login', {
       username: username,
@@ -43,7 +31,9 @@ function Login() {
         setEmail('');
         setPassword('');
 
-        // redirect to home / (React Router)
+        // set user to id
+        <Navigate to="/" state={{ from: location }} />
+
         return;
       };
 
