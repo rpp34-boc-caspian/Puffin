@@ -84,10 +84,10 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
-  let test = await bcrypt.hash('darian3', 11);
-    console.log({test})
-    let testMatach = await bcrypt.compare('darian3', '$2b$11$.lFxzOJB0Uk2P5BqsbcQCOausgR4kdJs7ZjnvIzd0.ZLqf6vY7FD6');
-    console.log({testMatach})
+  let test = await bcrypt.hash('$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36', 11);
+  console.log({test})
+  let testMatach = await bcrypt.compare('darian3', '$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36');
+  console.log({testMatach})
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
     console.log('RESULTS:', results.rows)
