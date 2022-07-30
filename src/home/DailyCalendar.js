@@ -67,7 +67,7 @@ const styledCalendar = styled(Calendar)`
 //     // example: title needs to be reformatted from string to add a hyperlink so can open to display to-do details
 //     title: 'Petit Event',
 //     descript: 'This is a modified event to include a description',
-//     allDay: false,
+//     allday: false,
 //     start: new Date(2022, 6, 29, 3, 30, 0),
 //     end: new Date(2022, 6, 29, 7, 30, 0),
 //     complete: false
@@ -77,7 +77,7 @@ const styledCalendar = styled(Calendar)`
 //     user_id: 1,
 //     cat_id: 1,
 //     title: 'All Day Event very long title',
-//     allDay: false,
+//     allday: false,
 //     start: new Date(2022, 6, 29, 16, 30, 0),
 //     end: new Date(2022, 6, 29, 18, 30, 0),
 //   },
@@ -139,14 +139,14 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
   // need to carry over event.color in order to render colors
   const onDropFromOutside = useCallback(
-    ({ start, end, allDay: isAllDay }) => {
+    ({ start, end, allday: isallday }) => {
       const { id, title } = draggedEvent;
       const event = {
         id,
         title,
         start,
         end,
-        isAllDay
+        isallday
       }
       setDraggedEvent(null)
       newEvent(event)
@@ -156,16 +156,16 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
 
   const moveEvent = useCallback(
-    ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
-      const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
-        event.allDay = true
+    ({ event, start, end, isallday: droppedOnalldaySlot = false }) => {
+      const { allday } = event
+      if (!allday && droppedOnalldaySlot) {
+        event.allday = true
       }
 
       setMyTodos((prev) => {
         const existing = prev.find((ev) => ev.id === event.id) ?? {}
         const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end, allDay }]
+        return [...filtered, { ...existing, start, end, allday }]
       })
     },
     [setMyTodos]
@@ -214,9 +214,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onSelectEvent={(e) => handleSelectedEvent(e)}
         draggable
         eventPropGetter={(event) => {
-          // backgroundColor can be set to any color we decide based on the category id of the to-do item
           let backgroundColor = colorMap[event.color]
-          // visibility is decided based on whether the to-do item is completed or not
           const visibility = event.complete === true ? 'hidden' : 'visible';
           return { style: { backgroundColor, visibility } }
         }}
@@ -225,10 +223,9 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
           event: CustomEvent,
           // toolbar: CustomToolbar
         }}
-        startAccessor={event => new Date(event.start_d)}
-        endAccessor={event => {
-          return new Date(event.end_d)
-        }}
+        startAccessor={event => new Date(event.start)}
+        endAccessor={event => new Date(event.end)
+}
       />
       <UnscheduledTodo
         toggleUnscheduledTodo={toggleUnscheduledTodo}
