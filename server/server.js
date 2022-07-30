@@ -179,10 +179,24 @@ app.post('/share', (req, res) => {
 
 //END of Sharing Functions
 
+//todo list
+app.get('/todos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = 'SELECT t.*, c.color from todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
+  pool.query(query, [user_id])
+    .then(({ rows }) => {
+      console.log('rows to get all todos in server', rows);
+      res.send(rows);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+})
+
 //Unscheduled todo list
 app.get('/unscheduledTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
-  const query = 'SELECT t.id, t.title, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false;'
+  const query = 'SELECT t.id, t.title, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NULL AND t.end_d IS NULL;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
       res.send(rows);

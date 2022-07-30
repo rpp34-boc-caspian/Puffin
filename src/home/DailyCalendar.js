@@ -8,14 +8,12 @@ import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { Typography, Tooltip, IconButton } from '@mui/material';
+import { Typography} from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { colorMap } from '../theme';
-import { MdOutlineMode, MdDeleteOutline } from 'react-icons/md';
-import { Link } from "react-router-dom";
-
+import CustomEvent from './CustomEvent';
 
 
 
@@ -60,48 +58,48 @@ const styledCalendar = styled(Calendar)`
   }
 `
 
-const initialEvents = [
-  {
-    id: 0,
-    user_id: 1,
-    cat_id: 2,
-    // once data is received, need to be reformatted to display with proper links...
-    // example: title needs to be reformatted from string to add a hyperlink so can open to display to-do details
-    title: 'Petit Event',
-    descript: 'This is a modified event to include a description',
-    allDay: false,
-    start: new Date(2022, 6, 29, 3, 30, 0),
-    end: new Date(2022, 6, 29, 7, 30, 0),
-    complete: false
-  },
-  {
-    id: 1,
-    user_id: 1,
-    cat_id: 1,
-    title: 'All Day Event very long title',
-    allDay: false,
-    start: new Date(2022, 6, 29, 16, 30, 0),
-    end: new Date(2022, 6, 29, 18, 30, 0),
-  },
+// const initialEvents = [
+//   {
+//     id: 0,
+//     user_id: 1,
+//     cat_id: 2,
+//     // once data is received, need to be reformatted to display with proper links...
+//     // example: title needs to be reformatted from string to add a hyperlink so can open to display to-do details
+//     title: 'Petit Event',
+//     descript: 'This is a modified event to include a description',
+//     allDay: false,
+//     start: new Date(2022, 6, 29, 3, 30, 0),
+//     end: new Date(2022, 6, 29, 7, 30, 0),
+//     complete: false
+//   },
+//   {
+//     id: 1,
+//     user_id: 1,
+//     cat_id: 1,
+//     title: 'All Day Event very long title',
+//     allDay: false,
+//     start: new Date(2022, 6, 29, 16, 30, 0),
+//     end: new Date(2022, 6, 29, 18, 30, 0),
+//   },
 
-  {
-    id: 4,
-    user_id: 1,
-    cat_id: 3,
-    title: 'Some Event',
-    start: new Date(2022, 6, 29, 0, 0, 0),
-    end: new Date(2022, 6, 29, 0, 0, 0),
-  },
-  {
-    id: 5,
-    title: 'Conference',
-    user_id: 1,
-    cat_id: 5,
-    start: new Date(2022, 6, 29),
-    end: new Date(2022, 6, 29),
-    desc: 'Big conference for important people',
-  }
-]
+//   {
+//     id: 4,
+//     user_id: 1,
+//     cat_id: 3,
+//     title: 'Some Event',
+//     start: new Date(2022, 6, 29, 0, 0, 0),
+//     end: new Date(2022, 6, 29, 0, 0, 0),
+//   },
+//   {
+//     id: 5,
+//     title: 'Conference',
+//     user_id: 1,
+//     cat_id: 5,
+//     start: new Date(2022, 6, 28),
+//     end: new Date(2022, 6, 30),
+//     desc: 'Big conference for important people',
+//   }
+// ]
 
 const locales = {
   'en-US': enUS,
@@ -116,103 +114,27 @@ const localizer = dateFnsLocalizer({
 })
 
 
-const EventComponent = (event) => {
-
-  const handleTodoEdit = (event) => {
-    // pass along current event to edit
-    console.log('open to do edit component for this event', event.title)
-  }
-
-  const handleDeleteEvent = (event) => {
-    // pass along current event to edit
-    console.log('delete this event and refresh current events to display current events', event.title)
-  }
-
-  const handleCompleteEvent = (event) => {
-    console.log('mark this event as complete and re-render to display event with text crossed out', <event className="title"></event>)
-  }
-
-  return (
-
-    <div className='eventTitle'>
-      {event.title}
-      <Link to="/edit_todo">
-      <Tooltip title='Edit Event'>
-        <IconButton sx={{ color: 'white' }} aria-label="edit event" onClick={(e) => {handleTodoEdit(event)}}>
-          <MdOutlineMode size={15} />
-        </IconButton>
-      </Tooltip>
-      </Link>
-      <Tooltip title='Mark as Complete'>
-      <input type="checkbox" id="complete" name="complete" onClick={(e) => {handleCompleteEvent()}}></input>
-      </Tooltip>
-      <Link to="/">
-      <Tooltip title='Delete Event'>
-        <IconButton sx={{ color: 'white' }} aria-label="delete item" onClick={(e) => {handleDeleteEvent(event)}}>
-          <MdDeleteOutline size={15} />
-        </IconButton>
-      </Tooltip>
-      </Link>
-      </div>)
-}
-
-
-
-const CustomToolbar = () => {
-  return (
-    <div className='rbc-toolbar'>
-      <div className="customView">
-        <form method="GET" action="/">
-          <select name="calendar-view" id="calendar-view">
-            <option value="/">My Calendar</option>
-            <option value="/tam">Tam</option>
-            <option value="/school">School</option>
-            <option value="/holidays">Holidays</option>
-          </select>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-
-
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
-export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUnscheduledTodo }) {
-  const [myEvents, setMyEvents] = useState(initialEvents);
+export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
-
-  useEffect(() => {
-    let params = 3;
-
-    axios.get(`scheduledTodos/${params}`)
-      .then((data) => {
-        setMyEvents(data.data);
-      })
-      .catch((err) => {
-        console.log('Error:', err);
-      })
-  }, [])
-
-
-  const handleSelectedEvent = (myEvents) => {
-    setSelectedEvent(myEvents)
+  const handleSelectedEvent = (myTodos) => {
+    setSelectedEvent(myTodos)
   }
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
 
   const newEvent = useCallback(
     (event) => {
-      setMyEvents((prev) => {
+      setMyTodos((prev) => {
         return [...prev, event]
       })
     },
-    [setMyEvents]
+    [setMyTodos]
   )
 
   // need to carry over event.color in order to render colors
@@ -240,24 +162,24 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
         event.allDay = true
       }
 
-      setMyEvents((prev) => {
+      setMyTodos((prev) => {
         const existing = prev.find((ev) => ev.id === event.id) ?? {}
         const filtered = prev.filter((ev) => ev.id !== event.id)
         return [...filtered, { ...existing, start, end, allDay }]
       })
     },
-    [setMyEvents]
+    [setMyTodos]
   )
 
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
-      setMyEvents((prev) => {
+      setMyTodos((prev) => {
         const existing = prev.find((ev) => ev.id === event.id) ?? {}
         const filtered = prev.filter((ev) => ev.id !== event.id)
         return [...filtered, { ...existing, start, end }]
       })
     },
-    [setMyEvents]
+    [setMyTodos]
   )
 
   const defaultDate = useMemo(() => new Date(), [])
@@ -277,7 +199,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
         onNavigate={() => { }}
         view='day'
         onView={() => { }}
-        events={myEvents}
+        events={myTodos}
         localizer={localizer}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
@@ -293,21 +215,27 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, setToggleUn
         draggable
         eventPropGetter={(event) => {
           // backgroundColor can be set to any color we decide based on the category id of the to-do item
-          let color = event.cat_id;
-          let backgroundColor = colorMap[color]
+          let backgroundColor = colorMap[event.color]
           // visibility is decided based on whether the to-do item is completed or not
           const visibility = event.complete === true ? 'hidden' : 'visible';
           return { style: { backgroundColor, visibility } }
         }}
+        toolbar={false}
         components={{
-          event: EventComponent,
-          toolbar: CustomToolbar
+          event: CustomEvent,
+          // toolbar: CustomToolbar
+        }}
+        startAccessor={event => new Date(event.start_d)}
+        endAccessor={event => {
+          return new Date(event.end_d)
         }}
       />
       <UnscheduledTodo
         toggleUnscheduledTodo={toggleUnscheduledTodo}
         setToggleUnscheduledTodo={setToggleUnscheduledTodo}
         setDraggedEvent={setDraggedEvent}
+        unscheduledTodoList={unscheduledTodoList}
+        setUnscheduledTodoList={setUnscheduledTodoList}
       />
       {/* {selectedEvent && <ToDoEditModal />} */}
     </div>
