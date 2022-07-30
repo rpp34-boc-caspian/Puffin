@@ -18,7 +18,7 @@ app.use(cors())
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
 app.post('/api/createtodo', (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, start, end, allDay } = req.body;
   console.log(req.body)
 
   res.json({ data: 'hello' })
