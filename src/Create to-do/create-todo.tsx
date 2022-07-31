@@ -32,6 +32,8 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import theme from '../theme';
 
+import { Category, CreateCategoryModal } from './create-category-modal';
+
 const Container = styled('div')`
     display: flex;
     flex: 1;
@@ -45,17 +47,6 @@ const Container = styled('div')`
 const StyledPeopleIcon = styled(PeopleIcon)`
     margin: 0 10px;
 `;
-
-const modalStyle = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -78,18 +69,26 @@ const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 const ADD_CATEGORY = 'add-category';
 
-export function CreateTodo() {
+export function CreateTodo({ calendarId = 1 }) {
+    const [categories, setCategories] = React.useState([]);
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [start, setStart] = React.useState(null);
     const [end, setEnd] = React.useState(null);
     const [allDay, setAllday] = React.useState(false);
     const [hideDates, setHideDates] = React.useState(false);
-    const [categories, setCategory] = React.useState<string[]>([]);
-    const [isOpenModal, setIsModalOpen] = React.useState(false);
-    const [newCategory, addCategory] = React.useState('');
+    const [selectedCategory, setSelectedCategory] = React.useState('');
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [friend, setFriend] = React.useState('');
 
+    React.useEffect(() => {
+        fetch(`/api/getcategories?calendarId=${calendarId}`, {
+            method: "GET",
+        })
+            .then((resp) => resp.json())
+            .then(({ categories }) => setCategories(categories))
+            .catch((err) => console.log(err));
+    }, []);
 
     const save = React.useCallback(async () => {
         const resp = await fetch("/api/createtodo", {
@@ -114,20 +113,41 @@ export function CreateTodo() {
         }
     }, [description, title, start, end, allDay])
 
-    const handleCategoryChange = (event: SelectChangeEvent<typeof categories>) => {
+    const handleCategoryChange = (event: SelectChangeEvent<typeof selectedCategory>) => {
         const {
             target: { value },
         } = event;
 
-        if (value[0] === ADD_CATEGORY) {
+        if (value === ADD_CATEGORY) {
             setIsModalOpen(true);
         } else {
-            setCategory(
+            setSelectedCategory(
                 // On autofill we get a stringified value.
-                typeof value === 'string' ? value.split(',') : value,
+                value as string,
             );
         }
     };
+
+    const handleSaveCategory = async ({ color, name }: Category) => {
+        const resp = await fetch("/api/createcategory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name,
+                color,
+                calendarId,
+            })
+        })
+
+        try {
+            const { categories } = await resp.json();
+            setCategories(categories);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <Container>
@@ -251,17 +271,16 @@ export function CreateTodo() {
                 <Select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
-                    multiple
-                    value={categories}
+                    value={selectedCategory}
                     onChange={handleCategoryChange}
                     input={<OutlinedInput label="Categories" />}
-                    renderValue={(selected) => selected.join(', ')}
+                    renderValue={(selected) => selected}
                     MenuProps={MenuProps}
                 >
-                    {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                            <Checkbox checked={categories.indexOf(name) > -1} />
-                            <ListItemText primary={name} />
+                    {categories.map(({ category_name, color, id }) => (
+                        <MenuItem key={category_name} value={category_name}>
+                            <Checkbox checked={selectedCategory === category_name} />
+                            <ListItemText primary={category_name} />
                         </MenuItem>
                     ))}
                     <MenuItem value={ADD_CATEGORY}>
@@ -276,29 +295,11 @@ export function CreateTodo() {
                 </Grid>
             </Grid>
             {/* </Stack> */}
-            <Modal
-                open={isOpenModal}
-                onClose={() => setIsModalOpen(false)}
-                aria-labelledby="modal-modal-title"
-            >
-                <Box sx={modalStyle}>
-                    {/* <Typography id="modal-modal-title" variant="body1" component="h6">
-                        New category
-                    </Typography> */}
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <TextField
-                            id="standard-textarea"
-                            label="Add a Category"
-                            // placeholder="Enter Category"
-                            multiline
-                            variant="standard"
-                            fullWidth
-                            value={newCategory}
-                            onChange={({ target: { value } }) => addCategory(value)}
-                        />
-                    </Box>
-                </Box>
-            </Modal>
+            <CreateCategoryModal
+                isOpen={isModalOpen}
+                close={() => setIsModalOpen(false)}
+                saveCategory={handleSaveCategory}
+            />
         </Container>
     )
 

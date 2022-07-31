@@ -41,7 +41,65 @@ app.post('/api/createtodo', (req, res) => {
         return;
       }
 
-      res.status(200).json(result);
+      res.status(200).json({ todos: result.rows });
+    })
+  })
+})
+
+app.get('/api/getcategories', (req, res) => {
+  const { calendarId } = req.query;
+
+  pool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`SELECT * from categories where calendar_id = ${calendarId}`,
+    (err, result) => {
+      release();
+      if (err) {
+        res.status(500).json({ err });
+        return;
+      }
+
+      res.status(200).json({ categories: result.rows });
+    })
+  })
+})
+
+app.post('/api/createcategory', (req, res) => {
+  const { 
+    name, 
+    color,
+    calendarId
+  } = req.body;
+  console.log(req.body)
+  pool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`INSERT INTO categories 
+      (category_name, color, calendar_id) 
+      VALUES ('${name}', ${color}, ${calendarId})
+    `,
+    (err, result) => {
+
+      if (err) {
+        console.log(err)
+        res.status(500).json({ err });
+        return;
+      }
+      client.query(`SELECT * from categories where calendar_id = ${calendarId}`,
+      (err, result) => {
+        release();
+        if (err) {
+          res.status(500).json({ err });
+          return;
+        }
+  
+        res.status(200).json({ categories: result.rows });
+      })
     })
   })
 })
