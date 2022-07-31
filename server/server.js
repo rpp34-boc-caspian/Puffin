@@ -1,6 +1,5 @@
 const express = require('express');
 var bodyParser = require('body-parser')
-
 const path = require('path');
 const app = express();
 const port = 8080;
@@ -179,12 +178,13 @@ app.post('/share', (req, res) => {
 
 //END of Sharing Functions
 
-//Unscheduled todo list
-app.get('/unscheduledTodos/:userId', (req, res) => {
+//todo list
+app.get('/todos/:userId', (req, res) => {
   const user_id = req.params.userId;
-  const query = 'SELECT t.id, t.title, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false;'
+  const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
+      console.log('rows to get all todos in server', rows);
       res.send(rows);
     })
     .catch(err => {
@@ -192,34 +192,30 @@ app.get('/unscheduledTodos/:userId', (req, res) => {
     })
 })
 
-app.put('/unscheduledTodos/:todoId', (req, res) => {
+app.put('/todos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
-  const searchQuery = 'SELECT t.complete FROM todos t WHERE id = $1';
-  const updateTrueQuery = 'UPDATE todos SET complete = true WHERE id = $1';
-  const updateFalseQuery = 'UPDATE todos SET complete = false WHERE id = $1';
-  pool.query(searchQuery, [todo_id])
-    .then(({ rows }) => {
-      return rows[0].complete;
-    })
-    .then(complete => {
-      if (complete) {
-        return pool.query(updateFalseQuery, [todo_id])
-      } else {
-        return pool.query(updateTrueQuery, [todo_id])
-      }
-    })
-    .then(({rowCount}) => {
-      if (rowCount > 0) {
-        res.json({ message: 'updated' });
-      }
-    })
-    .catch(err => {
-      console.log('err', err);
-      res.status(500).send(err);
-    })
+  const {start, end, allday, complete} = req.body;
+  const updateCompleteQuery = 'UPDATE todos SET complete = $1 WHERE id = $2';
+  const updateCompleteOptions = [complete, todo_id];
+  const updateTiemQuery = 'UPDATE todos SET start_d = $1, end_d = $2, all_d = $3 WHERE id = $4';
+  const updateTimeOptions = [new Date(start), new Date(end), allday, todo_id]
+  const updateComplete = () => pool.query(updateCompleteQuery, updateCompleteOptions);
+  const updateTime = () => pool.query(updateTiemQuery, updateTimeOptions);
+  const query = typeof complete === 'boolean' ? updateComplete() : updateTime();
+
+  query
+  .then(({rowCount}) => {
+    if (rowCount > 0) {
+      res.json({ message: 'updated' });
+    }
+  })
+  .catch(err => {
+    console.log('err', err);
+    res.status(500).send(err);
+  })
 })
 
-app.delete('/unscheduledTodos/:todoId', (req, res) => {
+app.delete('/todos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
   const query = 'DELETE FROM todos WHERE id = $1;';
   pool.query(query, [todo_id])
@@ -233,6 +229,20 @@ app.delete('/unscheduledTodos/:todoId', (req, res) => {
     res.status(500).send(err);
   })
 });
+
+//Unscheduled todo list
+app.get('/unscheduledTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = 'SELECT t.id, t.title, t.complete, c.color FROM todos t LEFT JOIN categories c ON t.cat_id = c.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NULL AND t.end_d IS NULL;'
+  pool.query(query, [user_id])
+    .then(({ rows }) => {
+      res.send(rows);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+})
+
 
 app.get('/completedTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
