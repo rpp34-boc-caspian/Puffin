@@ -14,7 +14,7 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { colorMap } from '../theme';
 import CustomEvent from './CustomEvent';
-
+import {updateTodo} from './utils/helper';
 
 
 
@@ -56,50 +56,10 @@ const styledCalendar = styled(Calendar)`
   .rbc-today {
     background-color: #fff;
   }
+  .rbc-event {
+    border: 1px solid #fff;
+  }
 `
-
-// const initialEvents = [
-//   {
-//     id: 0,
-//     user_id: 1,
-//     cat_id: 2,
-//     // once data is received, need to be reformatted to display with proper links...
-//     // example: title needs to be reformatted from string to add a hyperlink so can open to display to-do details
-//     title: 'Petit Event',
-//     descript: 'This is a modified event to include a description',
-//     allday: false,
-//     start: new Date(2022, 6, 29, 3, 30, 0),
-//     end: new Date(2022, 6, 29, 7, 30, 0),
-//     complete: false
-//   },
-//   {
-//     id: 1,
-//     user_id: 1,
-//     cat_id: 1,
-//     title: 'All Day Event very long title',
-//     allday: false,
-//     start: new Date(2022, 6, 29, 16, 30, 0),
-//     end: new Date(2022, 6, 29, 18, 30, 0),
-//   },
-
-//   {
-//     id: 4,
-//     user_id: 1,
-//     cat_id: 3,
-//     title: 'Some Event',
-//     start: new Date(2022, 6, 29, 0, 0, 0),
-//     end: new Date(2022, 6, 29, 0, 0, 0),
-//   },
-//   {
-//     id: 5,
-//     title: 'Conference',
-//     user_id: 1,
-//     cat_id: 5,
-//     start: new Date(2022, 6, 28),
-//     end: new Date(2022, 6, 30),
-//     desc: 'Big conference for important people',
-//   }
-// ]
 
 const locales = {
   'en-US': enUS,
@@ -130,9 +90,16 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
   const newEvent = useCallback(
     (event) => {
-      setMyTodos((prev) => {
-        return [...prev, event]
+      updateTodo(event.id, event.start, event.end, event.allday)
+      .then(({data}) => {
+        console.log('moveEvent', data);
+        if (data.message === 'updated') {
+          setMyTodos((prev) => {
+            return [...prev, event]
+          })
+        }
       })
+      .catch(err => console.log('update event err', err))
     },
     [setMyTodos]
   )
@@ -140,13 +107,14 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   // need to carry over event.color in order to render colors
   const onDropFromOutside = useCallback(
     ({ start, end, allday: isallday }) => {
-      const { id, title } = draggedEvent;
+      const { id, title, color } = draggedEvent;
       const event = {
         id,
         title,
         start,
         end,
-        isallday
+        isallday, 
+        color
       }
       setDraggedEvent(null)
       newEvent(event)
@@ -158,33 +126,44 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const moveEvent = useCallback(
     ({ event, start, end, isallday: droppedOnalldaySlot = false }) => {
       const { allday } = event
+      console.log('droppedOnalldaySlot', droppedOnalldaySlot);
+      console.log('allday', allday);
       if (!allday && droppedOnalldaySlot) {
         event.allday = true
-      }
-
-      setMyTodos((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id) ?? {}
-        const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end, allday }]
+      }      
+      updateTodo(event.id, start, end, allday)
+      .then(({data}) => {
+        if (data.message === 'updated') {
+          setMyTodos((prev) => {
+            const existing = prev.find((ev) => ev.id === event.id) ?? {}
+            const filtered = prev.filter((ev) => ev.id !== event.id)
+            return [...filtered, { ...existing, start, end, allday }]
+          })
+        }
       })
+      .catch(err => console.log('update event err', err))
     },
     [setMyTodos]
   )
 
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
-      setMyTodos((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id) ?? {}
-        const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end }]
+      updateTodo(event.id, start, end)
+      .then(({data}) => {
+        console.log('resizeEvent', data);
+        if (data.message === 'updated') {
+          setMyTodos((prev) => {
+            const existing = prev.find((ev) => ev.id === event.id) ?? {}
+            const filtered = prev.filter((ev) => ev.id !== event.id)
+            return [...filtered, { ...existing, start, end }]
+          })
+        }
       })
     },
     [setMyTodos]
   )
 
   const defaultDate = useMemo(() => new Date(), [])
-
-
 
   return (
     <div>
@@ -212,15 +191,15 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onDropFromOutside={onDropFromOutside}
         onSelectSlot={newEvent}
         onSelectEvent={(e) => handleSelectedEvent(e)}
-        draggable
+        // draggable
         eventPropGetter={(event) => {
-          let backgroundColor = colorMap[event.color]
-          const visibility = event.complete === true ? 'hidden' : 'visible';
-          return { style: { backgroundColor, visibility } }
+          let backgroundColor = colorMap[event.color];
+          const textDecorationLine = event.complete === false ? 'none' : 'line-through';
+          return { style: {backgroundColor, textDecorationLine} }
         }}
         toolbar={false}
         components={{
-          event: CustomEvent,
+          event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
           // toolbar: CustomToolbar
         }}
         startAccessor={event => new Date(event.start)}

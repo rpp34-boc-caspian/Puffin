@@ -27,15 +27,15 @@ const theme = createTheme({
 });
 
 export const colorMap: {[key: string]: string} = {
-  0: '#f44336', //red
-  1: '#e91e63', //pink
-  2: '#0276aa', //blue
-  3: '#357a38', //green
-  4: '#311b92', //purple
-  5: '#00796b', //teal
-  6: '#546e7a', //blueGrey
-  7: '#ef6c00', //orange
-  8: '#76ff03', //lightGreen
+  0: '#b71c1c', //red
+  1: '#880e4f', //pink
+  2: '#0d47a1', //blue
+  3: '#1b5e20', //green
+  4: '#4a148c', //purple
+  5: '#00695c', //teal
+  6: '#37474f', //blueGrey
+  7: '#e65100', //orange
+  8: '#616161', //grey
   9: '#00838f', //cyan
 }
 
