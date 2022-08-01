@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
+
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
@@ -78,12 +80,16 @@ const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
 export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
+  const history = useNavigate()
+
+  // const [myEvents, setMyEvents] = useState(initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
+    history.push(`/edit_todo/${myTodos.id}`);
   }
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])

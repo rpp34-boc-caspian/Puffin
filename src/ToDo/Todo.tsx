@@ -69,15 +69,37 @@ const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 const ADD_CATEGORY = 'add-category';
 
-export function CreateTodo({ calendarId = 1 }) {
+interface TodoProps {
+    id?: number;
+    initTitle: string;
+    initDescription: string;
+    initStart: Date | null;
+    initEnd: Date | null;
+    initAllDay: boolean;
+    initSelectedCategory: string;
+    calendarId: number;
+    mode: 'Add' | 'Edit';
+}
+
+export function ToDo({
+    id,
+    calendarId = 1,
+    initTitle,
+    initDescription,
+    initStart,
+    initEnd,
+    initAllDay,
+    initSelectedCategory,
+    mode,
+}: TodoProps) {
     const [categories, setCategories] = React.useState([]);
-    const [title, setTitle] = React.useState('');
-    const [description, setDescription] = React.useState('');
-    const [start, setStart] = React.useState(null);
-    const [end, setEnd] = React.useState(null);
-    const [allDay, setAllday] = React.useState(false);
-    const [hideDates, setHideDates] = React.useState(false);
-    const [selectedCategory, setSelectedCategory] = React.useState('');
+    const [title, setTitle] = React.useState(initTitle);
+    const [description, setDescription] = React.useState(initDescription);
+    const [start, setStart] = React.useState(initStart);
+    const [end, setEnd] = React.useState(initEnd);
+    const [allDay, setAllday] = React.useState(initAllDay);
+    const [hideDates, setHideDates] = React.useState(mode === "Edit");
+    const [selectedCategory, setSelectedCategory] = React.useState(initSelectedCategory);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [friend, setFriend] = React.useState('');
 
@@ -90,19 +112,29 @@ export function CreateTodo({ calendarId = 1 }) {
             .catch((err) => console.log(err));
     }, []);
 
-    const save = React.useCallback(async () => {
-        const resp = await fetch("/api/createtodo", {
+    const handleButtonClick = React.useCallback(async () => {
+        const url = mode === "Add" ? "/api/createtodo" : "/api/updatetodo";
+
+        const body = {
+            title,
+            description,
+            start,
+            end,
+            allDay,
+            selectedCategory
+        };
+
+        if (mode === "Edit") {
+            // @ts-ignore
+            body.id = id;
+        }
+
+        const resp = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                title,
-                description,
-                start,
-                end,
-                allDay
-            })
+            body: JSON.stringify(body)
         })
 
         try {
@@ -154,7 +186,7 @@ export function CreateTodo({ calendarId = 1 }) {
             {/* <Stack spacing={5}> */}
             <div style={{ display: 'flex', justifyContent: 'left' }}>
                 <Typography variant="h4" component="h2" >
-                    Add a new to-do
+                    {mode} {mode === "Add" && "a new"} to-do
                 </Typography>
             </div>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -181,9 +213,10 @@ export function CreateTodo({ calendarId = 1 }) {
                     placeholder="Enter Description"
                 />
             </Grid>
-            <div>
+            {mode === "Add" && <div>
                 Add to calendar <Switch {...label} value={hideDates} onChange={(event) => setHideDates(event.target.checked)} />
             </div>
+            }
             {hideDates &&
                 <>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -291,7 +324,9 @@ export function CreateTodo({ calendarId = 1 }) {
             <Grid container>
                 <Grid item xs={9}></Grid>
                 <Grid item xs={3}>
-                    <Button onClick={save} fullWidth variant="contained" size="large">Add</Button>
+                    <Button onClick={handleButtonClick} fullWidth variant="contained" size="large">
+                        {mode}
+                    </Button>
                 </Grid>
             </Grid>
             {/* </Stack> */}
