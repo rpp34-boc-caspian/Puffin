@@ -81,8 +81,6 @@ const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
   const history = useNavigate()
-
-  // const [myEvents, setMyEvents] = useState(initialEvents);
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
