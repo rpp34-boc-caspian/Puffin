@@ -14,10 +14,30 @@ import SignUp from './authentication/signup';
 import Login from './authentication/login';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 
 const App: React.FC = () => {
   const [metricsPageOpent, toggleMetrics] = useState(false);
+
+  const [shareData, setShareData] = useState<{
+    userid: number,
+    calendar: string,
+    categories: string[],
+    todos:string[],
+    friends: string[]
+  }[]>([]);
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8080/share/calendar_todos')
+      .then((data: any) => {
+        console.log('Share Data:', data);
+      })
+      .catch((err) => {
+        console.log('Error:', err);
+      })
+  })
+
   const [metricsData, setMetricsData] = useState<{
     title: string,
     start_d: string,

@@ -1,10 +1,10 @@
 const { Pool } = require('pg')
-// const pool = new Pool({
-//     user: 'isaiahsmith',
-//     host: 'localhost',
-//     database: 'puffin',
-//     port: 5432,
-//   });
+const sharePool = new Pool({
+    user: 'isaiahsmith',
+    host: 'localhost',
+    database: 'puffin',
+    port: 5432,
+  });
 
 
   const pool = new Pool({
@@ -22,4 +22,4 @@ const darianPool = new Pool({
 });
 
 
-module.exports = {pool, darianPool};
+module.exports = {pool, darianPool, sharePool};
