@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import TextField from '@mui/material/TextField';
@@ -17,7 +17,7 @@ function SignUp({ user }: { user: Function }) {
   const [passwordError, setPasswordError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
-  const location = useLocation();
+  const navigateTo = useNavigate();
 
   function validateEmail(email: string) {
     var re = /\S+@\S+\.\S+/;
@@ -56,7 +56,7 @@ function SignUp({ user }: { user: Function }) {
 
         user(res.data.id);
 
-        <Navigate to="/" state={{ from: location }} />
+        navigateTo('/');
 
         return;
       };

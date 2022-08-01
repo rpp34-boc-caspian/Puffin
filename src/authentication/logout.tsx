@@ -1,16 +1,16 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
 function Logout({ user }: { user: Function }) {
-  const location = useLocation();
+  const navigateTo = useNavigate();
 
   Cookies.remove('token');
 
   user(0);
 
-  <Navigate to="/login" state={{ from: location }} />
+  navigateTo('/');
 
   return (
     <>

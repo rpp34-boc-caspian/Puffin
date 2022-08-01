@@ -12,6 +12,7 @@ import { CreateTodo } from './Create to-do/create-todo';
 import Share from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
+import Logout from './authentication/logout';
 
 import RequireAuth from './authentication/requireAuth';
 import axios from 'axios';
@@ -78,6 +79,7 @@ const App: React.FC = () => {
             }/>
             <Route path="/login" element={ <Login user={ setUserId } /> } />
             <Route path="/signup" element={ <SignUp user={ setUserId } /> } />
+            <Route path="/logout" element={ <Logout user={ setUserId } /> } />
           </Routes>
         </BrowserRouter>
       </div>

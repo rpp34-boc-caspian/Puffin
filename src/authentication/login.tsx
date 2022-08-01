@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ function Login({ user }: { user: Function }) {
   const [loginError, setLoginError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
-  const location = useLocation();
+  const navigateTo = useNavigate();
 
   function handleLogin() {
     setLoginError(false);
@@ -35,10 +35,8 @@ function Login({ user }: { user: Function }) {
         user(res.data.id);
         Cookies.set('token', res.data.cookie, { path: '/' });
 
-
-        return (
-          <Navigate to="/" state={{ from: location }} />
-        );
+        navigateTo('/');
+        return;
       };
 
       setLoginError(true);
@@ -57,7 +55,6 @@ function Login({ user }: { user: Function }) {
 
   return (
     <>
-
       {
         serverError ? <Alert severity="error">Oops, something went wrong, please try again</Alert> : <></>
       }
