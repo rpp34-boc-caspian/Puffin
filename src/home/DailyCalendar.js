@@ -11,9 +11,9 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography } from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 import { colorMap } from '../theme';
 import CustomEvent from './CustomEvent';
+import CustomCalendar from './CustomCalendar';
 import { updateTodo } from './utils/helper';
 
 
@@ -202,11 +202,9 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
           const textDecorationLine = event.complete === false ? 'none' : 'line-through';
           return { style: { backgroundColor, textDecorationLine } }
         }}
-        toolbar={false}
         components={{
           event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          // toolbar: CustomToolbar
-          // timeSlotWrapper: CustomDate
+          toolbar: CustomCalendar
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)
@@ -219,7 +217,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         unscheduledTodoList={unscheduledTodoList}
         setUnscheduledTodoList={setUnscheduledTodoList}
       />
-      {/* {selectedEvent && <ToDoEditModal />} */}
     </div>
   )
 }
