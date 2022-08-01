@@ -1,5 +1,5 @@
 const { Pool } = require('pg')
-const sharePool = new Pool({
+const pool = new Pool({
     user: 'isaiahsmith',
     host: 'localhost',
     database: 'puffin',
@@ -7,19 +7,19 @@ const sharePool = new Pool({
   });
 
 
-  const pool = new Pool({
-    user:'postgres',
-    host: 'localhost',
-    database: 'puffin',
-    port: 5432,
-  });
+  // const pool = new Pool({
+  //   user:'postgres',
+  //   host: 'localhost',
+  //   database: 'puffin',
+  //   port: 5432,
+  // });
 
 const darianPool = new Pool({
-  user: 'darianhogue',
+  user: 'isaiahsmith',
   host: 'localhost',
   database: 'puffin',
   port: 5432,
 });
 
 
-module.exports = {pool, darianPool, sharePool};
+module.exports = {pool, darianPool};

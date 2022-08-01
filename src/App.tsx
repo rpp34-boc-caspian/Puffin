@@ -25,13 +25,21 @@ const App: React.FC = () => {
     calendar: string,
     categories: string[],
     todos:string[],
-    friends: string[]
+    friends: string[],
+    test: any[]
+  }[]>([]);
+
+  const [sharingData, setSharingData] = useState<{
+    cal_name: string,
+    category: string,
+    color: number,
+    title: string
   }[]>([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8080/share/calendar_todos')
+    axios.get('http://127.0.0.1:8080/share/user_profile/4')
       .then((data: any) => {
-        console.log('Share Data:', data);
+        setSharingData(data.data);
       })
       .catch((err) => {
         console.log('Error:', err);
@@ -57,7 +65,6 @@ const App: React.FC = () => {
         setMetricsData(FakeTodoData)
       })
   },[userId])
-
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
@@ -65,7 +72,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path='/share' element={<Share />} />
+            <Route path='/share' element={<Share rows={sharingData}/>} />
             <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
           </Routes>
         </BrowserRouter>

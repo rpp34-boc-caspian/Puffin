@@ -15,7 +15,7 @@ import {colorMap} from '../../theme';
 
 
 interface todo {
-  title: string,
+  title: string ,
   complete: boolean,
   permission: number
 }
@@ -23,18 +23,17 @@ interface todo {
 interface category {
   name: string,
   color: number,
-  todos: todo[]
+  todos: string[]
 }
 
 interface user {
-  username: string,
   calendar: string,
   calendarChecked: Boolean,
   categories: category[],
   friends: string[]
 }
 
-const Categories: React.FC<user> = ({ calendarChecked, username, calendar, categories, friends }) => {
+const Categories: React.FC<user> = ({ calendarChecked, calendar, categories, friends }) => {
   const catState : any = {
     calendarChecked: false
   };

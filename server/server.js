@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const cors = require('cors');
-const {pool, darianPool, sharePool} = require('../db/index.js');
+const {pool, darianPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
 
 app.use(express.json());
@@ -83,10 +83,11 @@ app.post('/login', (req, res) => {
 });
 //Sharing Functions
 
-app.get('/share/calendar_todos', (req, res) => {
+app.get('/share/user_profile/:userId', (req, res) => {
   const user_id = req.params.userId;
-  const query = 'SELECT cal_name FROM calendars WHERE user_id = 3';
-  sharePool.connect((err, client, release) => {
+  const query = `SELECT calendars.cal_name, categories.category_name, categories.color, todos.title from calendars left join categories on calendars.id = categories.calendar_id LEFT JOIN todos
+  ON categories.id = todos.cat_id where calendars.user_id = ${user_id};`;
+  pool.connect((err, client, release) => {
     client.query(query, (err, result) => {
       release();
       console.log(result.rows)
@@ -97,7 +98,10 @@ app.get('/share/calendar_todos', (req, res) => {
 
 app.get('/share_todos_info/:userId', (req, res) => {
   const user_id = req.params.userId;
-  pool.query(`SELECT calendars.user_id, calendars.cal_name, categories.category_name, categories.color, todos.title, users.username AS friend , permissions.permission FROM calendars LEFT JOIN categories ON calendars.user_id = categories.calendar_id LEFT JOIN todos ON categories.id = todos.cat_id LEFT JOIN permissions ON permissions.user_id = calendars.user_id LEFT JOIN users ON permissions.friend_id = users.id WHERE calendars.user_id = ${user_id}`)
+  pool.query(`SELECT calendars.user_id, calendars.cal_name, categories.category_name, categories.color, todos.title, users.username
+  AS friend , permissions.permission FROM calendars LEFT JOIN categories ON calendars.id = categories.calendar_id LEFT JOIN todos
+  ON categories.id = todos.cat_id LEFT JOIN permissions ON permissions.user_id = calendars.user_id LEFT JOIN users
+  ON permissions.friend_id = users.id WHERE calendars.user_id = ${user_id}`)
     .then(output => {
       res.send(output);
     })

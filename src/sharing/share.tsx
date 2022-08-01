@@ -1,9 +1,8 @@
 import { Container, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
-import { Circle } from "@mui/icons-material";
+import { Circle, ReorderTwoTone } from "@mui/icons-material";
 import Categories from "./components/Categories";
 import internal from "stream";
 import { red } from "@mui/material/colors";
-import React from 'react';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
@@ -23,68 +22,52 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Friends from "./components/Friends";
+import React, { useEffect, useState } from 'react';
+import { format } from "path";
+
 
 interface friend {
   name: string,
   permissions: number
 }
 
-export const Share = () => {
+interface user {
+  calendar: string,
+  categories: category[],
+  friends: string[]
+}
+
+interface category {
+  name: string,
+  todos: string[],
+  color: number
+}
+
+export const Share = (data: any) => {
   const userEx =
   {
-    username: 'Mandy',
     calendar: 'Mandy Cal',
     categories: [
       {
         name: 'Eat',
         todos: [
-          {
-            title: 'Broccoli',
-            complete: false,
-            permission: 1
-          },
-          {
-            title: 'Cheese',
-            complete: false,
-            permission: 1
-          },
+          'Broccoli',
+          'Cheese'
         ],
         color: 4
       },
       {
         name: 'Study',
-        todos: [
-          {
-            title: 'Science',
-            complete: false,
-            permission: 1
-          }
-        ],
+        todos: [],
         color: 2
       },
       {
         name: 'Sport',
         todos: [
-          {
-            title: 'Tennis',
-            complete: false,
-            permission: 1
-          },
-          {
-            title: 'Basketball',
-            complete: false,
-            permission: 1
-          },
-          {
-            title: 'Football',
-            complete: false,
-            permission: 1
-          },
-          {
-            title: 'American Football',
-            complete: false,
-            permission: 1
-          }
+            'Tennis',
+            'Basketball',
+            'Football',
+            'American Football'
         ],
         color: 9
       },
@@ -95,12 +78,51 @@ export const Share = () => {
 
   const options = userEx.friends;
   const access : friend[] = [];
+  const user : user = userEx;
 
   const [state, setState] = React.useState({
+    user: user,
     calendar: false,
     friends: userEx.friends,
     friendsAccess: access
   });
+
+  const formatData = (rows: any) => {
+    const no_cat : category[] = [];
+    const empty : string[] = [];
+    const user: user = {
+      calendar: '',
+      categories: no_cat,
+      friends: empty
+    };
+
+    for (var i = 0; i < rows.length; i++) {
+      var isFound = false;
+      if (user.calendar === '') {
+        user.calendar = rows[i].cal_name;
+      }
+      for (var j = 0; j < user.categories.length; j++) {
+        if (user.categories[j].name === rows[i].category_name) {
+          user.categories[j].todos.push(rows[i].title);
+          isFound = true;
+          break;
+        }
+      }
+      if (!isFound) {
+
+        user.categories.push({
+          name: rows[i].category_name,
+          todos: rows[i].title === null ? empty : [rows[i].title],
+          color: rows[i].color
+        });
+      }
+    }
+
+    setState({
+      ...state,
+      user: user
+    });
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -117,6 +139,9 @@ export const Share = () => {
   const [openAdd, setOpenAdd] = React.useState(false);
 
   const handleClickOpenAdd = () => {
+    console.log("rows", data);
+    formatData(data.rows);
+    console.log('DATA', state.user);
     setOpenAdd(true);
   };
 
@@ -186,11 +211,11 @@ export const Share = () => {
             control={
               <Checkbox checked={state.calendar} onChange={handleChange} name="calendar" />
             }
-            label={userEx.calendar}
+            label={state.user.calendar}
           />
         </FormGroup>
       </FormControl>
-      <Categories calendarChecked={state.calendar} username={userEx.username} categories={userEx.categories} calendar={userEx.calendar} friends={state.friends} />
+      <Categories calendarChecked={state.calendar} categories={state.user.categories} calendar={state.user.calendar} friends={state.friends} />
       <div>
         <PeopleAltIcon />
         <label>
@@ -198,7 +223,7 @@ export const Share = () => {
         </label>
         <AddIcon onClick={handleClickOpenAdd}></AddIcon>
       </div>
-      <Friends friends={state.friendsAccess}/>
+      {/* <Friends friends={state.friendsAccess}/> */}
       <Dialog open={openAdd} onClose={handleCloseAdd}>
         <DialogTitle>Share with Friend</DialogTitle>
         <DialogContent>
