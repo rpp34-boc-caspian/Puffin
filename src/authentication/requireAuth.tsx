@@ -7,10 +7,11 @@ function RequireAuth({ children, user }: { children: JSX.Element, user: Function
   const location = useLocation();
 
   if (authCookie === undefined) {
+
     return (
       <Navigate to="/login" state={{ from: location }} />
-    );
-  };
+      );
+    };
 
   let userInfo = {
     id: 0,
@@ -19,18 +20,20 @@ function RequireAuth({ children, user }: { children: JSX.Element, user: Function
     correct: false
   }
 
-  axios.get(`http://localhost:8080/verify/${authCookie}`)
+  axios.get(`http://127.0.0.1:8080/verify/${authCookie}`)
   .then((cookieInfo) => {
     userInfo = cookieInfo.data;
+
+    if (!userInfo.correct) {
+      return (
+        <Navigate to="/login" state={{ from: location }} />
+      );
+    }
+
+    user(userInfo.id);
+
+    return children;
   });
-
-  if (!userInfo.correct) {
-    return (
-      <Navigate to="/login" state={{ from: location }} />
-    );
-  }
-
-  user(userInfo.id);
 
   return children;
 };

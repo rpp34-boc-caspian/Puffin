@@ -11,7 +11,7 @@ import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, Ic
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import {MdOutlineDelete} from 'react-icons/md';
 import {UnscheduledTodoList} from '../App';
-import axios from 'axios';
+import {updateTodo, deleteTodo} from './utils/helper';
 
 const drawerBleeding = 56;
 
@@ -47,7 +47,7 @@ export default function UnscheduledTodo(props: Props) {
     const container = window !== undefined ? () => window().document.body : undefined;
 
     //mark an unscheduled todo as completed
-    const handleToggleMarkAsCompleted = (todoId: number) => () => {
+    const handleToggleMarkAsCompleted = (todoId: number, complete: boolean) => () => {
         const currentIndex = checked.indexOf(todoId);
         const newChecked = [...checked];
 
@@ -58,7 +58,7 @@ export default function UnscheduledTodo(props: Props) {
         }
 
         setChecked(newChecked);
-        axios.put(`http://127.0.0.1:8080/unscheduledTodos/${todoId}`)
+        updateTodo (todoId, null, null, null, !complete)
         .then(({data}) => {
             if (data.message === 'updated') {
                 console.log('here');
@@ -71,7 +71,7 @@ export default function UnscheduledTodo(props: Props) {
     //delete an unscheduled todo
     const handleDeleteTodoClick = (todoId: number) => {
         setOpenSuccessDelete(true);
-        axios.delete(`http://127.0.0.1:8080/unscheduledTodos/${todoId}`)
+        deleteTodo(todoId)
         .then(({data}) => {
             if (data.message === 'deleted') {
                 setUnscheduledTodoList(pre => pre.filter(todo => todo.id !== todoId))
@@ -156,7 +156,7 @@ export default function UnscheduledTodo(props: Props) {
                             }
                             disablePadding
                             >
-                            <ListItemButton role={undefined} onClick={handleToggleMarkAsCompleted(todo.id!)} dense>
+                            <ListItemButton role={undefined} onClick={handleToggleMarkAsCompleted(todo.id!, todo.complete!)} dense>
                             <ListItemIcon>
                                 <Checkbox
                                 edge="start"
