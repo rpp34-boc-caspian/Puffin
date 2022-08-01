@@ -7,7 +7,7 @@ const { Pool } = require('pg')
 //   });
 
 const pool = new Pool({
-  user: 'anuar',
+  user: 'darianhogue',
   host: 'localhost',
   database: 'puffin',
   port: 5432,
@@ -29,4 +29,4 @@ const tamPool = new Pool({
   port: 5432,
 });
 
-module.exports = {pool, tamPool, darianPool};
+module.exports = {pool, tamPool};
