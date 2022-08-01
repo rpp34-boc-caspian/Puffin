@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function RequireAuth({ children, user }: { children: JSX.Element, user: Function }) {
   let authCookie = Cookies.get('token');
-  let location = useLocation();
+  const location = useLocation();
 
   if (authCookie === undefined) {
     return (
@@ -19,7 +19,7 @@ function RequireAuth({ children, user }: { children: JSX.Element, user: Function
     correct: false
   }
 
-  axios.get(`/verify/${authCookie}`)
+  axios.get(`http://localhost:8080/verify/${authCookie}`)
   .then((cookieInfo) => {
     userInfo = cookieInfo.data;
   });

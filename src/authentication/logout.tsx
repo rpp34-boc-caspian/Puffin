@@ -1,16 +1,22 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 function Logout({ user }: { user: Function }) {
-  // get location
-  let location = useLocation();
-  // Remove cookie
+  const location = useLocation();
+
   Cookies.remove('token');
-  // set user to 0
+
   user(0);
-  // navigate to /login
+
   <Navigate to="/login" state={{ from: location }} />
-  // return a spinning circle?
+
+  return (
+    <>
+      <CircularProgress />
+    </>
+  );
 }
 
 export default Logout;

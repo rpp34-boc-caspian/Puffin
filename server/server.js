@@ -122,7 +122,7 @@ app.post('/login', (req, res) => {
 
     let token = jwt.sign({ id: results.rows[0].id, user: username }, 'teamPuffin');
 
-    res.cookie('token', token).json({ exists: true, id: results.rows[0].id });
+    res.json({ exists: true, id: results.rows[0].id, cookie: token });
 
   })
   .catch((err) => {

@@ -75,8 +75,8 @@ const App: React.FC = () => {
                 <Metrics todos={metricsData} />
               </RequireAuth>
             }/>
-            <Route path="/login" element={ <Login /> } />
-            <Route path="/signup" element={ <SignUp /> } />
+            <Route path="/login" element={ <Login user={ setUserId } /> } />
+            <Route path="/signup" element={ <SignUp user={ setUserId } /> } />
           </Routes>
         </BrowserRouter>
       </div>

@@ -42,7 +42,7 @@ function SignUp({ user }: { user: Function }) {
     setEmailError({ status: false, reason: '' });
     setServerError(false);
 
-    axios.post('/signup', {
+    axios.post('http://localhost:8080/signup', {
       email: email,
       username: username,
       password: password

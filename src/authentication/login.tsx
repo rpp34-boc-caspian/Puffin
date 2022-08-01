@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import TextField from '@mui/material/TextField';
@@ -32,10 +33,12 @@ function Login({ user }: { user: Function }) {
         setPassword('');
 
         user(res.data.id);
+        Cookies.set('token', res.data.cookie, { path: '/' });
 
-        <Navigate to="/" state={{ from: location }} />
 
-        return;
+        return (
+          <Navigate to="/" state={{ from: location }} />
+        );
       };
 
       setLoginError(true);
