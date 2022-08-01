@@ -10,7 +10,7 @@ function Logout({ user }: { user: Function }) {
 
   user(0);
 
-  navigateTo('/');
+  navigateTo('/login');
 
   return (
     <>
