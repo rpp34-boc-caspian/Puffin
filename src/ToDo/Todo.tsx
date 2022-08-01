@@ -79,6 +79,7 @@ interface TodoProps {
     initSelectedCategory: string;
     calendarId: number;
     mode: 'Add' | 'Edit';
+    userId?: number;
 }
 
 export function ToDo({
@@ -91,6 +92,7 @@ export function ToDo({
     initAllDay,
     initSelectedCategory,
     mode,
+    userId = 1,
 }: TodoProps) {
     const [categories, setCategories] = React.useState([]);
     const [title, setTitle] = React.useState(initTitle);
@@ -127,6 +129,9 @@ export function ToDo({
         if (mode === "Edit") {
             // @ts-ignore
             body.id = id;
+        } else {
+            // @ts-ignore
+            body.userId = userId;
         }
 
         const resp = await fetch(url, {

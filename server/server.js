@@ -21,19 +21,23 @@ app.post('/api/createtodo', (req, res) => {
   const { 
     title, 
     userId,
-    categoryId,
+    selectedCategory,
     description, 
     start, 
     end, 
     allDay
   } = req.body;
+  console.log(req.body)
   
   tamPool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
     }
-    client.query(`INSERT INTO todos (title, user_id, cat_id, descript, start_d, end_d, all_d) VALUES ('${title}', ${userId}, ${categoryId}, '${description}', now(), now(), ${allDay})`,
+    client.query(`INSERT INTO todos 
+      (title, user_id, cat_id, descript, start_d, end_d, all_d, complete) 
+      VALUES ('${title}', ${userId}, 1, '${description}', to_timestamp(${new Date(start).getTime() / 1000}), to_timestamp(${new Date(end).getTime() / 1000}), ${allDay}, false)
+    `,
     (err, result) => {
       release();
       if (err) {
