@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const cors = require('cors');
-const { pool, darianPool } = require('../db/index.js');
+const {pool, darianPool, tamPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -19,10 +19,153 @@ app.use(cors())
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
 app.post('/api/createtodo', (req, res) => {
-  const { title, description } = req.body;
+  const {
+    title,
+    userId,
+    selectedCategory,
+    description,
+    start,
+    end,
+    allDay
+  } = req.body;
   console.log(req.body)
 
-  res.json({ data: 'hello' })
+  tamPool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`INSERT INTO todos
+      (title, user_id, cat_id, descript, start_d, end_d, all_d, complete)
+      VALUES ('${title}', ${userId}, 1, '${description}', to_timestamp(${new Date(start).getTime() / 1000}), to_timestamp(${new Date(end).getTime() / 1000}), ${allDay}, false)
+    `,
+    (err, result) => {
+      release();
+      if (err) {
+        res.status(500).json({ err });
+        return;
+      }
+
+      res.status(200).json({ todos: result.rows });
+    })
+  })
+})
+
+app.post('/api/updatetodo', (req, res) => {
+  const {
+    id,
+    title,
+    selectedCategory,
+    description,
+    start,
+    end,
+    allDay
+  } = req.body;
+  console.log(req.body)
+
+  tamPool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`UPDATE todos
+      SET title='${title}',
+       cat_id=${selectedCategory},
+       descript='${description}',
+       start_d=to_timestamp(${new Date(start).getTime() / 1000}),
+       end_d=to_timestamp(${new Date(end).getTime() / 1000 }),
+       all_d=${allDay}
+       where id=${id}
+    `,
+    (err, result) => {
+      release();
+      if (err) {
+        console.log(err)
+        res.status(500).json({ err });
+        return;
+      }
+
+      res.status(200).json({ todos: result.rows });
+    })
+  })
+})
+
+app.get('/api/getcategories', (req, res) => {
+  const { calendarId } = req.query;
+
+  tamPool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`SELECT * from categories where calendar_id = ${calendarId}`,
+    (err, result) => {
+      release();
+      if (err) {
+        res.status(500).json({ err });
+        return;
+      }
+
+      res.status(200).json({ categories: result.rows });
+    })
+  })
+})
+
+app.get('/api/get_todo', (req, res) => {
+  const { todo } = req.query;
+
+  tamPool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`SELECT * from todos where id=${parseInt(todo)}`,
+    (err, result) => {
+      release();
+      if (err) {
+        res.status(500).json({ err });
+        return;
+      }
+      res.status(200).json({ todo: result.rows[0] });
+    })
+  })
+})
+
+app.post('/api/createcategory', (req, res) => {
+  const {
+    name,
+    color,
+    calendarId
+  } = req.body;
+  console.log(req.body)
+  tamPool.connect((err, client, release) => {
+    if (err) {
+      res.status(500).json(err);
+      return;
+    }
+    client.query(`INSERT INTO categories
+      (category_name, color, calendar_id)
+      VALUES ('${name}', ${color}, ${calendarId})
+    `,
+    (err, result) => {
+
+      if (err) {
+        console.log(err)
+        res.status(500).json({ err });
+        return;
+      }
+      client.query(`SELECT * from categories where calendar_id = ${calendarId}`,
+      (err, result) => {
+        release();
+        if (err) {
+          res.status(500).json({ err });
+          return;
+        }
+
+        res.status(200).json({ categories: result.rows });
+      })
+    })
+  })
 })
 
 app.get('/verify/:token', (req, res) => {
