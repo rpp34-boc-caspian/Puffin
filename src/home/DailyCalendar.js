@@ -83,13 +83,8 @@ const localizer = dateFnsLocalizer({
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
-<<<<<<< HEAD
-export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos }) {
-  console.log('from daily calendar component', myTodos)
-=======
 export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
   const history = useNavigate()
->>>>>>> master
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
