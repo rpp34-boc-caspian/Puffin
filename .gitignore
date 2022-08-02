@@ -26,3 +26,5 @@ yarn-error.log*
 *.sh
 
 postgres.sql
+
+TODO.md
