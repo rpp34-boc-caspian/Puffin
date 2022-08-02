@@ -15,6 +15,7 @@ import Login from './authentication/login';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
 import { ConstructionOutlined } from '@mui/icons-material';
+import {formatData} from './sharing/components/helpers/helpers';
 
 
 const App: React.FC = () => {
@@ -37,7 +38,7 @@ const App: React.FC = () => {
   }[]>([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8080/share/user_profile/4')
+    axios.get('http://127.0.0.1:8080/share/user_profile/3')
       .then((data: any) => {
         setSharingData(data.data);
       })
@@ -72,7 +73,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path='/share' element={<Share rows={sharingData}/>} />
+            <Route path='/share' element={<Share data={sharingData}/>} />
             <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
           </Routes>
         </BrowserRouter>

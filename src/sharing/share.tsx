@@ -24,6 +24,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Friends from "./components/Friends";
 import React, { useEffect, useState } from 'react';
 import { format } from "path";
+import {formatData} from './components/helpers/helpers';
 
 
 interface friend {
@@ -78,51 +79,24 @@ export const Share = (data: any) => {
 
   const options = userEx.friends;
   const access : friend[] = [];
-  const user : user = userEx;
 
   const [state, setState] = React.useState({
-    user: user,
     calendar: false,
     friends: userEx.friends,
     friendsAccess: access
   });
 
-  const formatData = (rows: any) => {
-    const no_cat : category[] = [];
-    const empty : string[] = [];
-    const user: user = {
-      calendar: '',
-      categories: no_cat,
-      friends: empty
-    };
+  const [currentUser, setCurrentUser] = React.useState(userEx);
+  const [friends, setFriends] = React.useState(userEx.friends);
+  const [value, setValue] = React.useState<string | null>(options[0]);
+  const [inputValue, setInputValue] = React.useState('');
+  const [openAdd, setOpenAdd] = React.useState(false);
+  const [openShare, setOpenShare] = React.useState(false);
+  const [openFriend, setOpenFriend] = React.useState(false);
 
-    for (var i = 0; i < rows.length; i++) {
-      var isFound = false;
-      if (user.calendar === '') {
-        user.calendar = rows[i].cal_name;
-      }
-      for (var j = 0; j < user.categories.length; j++) {
-        if (user.categories[j].name === rows[i].category_name) {
-          user.categories[j].todos.push(rows[i].title);
-          isFound = true;
-          break;
-        }
-      }
-      if (!isFound) {
-
-        user.categories.push({
-          name: rows[i].category_name,
-          todos: rows[i].title === null ? empty : [rows[i].title],
-          color: rows[i].color
-        });
-      }
-    }
-
-    setState({
-      ...state,
-      user: user
-    });
-  }
+  useEffect(() => {
+    setCurrentUser(formatData(data.data));
+  }, [data.data]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -131,17 +105,9 @@ export const Share = (data: any) => {
     });
   };
 
-  const [value, setValue] = React.useState<string | null>(options[0]);
-  const [inputValue, setInputValue] = React.useState('');
-
-
-
-  const [openAdd, setOpenAdd] = React.useState(false);
-
   const handleClickOpenAdd = () => {
-    console.log("rows", data);
-    formatData(data.rows);
-    console.log('DATA', state.user);
+    console.log("rows", data.data);
+    console.log("user", currentUser);
     setOpenAdd(true);
   };
 
@@ -160,8 +126,6 @@ export const Share = (data: any) => {
     });
   };
 
-  const [openShare, setOpenShare] = React.useState(false);
-
   const handleClickOpenShare = () => {
     setOpenShare(true);
   };
@@ -169,8 +133,6 @@ export const Share = (data: any) => {
   const handleCloseShare = () => {
     setOpenShare(false);
   };
-
-  const [openFriend, setOpenFriend] = React.useState(false);
 
   const handleClickOpenFriend = () => {
     setOpenFriend(true);
@@ -211,11 +173,11 @@ export const Share = (data: any) => {
             control={
               <Checkbox checked={state.calendar} onChange={handleChange} name="calendar" />
             }
-            label={state.user.calendar}
+            label={currentUser.calendar}
           />
         </FormGroup>
       </FormControl>
-      <Categories calendarChecked={state.calendar} categories={state.user.categories} calendar={state.user.calendar} friends={state.friends} />
+      <Categories calendarChecked={state.calendar} categories={currentUser.categories} calendar={currentUser.calendar} friends={state.friends} />
       <div>
         <PeopleAltIcon />
         <label>
