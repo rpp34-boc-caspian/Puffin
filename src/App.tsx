@@ -59,16 +59,6 @@ const App: React.FC = () => {
     title: string
   }[]>([]);
 
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8080/share/user_profile/3')
-      .then((data: any) => {
-        setSharingData(data.data);
-      })
-      .catch((err) => {
-        console.log('Error:', err);
-      })
-  })
-
   const [metricsData, setMetricsData] = useState<{
     title: string,
     start_d: string,
@@ -84,7 +74,7 @@ const App: React.FC = () => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
     let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
     let requestTodos = axios.get(`http://127.0.0.1:8080/todos/${userId}`);
-    let requestShares = axios.get('http://127.0.0.1:8080/share/user_profile/3')
+    let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`)
 
     axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares])
       .then(axios.spread((...allData) => {

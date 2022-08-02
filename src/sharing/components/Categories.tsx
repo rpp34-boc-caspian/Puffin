@@ -40,6 +40,7 @@ const Categories: React.FC<user> = ({ calendarChecked, calendar, categories, fri
 
   const expandState : any = {}
 
+  //Create the states for each category
   for (var i = 0; i < categories.length; i++) {
     catState[categories[i].name] = catState.calendarChecked ? true : false;
     expandState[categories[i].name] = false;
