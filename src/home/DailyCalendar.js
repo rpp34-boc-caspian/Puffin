@@ -62,7 +62,7 @@ const styledCalendar = styled(Calendar)`
 `
 
 let formats = {
-  timeGutterFormat: 'h a',
+  timeGutterFormat: 'ha',
 }
 
 const locales = {
@@ -82,6 +82,7 @@ const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
 export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos }) {
+  console.log('from daily calendar component', myTodos)
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
@@ -204,7 +205,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         }}
         components={{
           event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          toolbar: CustomCalendar
+          toolbar: (props) => <CustomCalendar {...props} myTodos={myTodos} setMyTodos={setMyTodos} />
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)

@@ -1,45 +1,103 @@
 
-import React from 'react';
-import { styled } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-// import { FormControl } from '@mui/material';
+import React, { useState } from 'react';
+import Dropdown from 'rc-dropdown';
+import 'rc-dropdown/assets/index.css';
+import Menu, { Item as MenuItem } from 'rc-menu';
 
 
-const myCalendarMock = ['Tam','School','Holidays'];
+const myCalendarMock = [
+  'Tam','School','Holidays'
+];
 
 const sharedCalendarMock = ['Darien', 'Vacation', 'Family']
 
 
-const CustomCalendar = (myTodos) => {
-   console.log('myTodos from CustomCalendar', myTodos)
+const CustomCalendar = ({myTodos}) => {
+
+  console.log('from custom calendar:', myTodos)
+  const [currentSelect, setCurrentSelect] = useState([myTodos]);
+
+
+  const handleViewSelect = (event) => {
+    let user = {
+      name: event.target.name,
+      isChecked: event.target.checked
+    }
+    console.log(`the ${user.name} was checked: ${user.isChecked}`)
+    let userIsChecked = user.isChecked
+    let prevArr = currentSelect;
+    if (userIsChecked) {
+      prevArr.push(user.name)
+      setCurrentSelect(prevArr);
+      console.log(currentSelect)
+    } else {
+      let indexDelete = prevArr.indexOf(user.name)
+      console.log(`the user ${user.name} needs to be removed from view/array ${indexDelete}`)
+      // remove the name at the indexDelete
+      // setCurrentSelect(array without indexDelete)
+    }
+  }
+
+  function onSelect({ key }) {
+    // console.log(`${key} selected`);
+  }
+
+  function onVisibleChange(visible) {
+    console.log(visible);
+  }
+
+  const menu = (
+    <Menu onSelect={onSelect}>
+      {
+        myCalendarMock.map((item, i) => {
+          return <MenuItem key={i}>
+            {item}
+            <input
+              type="checkbox"
+              name={item}
+              onChange={(e) => {
+                handleViewSelect(e);
+              }}/>
+          </MenuItem>
+        })
+      }
+    </Menu>
+  );
+
+  const sharedCalendarMenu = (
+    <Menu onSelect={onSelect}>
+      {
+        sharedCalendarMock.map((item, i) => {
+          return <MenuItem key={i}>{item}<input type="checkbox" name={item} onChange={handleViewSelect}/></MenuItem>
+        })
+      }
+    </Menu>
+  );
+
 
    // input checkbox (create event handler for each)
   return (
+
     <div className='rbc-toolbar'>
       <div className="myCalendarView" style={{ padding: 5}}>
-        <form method="GET" action="/">
-          <select name="my-calendar-view" id="my-calendar-view">
-            {/* map all available calendars available to that user_id */}
-            <option value="/">My Calendar</option>
-            <option>
-              Tam<input type="checkbox" />
-            </option>
-            <option value="/tam">Tam</option>
-            <option value="/school">School</option>
-            <option value="/holidays">Holidays</option>
-          </select>
-        </form>
+      <Dropdown
+        trigger={['click']}
+        overlay={menu}
+        animation="slide-up"
+        onVisibleChange={onVisibleChange}
+      >
+        <button style={{ width: 125 }}>My Calendars</button>
+      </Dropdown>
       </div>
       <div className="sharedCalendarView" style={{ padding: 5 }}>
-        <form method="GET" action="/">
-          <select name="shared-calendar-view" id="shared-calendar-view">
-            {/* map all available calendars available to that user_id */}
-            <option value="/">Shared Calendar</option>
-            <option value="/darian">Darian</option>
-            <option value="/vacation">Vacation</option>
-            <option value="/family">Family</option>
-          </select>
-        </form>
+      <Dropdown
+        trigger={['click']}
+        overlay={sharedCalendarMenu}
+        animation="slide-up"
+        onVisibleChange={onVisibleChange}
+      >
+        <button style={{ width: 150 }}>Shared Calendars</button>
+      </Dropdown>
       </div>
     </div>
   )
