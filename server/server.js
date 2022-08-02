@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const cors = require('cors');
-const {pool, darianPool, tamPool} = require('../db/index.js');
+const {pool, darianPool } = require('../db/index.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -27,9 +27,9 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -60,9 +60,9 @@ app.post('/api/updatetodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -92,7 +92,7 @@ app.post('/api/updatetodo', (req, res) => {
 app.get('/api/getcategories', (req, res) => {
   const { calendarId } = req.query;
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -113,7 +113,7 @@ app.get('/api/getcategories', (req, res) => {
 app.get('/api/get_todo', (req, res) => {
   const { todo } = req.query;
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -136,8 +136,8 @@ app.post('/api/createcategory', (req, res) => {
     color,
     calendarId
   } = req.body;
-  console.log(req.body)
-  tamPool.connect((err, client, release) => {
+  // console.log(req.body)
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -324,7 +324,7 @@ app.get('/todos/:userId', (req, res) => {
   const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
-      console.log('rows to get all todos in server', rows);
+      // console.log('rows to get all todos in server', rows);
       res.send(rows);
     })
     .catch(err => {
@@ -401,7 +401,7 @@ app.get('/completedTodos/:userId', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack);
       }
-      console.log(result.rows)
+      // console.log(result.rows)
       res.send(result.rows)
     })
   })

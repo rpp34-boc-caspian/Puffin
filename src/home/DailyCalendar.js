@@ -19,7 +19,6 @@ import CustomCalendar from './CustomCalendar';
 import { updateTodo } from './utils/helper';
 
 
-
 const styledCalendar = styled(Calendar)`
   .rbc-current-time-indicator {
     background-color: #3f50b5;
