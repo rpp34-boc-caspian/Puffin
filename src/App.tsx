@@ -8,13 +8,15 @@ import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { Metrics } from './Metrics/Metrics';
 import Home from './home/Home';
-import { CreateTodo } from './Create to-do/create-todo';
-import Share from './sharing/share';
+import { ToDo } from './ToDo/Todo';
+import { Share } from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
 import RequireAuth from './authentication/requireAuth';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
+import { UpdateTodo } from './ToDo/Edit-todo';
+import { CreateTodo } from './ToDo/Create_todo';
 
 export interface UnscheduledTodoList {
   id?: number,
@@ -73,6 +75,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList} myTodos={myTodos} setMyTodos={setMyTodos}/>} />
             <Route path="/create_todo" element={<CreateTodo />} />
+            <Route path="/update_todo/:todoId" element={<UpdateTodo />} />
             <Route path='/share' element={<Share />} />
             <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
           </Routes>
