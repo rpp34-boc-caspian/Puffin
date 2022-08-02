@@ -59,92 +59,92 @@ export const buildWeekReportData = (weekTodos: any) => {
  export const FakeTodoData = [
   {
     title: 'Paint House',
-    start_d: '2022-07-28T15:00:00.000Z',
-    end_d: '2022-07-28T18:00:00.000Z',
+    start_d: '2022-08-01T15:00:00.000Z',
+    end_d: '2022-08-01T18:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Mow Lawn',
-    start_d: '2022-07-03T16:00:00.000Z',
-    end_d: '2022-07-03T17:00:00.000Z',
+    start_d: '2022-08-06T16:00:00.000Z',
+    end_d: '2022-08-06T17:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Clean Dishes Again',
-    start_d: '2022-07-06T14:00:00.000Z',
-    end_d: '2022-07-06T16:00:00.000Z',
+    start_d: '2022-08-05T14:00:00.000Z',
+    end_d: '2022-08-05T16:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Clean Gutters',
-    start_d: '2022-07-03T14:00:00.000Z',
-    end_d: '2022-07-03T16:00:00.000Z',
+    start_d: '2022-08-06T14:00:00.000Z',
+    end_d: '2022-08-06T16:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Clean Garage',
-    start_d: '2022-07-27T14:00:00.000Z',
-    end_d: '2022-07-27T16:00:00.000Z',
+    start_d: '2022-08-02T14:00:00.000Z',
+    end_d: '2022-08-02T16:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Clean Room',
-    start_d: '2022-07-03T14:00:00.000Z',
-    end_d: '2022-07-03T16:00:00.000Z',
+    start_d: '2022-08-06T14:00:00.000Z',
+    end_d: '2022-08-06T16:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Clean Dishes',
-    start_d: '2022-07-03T14:00:00.000Z',
-    end_d: '2022-07-03T16:00:00.000Z',
+    start_d: '2022-08-06T14:00:00.000Z',
+    end_d: '2022-08-06T16:00:00.000Z',
     category_name: 'Chores',
     color: 8
   },
   {
     title: 'Feautre Update 123.0',
-    start_d: '2022-07-28T14:00:00.000Z',
-    end_d: '2022-07-28T20:00:00.000Z',
+    start_d: '2022-08-01T14:00:00.000Z',
+    end_d: '2022-08-01T20:00:00.000Z',
     category_name: 'Work',
     color: 3
   },
   {
     title: 'Client Meeting (Janet)',
-    start_d: '2022-07-28T14:00:00.000Z',
-    end_d: '2022-07-28T16:00:00.000Z',
+    start_d: '2022-08-01T14:00:00.000Z',
+    end_d: '2022-08-01T16:00:00.000Z',
     category_name: 'Work',
     color: 3
   },
   {
     title: 'Client Meeting (Peter)',
-    start_d: '2022-07-27T14:00:00.000Z',
-    end_d: '2022-07-27T16:00:00.000Z',
+    start_d: '2022-08-02T14:00:00.000Z',
+    end_d: '2022-08-02T16:00:00.000Z',
     category_name: 'Work',
     color: 3
   },
   {
     title: 'Client Meeting (Leah)',
-    start_d: '2022-07-26T14:00:00.000Z',
-    end_d: '2022-07-26T17:00:00.000Z',
+    start_d: '2022-08-04T14:00:00.000Z',
+    end_d: '2022-08-04T17:00:00.000Z',
     category_name: 'Work',
     color: 3
   },
   {
     title: 'Client Meeting (Jim)',
-    start_d: '2022-07-25T14:00:00.000Z',
-    end_d: '2022-07-25T16:00:00.000Z',
+    start_d: '2022-08-05T14:00:00.000Z',
+    end_d: '2022-08-05T16:00:00.000Z',
     category_name: 'Work',
     color: 3
   },
   {
     title: 'Interview',
-    start_d: '2022-07-24T13:00:00.000Z',
-    end_d: '2022-07-24T15:00:00.000Z',
+    start_d: '2022-08-01T13:00:00.000Z',
+    end_d: '2022-08-01T15:00:00.000Z',
     category_name: 'Work',
     color: 3
   }
