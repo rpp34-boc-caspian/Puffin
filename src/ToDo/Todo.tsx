@@ -106,7 +106,7 @@ export function ToDo({
     const [friend, setFriend] = React.useState('');
 
     React.useEffect(() => {
-        fetch(`/api/getcategories?calendarId=${calendarId}`, {
+        fetch(`http://localhost:8080/api/getcategories?calendarId=${calendarId}`, {
             method: "GET",
         })
             .then((resp) => resp.json())

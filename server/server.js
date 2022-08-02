@@ -18,24 +18,24 @@ app.use(cors())
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
 app.post('/api/createtodo', (req, res) => {
-  const { 
-    title, 
+  const {
+    title,
     userId,
     selectedCategory,
-    description, 
-    start, 
-    end, 
+    description,
+    start,
+    end,
     allDay
   } = req.body;
   console.log(req.body)
-  
+
   tamPool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
     }
-    client.query(`INSERT INTO todos 
-      (title, user_id, cat_id, descript, start_d, end_d, all_d, complete) 
+    client.query(`INSERT INTO todos
+      (title, user_id, cat_id, descript, start_d, end_d, all_d, complete)
       VALUES ('${title}', ${userId}, 1, '${description}', to_timestamp(${new Date(start).getTime() / 1000}), to_timestamp(${new Date(end).getTime() / 1000}), ${allDay}, false)
     `,
     (err, result) => {
@@ -51,23 +51,23 @@ app.post('/api/createtodo', (req, res) => {
 })
 
 app.post('/api/updatetodo', (req, res) => {
-  const { 
+  const {
     id,
-    title, 
+    title,
     selectedCategory,
-    description, 
-    start, 
-    end, 
+    description,
+    start,
+    end,
     allDay
   } = req.body;
-  console.log(req.body) 
-  
+  console.log(req.body)
+
   tamPool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
     }
-    client.query(`UPDATE todos 
+    client.query(`UPDATE todos
       SET title='${title}',
        cat_id=${selectedCategory},
        descript='${description}',
@@ -131,8 +131,8 @@ app.get('/api/get_todo', (req, res) => {
 })
 
 app.post('/api/createcategory', (req, res) => {
-  const { 
-    name, 
+  const {
+    name,
     color,
     calendarId
   } = req.body;
@@ -142,8 +142,8 @@ app.post('/api/createcategory', (req, res) => {
       res.status(500).json(err);
       return;
     }
-    client.query(`INSERT INTO categories 
-      (category_name, color, calendar_id) 
+    client.query(`INSERT INTO categories
+      (category_name, color, calendar_id)
       VALUES ('${name}', ${color}, ${calendarId})
     `,
     (err, result) => {
@@ -160,7 +160,7 @@ app.post('/api/createcategory', (req, res) => {
           res.status(500).json({ err });
           return;
         }
-  
+
         res.status(200).json({ categories: result.rows });
       })
     })
@@ -296,7 +296,6 @@ if (err) {
 } else {
   query.push([friend_id]);
 }});
-
 app.post('/share', (req, res) => {
   const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
   pool.query(query, (err, data) => {
@@ -306,8 +305,6 @@ app.post('/share', (req, res) => {
   } else {
     query.push([friend_id]);
   }});
-
-
 app.post('/share', (req, res) => {
     const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
     pool.query(query, (err, data) => {
