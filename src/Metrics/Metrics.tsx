@@ -1,10 +1,12 @@
-import { Container, Stack } from "@mui/material"
+import { Container, Grid, IconButton, Stack } from "@mui/material"
 import { useEffect, useState } from "react"
 import { TodayMonth } from "./components/TodayMonth"
 import { Week } from "./components/Week"
 import { Detailed } from "./components/Detailed"
 import { getToDoHours } from "./components/helpers/helpers"
 import { DoughnutChart } from "./components/charts/DoughnutChart"
+import CloseIcon from '@mui/icons-material/Close';
+import { Link } from "react-router-dom"
 
 interface userTodo {
   title: string,
@@ -203,33 +205,43 @@ export const Metrics = (props: allTodos) => {
 
   if (pageStatus.home) {
     page = (
-      <Container sx={{p: 2}} maxWidth='sm'>
-        <h1>Reports</h1>
-        <Stack sx={{mx: 2}} spacing={2}>
-          <TodayMonth
-            togglePage={togglePage}
-            totalHours={todayTotalHours}
-            categories={todayCategoryTotalHours}
-            colors={todayCategoryColors}
-            chart={(data: any) => <DoughnutChart data={data}/>}
-            title="Today's Report"
-          ></TodayMonth>
-          <Week
-            togglePage={togglePage}
-            totalHours={weekTotalHours}
-            categories={weekCategoryTotalHours}
-            todos={weekData}
-          ></Week>
-          <TodayMonth
-            togglePage={togglePage}
-            totalHours={monthTotalHours}
-            categories={monthCategoryHours}
-            colors={monthCategoryColors}
-            chart={(data: any) => <DoughnutChart data={data}/>}
-            title="This Month's Report"
-          ></TodayMonth>
-        </Stack>
-      </Container>
+        <Container sx={{p: 2}} maxWidth='sm'>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+          >
+            <Link to="/">
+              <CloseIcon></CloseIcon>
+            </Link>
+          </Grid>
+          <h1>Reports</h1>
+          <Stack sx={{mx: 2}} spacing={2}>
+            <TodayMonth
+              togglePage={togglePage}
+              totalHours={todayTotalHours}
+              categories={todayCategoryTotalHours}
+              colors={todayCategoryColors}
+              chart={(data: any) => <DoughnutChart data={data}/>}
+              title="Today's Report"
+            ></TodayMonth>
+            <Week
+              togglePage={togglePage}
+              totalHours={weekTotalHours}
+              categories={weekCategoryTotalHours}
+              todos={weekData}
+            ></Week>
+            <TodayMonth
+              togglePage={togglePage}
+              totalHours={monthTotalHours}
+              categories={monthCategoryHours}
+              colors={monthCategoryColors}
+              chart={(data: any) => <DoughnutChart data={data}/>}
+              title="This Month's Report"
+            ></TodayMonth>
+          </Stack>
+        </Container>
     );
   }
   if(pageStatus.today) {
