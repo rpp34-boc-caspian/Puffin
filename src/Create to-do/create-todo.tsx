@@ -1,5 +1,6 @@
 
 import React from 'react';
+import axios from 'axios'
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -52,29 +53,31 @@ const names = [
     'test',
 ];
 
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
 export function CreateTodo() {
+    const [title, setTitle] = React.useState('');
+    const [description, setDescription] = React.useState('');
 
-    const label = { inputProps: { 'aria-label': 'Switch demo' } };
+    const save = React.useCallback(async () => {
+        const resp = await fetch("/api/createtodo", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title,
+                description
+            })
+        })
 
-    const [value, setValue] = React.useState<Date | null>(
-        new Date('2014-08-18T21:11:54'),
-    );
-
-    const handleChange = (newValue: Date | null) => {
-        setValue(newValue);
-    };
-
-    const [personName, setPersonName] = React.useState<string[]>([]);
-
-    const handleChangeCategories = (event: SelectChangeEvent<typeof personName>) => {
-        const {
-            target: { value },
-        } = event;
-        setPersonName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
+        try {
+            const data = await resp.json();
+            console.log(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }, [description, title])
 
     return (
         <Container>
@@ -92,7 +95,8 @@ export function CreateTodo() {
                         multiline
                         variant="standard"
                         fullWidth
-
+                        value={title}
+                        onChange={({ target: { value } }) => setTitle(value)}
                     />
                 </Box>
                 <Grid container item xs={12}>
@@ -102,6 +106,8 @@ export function CreateTodo() {
                         fullWidth
                         multiline
                         rows={6}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                         placeholder="Enter Description"
                     />
                 </Grid>
@@ -118,24 +124,22 @@ export function CreateTodo() {
                                 <DesktopDatePicker
                                     label="Date"
                                     inputFormat="MM/dd/yyyy"
-                                    value={value}
-                                    onChange={handleChange}
+                                    value={new Date()}
+                                    onChange={() => { }}
+                                    // value={value}
+                                    // onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
                             <Grid item xs={5}>
                                 <MobileTimePicker
                                     label="Time"
-                                    value={value}
-                                    onChange={handleChange}
+                                    value={new Date()}
+                                    onChange={() => { }}
+                                    // value={value}
+                                    // onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
-                                {/* <TimePicker
-                                    label="Time"
-                                    value={value}
-                                    onChange={handleChange}
-                                    renderInput={(params) => <TextField {...params} />}
-                                /> */}
                             </Grid>
                         </Grid>
                         <Grid container item xs={12} spacing={2}>
@@ -146,16 +150,20 @@ export function CreateTodo() {
                                 <DesktopDatePicker
                                     label="Date"
                                     inputFormat="MM/dd/yyyy"
-                                    value={value}
-                                    onChange={handleChange}
+                                    value={new Date()}
+                                    onChange={() => { }}
+                                    // value={value}
+                                    // onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
                             <Grid item xs={5}>
                                 <TimePicker
                                     label="Time"
-                                    value={value}
-                                    onChange={handleChange}
+                                    value={new Date()}
+                                    onChange={() => { }}
+                                    // value={value}
+                                    // onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
@@ -168,16 +176,16 @@ export function CreateTodo() {
                 <div>
                     <StyledPeopleIcon />Share with friends<Switch {...label} defaultChecked />
                 </div>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="demo-multiple-checkbox-label">CATEGORIES</InputLabel>
                     <Select
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
                         multiple
-                        value={personName}
-                        onChange={handleChangeCategories}
+                        // value={personName}
+                        // onChange={handleChangeCategories}
                         input={<OutlinedInput label="Tag" />}
-                        renderValue={(selected) => selected.join(', ')}
+                        // renderValue={(selected) => selected.join(', ')}
                         MenuProps={MenuProps}
                     >
                         {names.map((name) => (
@@ -187,16 +195,13 @@ export function CreateTodo() {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
                 <Grid container>
                     <Grid xs={9}></Grid>
                     <Grid xs={3}>
-                        <Button fullWidth variant="contained" size="large">Add</Button>\
+                        <Button onClick={save} fullWidth variant="contained" size="large">Add</Button>
                     </Grid>
-
                 </Grid>
-                {/* <div style={{ display: 'flex', justifyContent: 'right' }}> */}
-                {/* </div> */}
             </Stack>
         </Container>
     )

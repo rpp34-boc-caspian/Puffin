@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
@@ -8,9 +8,15 @@ import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { Typography } from '@mui/material';
+import { Typography} from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
+import { colorMap } from '../theme';
+import CustomEvent from './CustomEvent';
+import {updateTodo} from './utils/helper';
+
+
 
 const styledCalendar = styled(Calendar)`
   .rbc-current-time-indicator {
@@ -21,15 +27,12 @@ const styledCalendar = styled(Calendar)`
     border-top: none;
     gap: 20px;
   }
-
   .rbc-time-content > * + * > * {
     border-left: none;
   }
-
   .rbc-time-header {
     gap: 20px;
   }
-
   .rbc-time-header-content {
     border-left: none;
     border-bottom: 1px solid #f44336;
@@ -50,95 +53,13 @@ const styledCalendar = styled(Calendar)`
     width: 90%;
     margin: 0 auto;
   }
-
   .rbc-today {
     background-color: #fff;
   }
-
+  .rbc-event {
+    border: 1px solid #fff;
+  }
 `
-
-const initialEvents = [
-  {
-    id: 0,
-    user_id: 1,
-    cat_id: 2,
-    // once data is received, need to be reformatted to display with proper links...
-    // example: title needs to be reformatted from string to add a hyperlink so can open to display to-do details
-    title: 'Petit Event',
-    descript: 'This is a modified event to include a description',
-    allDay: false,
-    start: new Date(2022, 6, 25, 3, 30, 0),
-    end: new Date(2022, 6, 25, 7, 30, 0),
-    complete: false
-  },
-    {
-      id: 1,
-      title: 'All Day Event very long title',
-      allDay: false,
-      start: new Date(2022, 6, 25, 16, 30, 0),
-      end: new Date(2022, 6, 25, 18, 30, 0),
-    },
-
-    {
-      id: 4,
-      title: 'Some Event',
-      start: new Date(2022, 6, 22, 0, 0, 0),
-      end: new Date(2015, 3, 10, 0, 0, 0),
-    },
-    {
-      id: 5,
-      title: 'Conference',
-      start: new Date(2022, 6, 22),
-      end: new Date(2022, 6, 22),
-      desc: 'Big conference for important people',
-    },
-    {
-      id: 6,
-      title: 'Meeting',
-      start: new Date(2022, 6, 22, 10, 30, 0, 0),
-      end: new Date(2022, 6, 22, 12, 30, 0, 0),
-      desc: 'Pre-meeting meeting, to prepare for the meeting',
-    },
-    {
-      id: 7,
-      title: 'Lunch',
-      start: new Date(2022, 6, 22, 12, 0, 0, 0),
-      end: new Date(2022, 6, 22, 13, 0, 0, 0),
-      desc: 'Power lunch',
-    },
-    {
-      id: 8,
-      title: 'Meeting',
-      start: new Date(2022, 6, 22, 14, 0, 0, 0),
-      end: new Date(2022, 6, 22, 15, 0, 0, 0),
-    },
-    {
-      id: 9,
-      title: 'Happy Hour',
-      start: new Date(2022, 6, 22, 17, 0, 0, 0),
-      end: new Date(2022, 6, 22, 17, 30, 0, 0),
-      desc: 'Most important meal of the day',
-    },
-    {
-      id: 10,
-      title: 'Dinner',
-      start: new Date(2022, 6, 23, 20, 0, 0, 0),
-      end: new Date(2022, 6, 23, 21, 0, 0, 0),
-    },
-    {
-      id: 11,
-      title: 'Planning Meeting with Paige',
-      start: new Date(2022, 6, 23, 8, 0, 0),
-      end: new Date(2022, 6, 23, 10, 30, 0),
-    },
-
-    {
-      id: 23,
-      title: 'Go to the gym',
-      start: new Date(2022, 6, 23, 18, 30, 0),
-      end: new Date(2022, 6, 23, 20, 0, 0),
-    },
-  ]
 
 const locales = {
   'en-US': enUS,
@@ -152,75 +73,48 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-const EventComponent = (event) => {
-  return (
-    <div className='eventTitle'>
-      {event.title}
-      <a href="/" onClick={(e) => {alert('edit')}}>x</a>
-      <a href="/" onClick={(e) => {alert('edit')}}>🖊️</a>
-      <input type="checkbox" id="complete" name="complete" onClick={(e) => { alert('mark as complete') }}></input>
-    </div>)
-}
 
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
-export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUnscheduledTodo}) {
-  const [myEvents, setMyEvents] = useState(initialEvents);
+
+export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
-  const [modalState, setModalState] = useState(false)
 
-  const ToDoEditModal = () => {
-    return (
-      <>
-      <style>
-        {`
-          .modal-show {
-            background-color: white;
-            position: fixed;
-            padding: 5%;
-            right: 10%;
-            top: 30%;
-          }
-
-        `}
-      </style>
-      <div className={`modal-${modalState === true ? 'show' : 'hide'}`} >
-        <h3>{selectedEvent.title}</h3>
-        <h4>{selectedEvent.descript}</h4>
-        <p> ToDoEditModal Component for Selected Event </p>
-      </div>
-      </>
-    )
-  }
-
-
-  const handleSelectedEvent = (myEvents) => {
-    setSelectedEvent(myEvents)
-    modalState === true ? setModalState(false) : setModalState(true)
+  const handleSelectedEvent = (myTodos) => {
+    setSelectedEvent(myTodos)
   }
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
 
   const newEvent = useCallback(
     (event) => {
-      setMyEvents((prev) => {
-        return [...prev, event]
+      updateTodo(event.id, event.start, event.end, event.allday)
+      .then(({data}) => {
+        console.log('moveEvent', data);
+        if (data.message === 'updated') {
+          setMyTodos((prev) => {
+            return [...prev, event]
+          })
+        }
       })
+      .catch(err => console.log('update event err', err))
     },
-    [setMyEvents]
+    [setMyTodos]
   )
 
+  // need to carry over event.color in order to render colors
   const onDropFromOutside = useCallback(
-    ({ start, end, allDay: isAllDay }) => {
-      const { id, title } = draggedEvent;
+    ({ start, end, allday: isallday }) => {
+      const { id, title, color } = draggedEvent;
       const event = {
         id,
         title,
         start,
         end,
-        isAllDay,
+        isallday, 
+        color
       }
       setDraggedEvent(null)
       newEvent(event)
@@ -229,91 +123,97 @@ export default function DailyCalendar({date, toggleUnscheduledTodo, setToggleUns
   )
 
 
-
   const moveEvent = useCallback(
-    ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
-      const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
-        event.allDay = true
-      }
-
-      setMyEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id) ?? {}
-        const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end, allDay }]
+    ({ event, start, end, isallday: droppedOnalldaySlot = false }) => {
+      const { allday } = event
+      console.log('droppedOnalldaySlot', droppedOnalldaySlot);
+      console.log('allday', allday);
+      if (!allday && droppedOnalldaySlot) {
+        event.allday = true
+      }      
+      updateTodo(event.id, start, end, allday)
+      .then(({data}) => {
+        if (data.message === 'updated') {
+          setMyTodos((prev) => {
+            const existing = prev.find((ev) => ev.id === event.id) ?? {}
+            const filtered = prev.filter((ev) => ev.id !== event.id)
+            return [...filtered, { ...existing, start, end, allday }]
+          })
+        }
       })
+      .catch(err => console.log('update event err', err))
     },
-    [setMyEvents]
+    [setMyTodos]
   )
 
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
-      setMyEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id) ?? {}
-        const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end }]
+      updateTodo(event.id, start, end)
+      .then(({data}) => {
+        console.log('resizeEvent', data);
+        if (data.message === 'updated') {
+          setMyTodos((prev) => {
+            const existing = prev.find((ev) => ev.id === event.id) ?? {}
+            const filtered = prev.filter((ev) => ev.id !== event.id)
+            return [...filtered, { ...existing, start, end }]
+          })
+        }
       })
     },
-    [setMyEvents]
+    [setMyTodos]
   )
 
   const defaultDate = useMemo(() => new Date(), [])
 
-
   return (
     <div>
-        <Typography
-          sx={{my: 2, textAlign: 'center', color: 'primary.main', fontWeight: 900}}
-        >
-          {date}
-        </Typography>
-        <DragAndDropCalendar
-            defaultDate={defaultDate}
-            date={date}
-            onNavigate={() => {}}
-            view='day'
-            onView={() => {}}
-            events={myEvents}
-            localizer={localizer}
-            onEventDrop={moveEvent}
-            onEventResize={resizeEvent}
-            popup
-            resizable
-            step={60}
-            toolbar={false}
-            dragFromOutsideItem={
-              displayDragItemInCell ? dragFromOutsideItem : null
-            }
-            onDropFromOutside={onDropFromOutside}
-            onSelectSlot={newEvent}
-            onSelectEvent={(e) => handleSelectedEvent(e)}
-            draggable
-            eventPropGetter={(event) => {
-              // backgroundColor can be set to any color we decide based on the category id of the to-do item
-              let backgroundColor;
-              if (event.cat_id === 1) {
-                backgroundColor = 'plum';
-              }
-              if (event.cat_id === 2) {
-                backgroundColor = 'green'
-              }
-              if (event.cat_id === 3) {
-                backgroundColor = 'orange'
-              }
-              // visibility is decided based on whether the to-do item is completed or not
-              const visibility = event.complete === true ? 'hidden' : 'visible';
-              return { style: { backgroundColor, visibility } }
-            }}
-            components={{
-              event: EventComponent
-            }}
-        />
-        <UnscheduledTodo
-          toggleUnscheduledTodo={toggleUnscheduledTodo}
-          setToggleUnscheduledTodo={setToggleUnscheduledTodo}
-          setDraggedEvent={setDraggedEvent}
-        />
-        {selectedEvent && <ToDoEditModal />}
+      <Typography
+        sx={{ my: 2, textAlign: 'center', color: 'primary.main', fontWeight: 900 }}
+      >
+        {date}
+      </Typography>
+      <DragAndDropCalendar
+        defaultDate={defaultDate}
+        date={date}
+        onNavigate={() => { }}
+        view='day'
+        onView={() => { }}
+        events={myTodos}
+        localizer={localizer}
+        onEventDrop={moveEvent}
+        onEventResize={resizeEvent}
+        popup
+        resizable
+        step={60}
+        dragFromOutsideItem={
+          displayDragItemInCell ? dragFromOutsideItem : null
+        }
+        onDropFromOutside={onDropFromOutside}
+        onSelectSlot={newEvent}
+        onSelectEvent={(e) => handleSelectedEvent(e)}
+        // draggable
+        eventPropGetter={(event) => {
+          let backgroundColor = colorMap[event.color];
+          const textDecorationLine = event.complete === false ? 'none' : 'line-through';
+          return { style: {backgroundColor, textDecorationLine} }
+        }}
+        toolbar={false}
+        components={{
+          event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
+          // toolbar: CustomToolbar
+        }}
+        startAccessor={event => new Date(event.start)}
+        endAccessor={event => new Date(event.end)
+}
+      />
+      <UnscheduledTodo
+        toggleUnscheduledTodo={toggleUnscheduledTodo}
+        setToggleUnscheduledTodo={setToggleUnscheduledTodo}
+        setDraggedEvent={setDraggedEvent}
+        unscheduledTodoList={unscheduledTodoList}
+        setUnscheduledTodoList={setUnscheduledTodoList}
+      />
+      {/* {selectedEvent && <ToDoEditModal />} */}
     </div>
   )
 }

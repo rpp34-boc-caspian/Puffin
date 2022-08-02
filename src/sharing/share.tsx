@@ -246,3 +246,5 @@ export const Share = (data: any) => {
     </Container>
   );
 };
+
+export default Share;
