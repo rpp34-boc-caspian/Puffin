@@ -12,26 +12,27 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import { toEditorSettings } from "typescript";
+import {colorMap} from '../../theme';
 
 
 interface todo {
   title: string,
   complete: boolean,
-  permission: number
+  permission: number,
 }
 
 interface category {
   check: boolean,
   name: string,
-  todos: todo[]
+  todos: string[],
+  color: number
 }
 
-const Todos: React.FC<category> = ({ name, todos }) => {
-  const todoState : any = {
-    categoryChecked: false
-  };
+const Todos: React.FC<category> = ({ check, name, todos, color }) => {
+  const todoState : any = {};
+
   for (var i = 0; i < todos.length; i++) {
-    todoState[todos[i].title] = todoState.categoryChecked ? true : false;
+    todoState[todos[i]] = todoState.categoryChecked ? true : false;
   }
 
   const [state, setState] = React.useState(todoState);
@@ -47,12 +48,12 @@ const Todos: React.FC<category> = ({ name, todos }) => {
     <FormControl component="fieldset" variant="standard" sx={{ pl: 4 }}>
       {
         todos.map((todo) => (
-              <FormGroup key={todo.title}>
+              <FormGroup key={todo}>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={state[todo.title]} onChange={handleChange} name={todo.title} />
+                    <Checkbox checked={check || state[todo]} onChange={handleChange} name={todo} sx={{color: colorMap[color]}}/>
                   }
-                  label={todo.title}
+                  label={todo}
                 />
               </FormGroup>
         ))
