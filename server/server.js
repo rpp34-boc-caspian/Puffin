@@ -27,7 +27,7 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  // console.log(req.body)
+  console.log(req)
 
   pool.connect((err, client, release) => {
     if (err) {
@@ -227,9 +227,9 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
   let test = await bcrypt.hash('$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36', 11);
-  console.log({test})
+  console.log('this is the hash, save me: ', {test})
   let testMatach = await bcrypt.compare('darian3', '$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36');
-  console.log({testMatach})
+  console.log('this is test match: ', {testMatach})
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
     console.log('RESULTS:', results.rows)
