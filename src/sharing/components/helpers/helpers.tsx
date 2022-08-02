@@ -48,3 +48,35 @@ export const formatData = (rows: any) => {
 
   return user;
 };
+
+export const userEx =
+  {
+    calendar: 'Mandy Cal',
+    categories: [
+      {
+        name: 'Eat',
+        todos: [
+          'Broccoli',
+          'Cheese'
+        ],
+        color: 4
+      },
+      {
+        name: 'Study',
+        todos: [],
+        color: 2
+      },
+      {
+        name: 'Sport',
+        todos: [
+            'Tennis',
+            'Basketball',
+            'Football',
+            'American Football'
+        ],
+        color: 9
+      },
+    ],
+
+    friends: ['Tim', 'Sarah', 'Mandy', 'Luna', 'Joshua', 'Michael', 'Martin', 'Luke']
+  }

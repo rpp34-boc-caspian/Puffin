@@ -108,9 +108,11 @@ const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
                         </Link>
                     </Tooltip>
                     <Tooltip title="Share with friends">
+                        <Link to='/share'>
                         <IconButton color="secondary" aria-label="share with friends">
                             <MdOutlineIosShare size={30} />
                         </IconButton>
+                        </Link>
                     </Tooltip>
                     <Box>
                         <IconButton

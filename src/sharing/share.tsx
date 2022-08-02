@@ -24,7 +24,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Friends from "./components/Friends";
 import React, { useEffect, useState } from 'react';
 import { format } from "path";
-import {formatData} from './components/helpers/helpers';
+import { Link } from "react-router-dom"
+import {formatData, userEx} from './components/helpers/helpers';
 
 
 interface friend {
@@ -45,37 +46,6 @@ interface category {
 }
 
 export const Share = (data: any) => {
-  const userEx =
-  {
-    calendar: 'Mandy Cal',
-    categories: [
-      {
-        name: 'Eat',
-        todos: [
-          'Broccoli',
-          'Cheese'
-        ],
-        color: 4
-      },
-      {
-        name: 'Study',
-        todos: [],
-        color: 2
-      },
-      {
-        name: 'Sport',
-        todos: [
-            'Tennis',
-            'Basketball',
-            'Football',
-            'American Football'
-        ],
-        color: 9
-      },
-    ],
-
-    friends: ['Tim', 'Sarah', 'Mandy', 'Luna', 'Joshua', 'Michael', 'Martin', 'Luke']
-  }
 
   const options = userEx.friends;
   const access : friend[] = [];
@@ -156,7 +126,9 @@ export const Share = (data: any) => {
         justifyContent="flex-end"
         alignItems="flex-end"
       >
-        <CloseIcon />
+        <Link to='/'>
+          <CloseIcon />
+        </Link>
       </Box>
       <div>
         <h1>
@@ -236,7 +208,7 @@ export const Share = (data: any) => {
         </DialogActions>
       </Dialog>
       </div>
-      <div>
+      {/* <div>
         <Box
           component="span"
           display="flex"
@@ -270,7 +242,7 @@ export const Share = (data: any) => {
           alignItems="center"
         >
         </Box>
-      </div>
+      </div> */}
     </Container>
   );
 };

@@ -15,7 +15,6 @@ import Login from './authentication/login';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
 import { ConstructionOutlined } from '@mui/icons-material';
-import {formatData} from './sharing/components/helpers/helpers';
 
 
 const App: React.FC = () => {
@@ -32,8 +31,11 @@ const App: React.FC = () => {
 
   const [sharingData, setSharingData] = useState<{
     cal_name: string,
+    cal_id: number,
     category: string,
+    cat_id: number,
     color: number,
+    todo_id: number,
     title: string
   }[]>([]);
 
