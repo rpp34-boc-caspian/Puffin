@@ -12,6 +12,8 @@ import { ToDo } from './ToDo/Todo';
 import { Share } from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
+import Logout from './authentication/logout';
+
 import RequireAuth from './authentication/requireAuth';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
@@ -25,18 +27,6 @@ export interface UnscheduledTodoList {
   color?: number
 }
 
-export interface TodoList {
-  id: number,
-  user_id: number,
-  cat_id: number,
-  title: string,
-  descript: string, 
-  start_d: string,
-  end_d: string,
-  all_d: boolean,
-  complete: boolean,
-  color: number
-}
 
 const App: React.FC = () => {
   const [metricsPageOpent, toggleMetrics] = useState(false);
@@ -48,20 +38,16 @@ const App: React.FC = () => {
     color: number
   }[]>([]);
   const [userId, setUserId] = useState(3) //gave default val until signin uses it
-  const [unscheduledTodoList, setUnscheduledTodoList] = React.useState<UnscheduledTodoList[]>([]);
-  const [myTodos, setMyTodos] = React.useState<TodoList[]>([]);
+  const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
 
   useEffect(() => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
     let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
-    let requestTodos = axios.get(`http://127.0.0.1:8080/todos/${userId}`);
 
-    axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos])
+    axios.all([requestCompletedTodos, requestUnscheduledTodos])
       .then(axios.spread((...allData) => {
-        console.log('allData in client side', allData);
         setMetricsData(allData[0].data);
         setUnscheduledTodoList(allData[1].data);
-        setMyTodos(allData[2].data);
       }))
       .catch((err) => {
         setMetricsData(FakeTodoData)
@@ -73,11 +59,29 @@ const App: React.FC = () => {
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList} myTodos={myTodos} setMyTodos={setMyTodos}/>} />
-            <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path="/update_todo/:todoId" element={<UpdateTodo />} />
-            <Route path='/share' element={<Share />} />
-            <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
+            <Route path="/" element={
+              <RequireAuth user={setUserId} >
+                <Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList}/>
+              </RequireAuth>
+            } />
+            <Route path="/create_todo" element={
+              <RequireAuth user={setUserId} >
+                <CreateTodo />
+              </RequireAuth>
+              } />
+            <Route path='/share' element={
+              <RequireAuth user={setUserId} >
+                <Share />
+              </RequireAuth>
+            } />
+            <Route path="/metrics/*" element={
+              <RequireAuth user={setUserId} >
+                <Metrics todos={metricsData} />
+              </RequireAuth>
+            }/>
+            <Route path="/login" element={ <Login user={ setUserId } /> } />
+            <Route path="/signup" element={ <SignUp user={ setUserId } /> } />
+            <Route path="/logout" element={ <Logout user={ setUserId } /> } />
           </Routes>
         </BrowserRouter>
       </div>

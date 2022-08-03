@@ -1,11 +1,19 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
-import TextField from "@mui/material/TextField";
+import { ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-function SignUp() {
+import theme from '../theme';
+
+function SignUp({ user }: { user: Function }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,14 +24,14 @@ function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [serverError, setServerError] = useState(false);
 
+  const navigateTo = useNavigate();
+
   function validateEmail(email: string) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
   function handleSignUp() {
-    console.log(`Email ${email}, username ${username}, password ${password}, confirmation ${confirmationPassword}`);
-
     if (!validateEmail(email)) {
       setEmailError({ status: true, reason: 'format' });
       return;
@@ -41,7 +49,7 @@ function SignUp() {
     setEmailError({ status: false, reason: '' });
     setServerError(false);
 
-    axios.post('/signup', {
+    axios.post('http://localhost:8080/signup', {
       email: email,
       username: username,
       password: password
@@ -53,7 +61,11 @@ function SignUp() {
         setPassword('');
         setConfirmation('');
 
-        // redirect to home / (React Router)
+        user(res.data.id);
+        Cookies.set('token', res.data.cookie);
+
+        navigateTo('/');
+
         return;
       };
 
@@ -73,68 +85,116 @@ function SignUp() {
   };
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
 
-      {
-        serverError ? <Alert severity="error">Oops, something went wrong, please try again</Alert> : <></>
-      }
+      <Typography variant="h3" color="primary" style={{ fontWeight: 600 }} align="center" mt={ 5 } component="div">
+        Puffin
+      </Typography>
 
-      <div>
+      <Grid
+        container
+        spacing={ 0 }
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '75vh' }}
+      >
+
+        {
+          serverError ? <Alert severity="error">Oops, something went wrong, please try again</Alert> : <></>
+        }
+
+        <Box
+          mt={ 15 }
+          mb={ 15 }
+        >
+          <h3>Placeholder for GIF or video</h3>
+
+        </Box>
+
+        <Typography variant="h4" align="left" component="div">
+          Sign Up
+        </Typography>
+
         <TextField
           error={ emailError.status }
           id="email"
           label="Email"
           type="email"
+          margin="dense"
+          sx={{ width: 300 }}
           value={ email }
           onChange={ (e) => { setEmail(e.target.value) } }
           autoComplete="current-password"
           variant="standard"
           helperText={ emailError.reason !== 'exists' ? emailError.reason === 'format' ? 'Please enter a valid email' : '' : 'Email is already in use' }
         />
-      </div>
-      <div>
+
         <TextField
           error={ userError }
           id="signup-username"
           label="Username"
           type="text"
+          margin="dense"
+          sx={{ width: 300 }}
           value={ username }
           onChange={ (e) => { setUsername(e.target.value) } }
           autoComplete="current-password"
           variant="standard"
           helperText={ userError ? "Username is already taken" : '' }
         />
-      </div>
-      <div>
+
         <TextField
           error={ passwordError }
           id="signup-password"
           label="Password"
           type="password"
+          margin="dense"
+          sx={{ width: 300 }}
           value={ password }
           onChange={ (e) => { setPassword(e.target.value) } }
           autoComplete="current-password"
           variant="standard"
           helperText={ passwordError ? "Passwords do not match" : '' }
         />
-      </div>
-      <div>
+
         <TextField
           error={ passwordError }
           id="password-confirmation"
           label="Confirm Password"
           type="password"
+          margin="dense"
+          sx={{ width: 300 }}
           value={ confirmationPassword }
           onChange={ (e) => { setConfirmation(e.target.value) } }
           autoComplete="current-password"
           variant="standard"
           helperText={ passwordError ? "Passwords do not match" : '' }
         />
-      </div>
 
-      <Button variant="contained" onClick={ () => { handleSignUp() } }>Sign Up</Button>
+        <Box p={ 2 } sx={{ width: 300 }} >
+          <Button fullWidth variant="contained" onClick={ () => { handleSignUp() } }>Sign Up</Button>
+        </Box>
 
-    </>
+        <Box>
+          <Typography component="span">
+            Have an account?
+          </Typography>
+
+          <Typography
+            component="span"
+            color="secondary"
+            style={{ fontWeight: 600 }}
+            onClick={ () => { navigateTo('/login') } }>
+
+            &nbsp;Sign in
+          </Typography>
+        </Box>
+
+      </Grid>
+
+
+    </ThemeProvider>
   );
 };
 
