@@ -1,3 +1,4 @@
+
 const express = require('express');
 var bodyParser = require('body-parser')
 const path = require('path');
@@ -27,9 +28,15 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
+<<<<<<< HEAD
   console.log(req)
 
   pool.connect((err, client, release) => {
+=======
+  console.log(req.body)
+
+  tamPool.connect((err, client, release) => {
+>>>>>>> master
     if (err) {
       res.status(500).json(err);
       return;
@@ -60,9 +67,15 @@ app.post('/api/updatetodo', (req, res) => {
     end,
     allDay
   } = req.body;
+<<<<<<< HEAD
   // console.log(req.body)
 
   pool.connect((err, client, release) => {
+=======
+  console.log(req.body)
+
+  tamPool.connect((err, client, release) => {
+>>>>>>> master
     if (err) {
       res.status(500).json(err);
       return;
@@ -270,22 +283,34 @@ app.post('/login', async (req, res) => {
 });
 //Sharing Functions
 
-app.get('calendar_todos', (req, res) => {
-  const user_id = req.params.user_id;
-  pool.query(`SELECT cal_name FROM calendars WHERE user_id = ${user_id}`)
+app.get('/share/user_profile/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = `SELECT calendars.cal_name, calendars.id as cal_id, categories.category_name, categories.id as cat_id, categories.color, todos.id as todo_id, todos.title from calendars left join categories on calendars.id = categories.calendar_id LEFT JOIN todos
+  ON categories.id = todos.cat_id where calendars.user_id = ${user_id};`;
+  pool.connect((err, client, release) => {
+    client.query(query, (err, result) => {
+      release();
+      console.log(result.rows)
+      res.send(result.rows)
+    })
+  })
+});
+
+app.get('/share/todos_info/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  pool.query(`SELECT calendars.user_id, calendars.cal_name, categories.category_name, categories.color, todos.title, users.username
+  AS friend , permissions.permission FROM calendars LEFT JOIN categories ON calendars.id = categories.calendar_id LEFT JOIN todos
+  ON categories.id = todos.cat_id LEFT JOIN permissions ON permissions.user_id = calendars.user_id LEFT JOIN users
+  ON permissions.friend_id = users.id WHERE calendars.user_id = ${user_id}`)
     .then(output => {
       res.send(output);
+    })
+    .catch(err => {
+      res.status(500).send(err);
     });
 });
 
-app.get('/share_todos_info', (req, res) => {
-  const user_id = req.params.user_id;
-  pool.query(`SELECT calendars.user_id, calendars.cal_name, categories.category_name, categories.color, todos.title, users.username AS friend , permissions.permission FROM calendars LEFT JOIN categories ON calendars.user_id = categories.calendar_id LEFT JOIN todos ON categories.id = todos.cat_id LEFT JOIN permissions ON permissions.user_id = calendars.user_id LEFT JOIN users ON permissions.friend_id = users.id WHERE calendars.user_id = ${user_id}`)
-    .then(output => {
-      res.send(output);
-    });
-});
-
+<<<<<<< HEAD
 /*
 app.post('/friends', (req, res) => {
 const query = `INSERT INTO friends(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
@@ -308,15 +333,33 @@ app.post('/share', (req, res) => {
 app.post('/share', (req, res) => {
     const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
     pool.query(query, (err, data) => {
+=======
+app.post('/share/friends/:userId/:friendId', (req, res) => {
+  const query = `INSERT INTO friends(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
+  pool.query(query, (err, data) => {
+>>>>>>> master
     if (err) {
       console.log('err1: ', err);
       res.status(500).send(err);
     } else {
-        query.characteristicReviewsValues.push([friend_id]);
-    };
-});*/
+      //
+    }
+  })
+});
 
-//END of Sharing Functions
+  app.put('/share/store', (req, res) => {
+    const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
+    pool.query(query, (err, data) => {
+      if (err) {
+        console.log('err1: ', err);
+        res.status(500).send(err);
+      } else {
+        //query.characteristicReviewsValues.push([friend_id]);
+      };
+    })
+  });
+
+    //END of Sharing Functions
 
 //todo list
 app.get('/todos/:userId', (req, res) => {
