@@ -28,15 +28,9 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
-<<<<<<< HEAD
-  console.log(req)
-
-  pool.connect((err, client, release) => {
-=======
   console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
->>>>>>> master
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -67,15 +61,9 @@ app.post('/api/updatetodo', (req, res) => {
     end,
     allDay
   } = req.body;
-<<<<<<< HEAD
-  // console.log(req.body)
-
-  pool.connect((err, client, release) => {
-=======
   console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
->>>>>>> master
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -310,34 +298,9 @@ app.get('/share/todos_info/:userId', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-/*
-app.post('/friends', (req, res) => {
-const query = `INSERT INTO friends(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
-pool.query(query, (err, data) => {
-if (err) {
-  console.log('err1: ', err);
-  res.status(500).send(err);
-} else {
-  query.push([friend_id]);
-}});
-app.post('/share', (req, res) => {
-  const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
-  pool.query(query, (err, data) => {
-  if (err) {
-    console.log('err1: ', err);
-    res.status(500).send(err);
-  } else {
-    query.push([friend_id]);
-  }});
-app.post('/share', (req, res) => {
-    const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
-    pool.query(query, (err, data) => {
-=======
 app.post('/share/friends/:userId/:friendId', (req, res) => {
   const query = `INSERT INTO friends(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
   pool.query(query, (err, data) => {
->>>>>>> master
     if (err) {
       console.log('err1: ', err);
       res.status(500).send(err);

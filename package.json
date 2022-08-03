@@ -78,7 +78,8 @@
   "devDependencies": {
     "@types/js-cookie": "^3.0.2",
     "@types/jsonwebtoken": "^8.5.8",
-    "@types/react-big-calendar": "^0.38.1"
+    "@types/react-big-calendar": "^0.38.1",
+    "flow-babel-webpack-plugin": "^1.1.1"
   },
   "proxy": "http://localhost:8080/"
 }
