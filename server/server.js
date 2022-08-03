@@ -207,19 +207,30 @@ app.post('/signup', async (req, res) => {
       } else {
 
         pool.query(`INSERT INTO users (email, username, hashed_pass) VALUES ('${email}', '${username}', '${hash}')`)
-          .then((result) => {
-            res.json({ created: true });
-
-          })
-          .catch(() => {
+          .catch((err) => {
+            console.log(err);
             res.status(500).send();
 
           });
 
+          pool.query(`SELECT * FROM users WHERE username = '${username}'`)
+            .then((result) => {
+              let token = jwt.sign({ id: result.rows[0].id, user: username }, 'teamPuffin');
+
+              res.json({ created: true, id: result.rows[0].id, cookie: token });
+
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(500).send();
+
+            });
+
       }
 
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).send();
 
     });
@@ -228,13 +239,9 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
-  let test = await bcrypt.hash('$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36', 11);
-  console.log({test})
-  let testMatach = await bcrypt.compare('darian3', '$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36');
-  console.log({testMatach})
+
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
-    console.log('RESULTS:', results.rows)
     if (results.rows.length === 0) {
       res.json({ exists: false });
 
@@ -258,7 +265,6 @@ app.post('/login', async (req, res) => {
       };
 
     let token = jwt.sign({ id: results.rows[0].id, user: username }, 'teamPuffin');
-    console.log({token})
 
     res.json({ exists: true, id: results.rows[0].id, cookie: token });
 
