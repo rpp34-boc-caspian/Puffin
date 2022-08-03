@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+import { ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -11,7 +12,6 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 import theme from '../theme';
-import { ThemeProvider } from '@mui/material/styles';
 
 
 function Login({ user }: { user: Function }) {
@@ -63,7 +63,7 @@ function Login({ user }: { user: Function }) {
   return (
       <ThemeProvider theme={theme}>
 
-        <Typography variant="h4" color="primary" align="center" mt={ 5 } component="div">
+        <Typography variant="h3" color="primary" style={{ fontWeight: 600 }} align="center" mt={ 5 } component="div">
           Puffin
         </Typography>
 
