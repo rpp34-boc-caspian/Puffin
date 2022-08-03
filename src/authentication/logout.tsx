@@ -1,20 +1,22 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import Cookies from 'js-cookie';
-
-import CircularProgress from '@mui/material/CircularProgress';
 
 function Logout({ user }: { user: Function }) {
   const navigateTo = useNavigate();
 
-  Cookies.remove('token');
+  useEffect(() => {
+    console.log('USING EFFECT')
+    Cookies.remove('token');
+    user(0);
 
-  user(0);
+    navigateTo('/login');
+  }, [user, navigateTo]);
 
-  navigateTo('/login');
+
 
   return (
     <>
-      <CircularProgress />
     </>
   );
 }

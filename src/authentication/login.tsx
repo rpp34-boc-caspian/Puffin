@@ -15,9 +15,9 @@ import theme from '../theme';
 
 
 function Login({ user }: { user: Function }) {
-  const [username, setUsername] = useState('JIT');
-  const [email, setEmail] = useState('amplesample@email.com');
-  const [password, setPassword] = useState('password123');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [loginError, setLoginError] = useState(false);
   const [serverError, setServerError] = useState(false);
@@ -34,13 +34,14 @@ function Login({ user }: { user: Function }) {
       password: password
     })
     .then((res) => {
+      console.log('RESPONSE',res);
       if (res.data.exists) {
         setUsername('');
         setEmail('');
         setPassword('');
 
         user(res.data.id);
-        Cookies.set('token', res.data.cookie, { path: '/' });
+        Cookies.set('token', res.data.cookie);
 
         navigateTo('/');
         return;
@@ -88,66 +89,74 @@ function Login({ user }: { user: Function }) {
 
           </Box>
 
+          <Typography variant="h4" align="left" component="div">
+            Sign In
+          </Typography>
+
+          <TextField
+            error={ loginError }
+            id="login-username"
+            label="Username"
+            type="text"
+            margin="dense"
+            sx={{ width: 300 }}
+            value={ username }
+            onChange={ (e) => { setUsername(e.target.value) } }
+            autoComplete="current-password"
+            variant="standard"
+            helperText={ loginError ? "Username, email, or password is incorrect" : '' }
+          />
+
+          <TextField
+            error={ loginError }
+            id="login-email"
+            label="Email"
+            type="text"
+            margin="dense"
+            sx={{ width: 300 }}
+            value={ email }
+            onChange={ (e) => { setEmail(e.target.value) } }
+            autoComplete="current-password"
+            variant="standard"
+            helperText={ loginError ? "Username, email, or password is incorrect" : '' }
+          />
+
+          <TextField
+            error={ loginError }
+            id="login-password"
+            label="Password"
+            type="password"
+            margin="dense"
+            sx={{ width: 300 }}
+            value={ password }
+            onChange={ (e) => { setPassword(e.target.value) } }
+            autoComplete="current-password"
+            variant="standard"
+            helperText={ loginError ? "Username, email, or password is incorrect" : '' }
+          />
+
+          <Box p={ 2 } sx={{ width: 300 }}>
+            <Button fullWidth variant="contained" onClick={ () => { handleLogin() } }>Sign In</Button>
+          </Box>
+
           <Box>
-            <Typography variant="h4" align="left" component="div">
-              Sign In
+            <Typography component="span">
+              Don't have an account?
+            </Typography>
+
+            <Typography
+              component="span"
+              color="secondary"
+              style={{ fontWeight: 600 }}
+              onClick={ () => { navigateTo('/signup') } }>
+
+              &nbsp;Sign up
             </Typography>
           </Box>
 
-          <Box>
-            <TextField
-              error={ loginError }
-              id="login-username"
-              label="Username"
-              margin="dense"
-              sx={{ width: 300 }}
-              type="text"
-              value={ username }
-              onChange={ (e) => { setUsername(e.target.value) } }
-              autoComplete="current-password"
-              variant="standard"
-              helperText={ loginError ? "Username, email, or password is incorrect" : '' }
-            />
-          </Box>
-          <Box>
-            <TextField
-              error={ loginError }
-              id="login-email"
-              label="Email"
-              margin="dense"
-              sx={{ width: 300 }}
-              type="text"
-              value={ email }
-              onChange={ (e) => { setEmail(e.target.value) } }
-              autoComplete="current-password"
-              variant="standard"
-              helperText={ loginError ? "Username, email, or password is incorrect" : '' }
-            />
-          </Box>
-          <Box>
-            <TextField
-              error={ loginError }
-              id="login-password"
-              label="Password"
-              margin="dense"
-              sx={{ width: 300 }}
-              type="password"
-              value={ password }
-              onChange={ (e) => { setPassword(e.target.value) } }
-              autoComplete="current-password"
-              variant="standard"
-              helperText={ loginError ? "Username, email, or password is incorrect" : '' }
-            />
-          </Box>
-
-          <Box
-            p={ 2 }
-            sx={{ width: 300 }}
-          >
-            <Button fullWidth variant="contained" onClick={ () => { handleLogin() } }>Login</Button>
-          </Box>
-
         </Grid>
+
+
       </ThemeProvider>
   );
 };

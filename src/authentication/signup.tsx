@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import { ThemeProvider } from '@mui/material/styles';
@@ -61,6 +62,7 @@ function SignUp({ user }: { user: Function }) {
         setConfirmation('');
 
         user(res.data.id);
+        Cookies.set('token', res.data.cookie);
 
         navigateTo('/');
 
@@ -110,78 +112,88 @@ function SignUp({ user }: { user: Function }) {
 
         </Box>
 
-        <Box>
-          <Typography variant="h4" style={{ fontWeight: 600 }} align="left" component="div">
-            Sign Up
-          </Typography>
-        </Box>
+        <Typography variant="h4" align="left" component="div">
+          Sign Up
+        </Typography>
 
-        <Box>
-          <TextField
-            error={ emailError.status }
-            id="email"
-            label="Email"
-            type="email"
-            margin="dense"
-            sx={{ width: 300 }}
-            value={ email }
-            onChange={ (e) => { setEmail(e.target.value) } }
-            autoComplete="current-password"
-            variant="standard"
-            helperText={ emailError.reason !== 'exists' ? emailError.reason === 'format' ? 'Please enter a valid email' : '' : 'Email is already in use' }
-          />
-        </Box>
-        <Box>
-          <TextField
-            error={ userError }
-            id="signup-username"
-            label="Username"
-            type="text"
-            margin="dense"
-            sx={{ width: 300 }}
-            value={ username }
-            onChange={ (e) => { setUsername(e.target.value) } }
-            autoComplete="current-password"
-            variant="standard"
-            helperText={ userError ? "Username is already taken" : '' }
-          />
-        </Box>
-        <Box>
-          <TextField
-            error={ passwordError }
-            id="signup-password"
-            label="Password"
-            type="password"
-            margin="dense"
-            sx={{ width: 300 }}
-            value={ password }
-            onChange={ (e) => { setPassword(e.target.value) } }
-            autoComplete="current-password"
-            variant="standard"
-            helperText={ passwordError ? "Passwords do not match" : '' }
-          />
-        </Box>
-        <Box>
-          <TextField
-            error={ passwordError }
-            id="password-confirmation"
-            label="Confirm Password"
-            type="password"
-            margin="dense"
-            sx={{ width: 300 }}
-            value={ confirmationPassword }
-            onChange={ (e) => { setConfirmation(e.target.value) } }
-            autoComplete="current-password"
-            variant="standard"
-            helperText={ passwordError ? "Passwords do not match" : '' }
-          />
-        </Box>
+        <TextField
+          error={ emailError.status }
+          id="email"
+          label="Email"
+          type="email"
+          margin="dense"
+          sx={{ width: 300 }}
+          value={ email }
+          onChange={ (e) => { setEmail(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ emailError.reason !== 'exists' ? emailError.reason === 'format' ? 'Please enter a valid email' : '' : 'Email is already in use' }
+        />
+
+        <TextField
+          error={ userError }
+          id="signup-username"
+          label="Username"
+          type="text"
+          margin="dense"
+          sx={{ width: 300 }}
+          value={ username }
+          onChange={ (e) => { setUsername(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ userError ? "Username is already taken" : '' }
+        />
+
+        <TextField
+          error={ passwordError }
+          id="signup-password"
+          label="Password"
+          type="password"
+          margin="dense"
+          sx={{ width: 300 }}
+          value={ password }
+          onChange={ (e) => { setPassword(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ passwordError ? "Passwords do not match" : '' }
+        />
+
+        <TextField
+          error={ passwordError }
+          id="password-confirmation"
+          label="Confirm Password"
+          type="password"
+          margin="dense"
+          sx={{ width: 300 }}
+          value={ confirmationPassword }
+          onChange={ (e) => { setConfirmation(e.target.value) } }
+          autoComplete="current-password"
+          variant="standard"
+          helperText={ passwordError ? "Passwords do not match" : '' }
+        />
 
         <Box p={ 2 } sx={{ width: 300 }} >
           <Button fullWidth variant="contained" onClick={ () => { handleSignUp() } }>Sign Up</Button>
         </Box>
 
+        <Box>
+          <Typography component="span">
+            Have an account?
+          </Typography>
+
+          <Typography
+            component="span"
+            color="secondary"
+            style={{ fontWeight: 600 }}
+            onClick={ () => { navigateTo('/login') } }>
+
+            &nbsp;Sign in
+          </Typography>
+        </Box>
+
       </Grid>
+
+
     </ThemeProvider>
   );
 };
