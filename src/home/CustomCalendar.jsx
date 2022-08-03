@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
 import Menu, { Item as MenuItem } from 'rc-menu';
@@ -15,7 +15,6 @@ const sharedCalendarMock = ['Darien', 'Vacation', 'Family']
 const CustomCalendar = ({myTodos, setMyTodos}) => {
 
   const [currentSelect, setCurrentSelect] = useState([]);
-
 
   const handleViewSelect = (event) => {
     let user = {
