@@ -6,7 +6,7 @@ import {updateTodo, deleteTodo} from './utils/helper';
 
 const CustomEvent = ({event, setMyTodos}) => {
     const handleTodoEdit = (event) => {
-
+       console.log(event);
     }
 
     const handleDeleteEvent = (event) => {
@@ -18,7 +18,7 @@ const CustomEvent = ({event, setMyTodos}) => {
         })
         .catch(err => console.log(err))
     }
-  
+
     const handleCompleteEvent = (event) => {
         var complete = !event.complete;
         updateTodo(event.id, event.start, event.end, event.allday, complete)
@@ -29,7 +29,7 @@ const CustomEvent = ({event, setMyTodos}) => {
           })
         .catch(err => console.log('update event err', err))
     }
-  
+
     return (
         <div className='eventTitle'>
             {event.title}
