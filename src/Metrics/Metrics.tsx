@@ -13,7 +13,8 @@ interface userTodo {
   start_d: string,
   end_d: string,
   category_name: string,
-  color: number
+  color: number,
+  todo_id: number
 }
 
 interface allTodos {
@@ -147,6 +148,16 @@ export const Metrics = (props: allTodos) => {
 
   let page = (
     <Container sx={{p: 2}} maxWidth='sm'>
+      <Grid
+        container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center"
+      >
+        <Link to="/">
+          <CloseIcon></CloseIcon>
+        </Link>
+      </Grid>
       <h1>Reports</h1>
       <Stack sx={{mx: 2}} spacing={2}>
         <TodayMonth
@@ -164,13 +175,13 @@ export const Metrics = (props: allTodos) => {
           todos={weekData}
         ></Week>
         <TodayMonth
-            togglePage={togglePage}
-            totalHours={monthTotalHours}
-            categories={monthCategoryHours}
-            colors={monthCategoryColors}
-            chart={(data: any) => <DoughnutChart data={data}/>}
-            title="This Month's Report"
-          ></TodayMonth>
+          togglePage={togglePage}
+          totalHours={monthTotalHours}
+          categories={monthCategoryHours}
+          colors={monthCategoryColors}
+          chart={(data: any) => <DoughnutChart data={data}/>}
+          title="This Month's Report"
+        ></TodayMonth>
       </Stack>
     </Container>
   );

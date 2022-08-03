@@ -1,5 +1,6 @@
-import { Stack } from "@mui/material";
+import { Box, Button, Modal, Stack, Typography } from "@mui/material";
 import { Container } from "@mui/system";
+import { useState } from "react";
 import { CategoryDetailed } from "./CatergoryDetailed";
 
 interface userTodo {
@@ -7,7 +8,8 @@ interface userTodo {
   start_d: string,
   end_d: string,
   category_name: string,
-  color: number
+  color: number,
+  id: number
 }
 interface allTodos {
   todos: userTodo[],
@@ -23,13 +25,15 @@ interface allTodos {
 }
 
 export const Detailed = (props: allTodos) => {
+
+
   let categoryPage = [
       <CategoryDetailed
         key={'0-items-today'}
         togglePage={props.togglePage}
         categoryHours={0}
         categoryName={'No Tracked Todos'}
-        todayTodos={[]}
+        todos={[]}
       />
   ];
   if (props.categoryHours) {
@@ -40,7 +44,7 @@ export const Detailed = (props: allTodos) => {
           togglePage={props.togglePage}
           categoryHours={props.categoryHours[category]}
           categoryName={category}
-          todayTodos={props.todos.filter((todo) => (todo.category_name === category))}
+          todos={props.todos.filter((todo) => (todo.category_name === category))}
         />
       ))
     )

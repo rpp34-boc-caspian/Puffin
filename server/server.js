@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const cors = require('cors');
-const {pool, darianPool, tamPool} = require('../db/index.js');
+const {pool, tamPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -393,7 +393,7 @@ app.get('/unscheduledTodos/:userId', (req, res) => {
 app.get('/completedTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
   const query = (
-    `SELECT todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
+    `SELECT todos.id, todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
     FROM todos
     INNER JOIN categories ON todos.cat_id=categories.id
     WHERE user_id=${user_id} AND complete=true`

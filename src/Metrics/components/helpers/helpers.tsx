@@ -62,90 +62,103 @@ export const buildWeekReportData = (weekTodos: any) => {
     start_d: '2022-08-01T15:00:00.000Z',
     end_d: '2022-08-01T18:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 1
   },
   {
     title: 'Mow Lawn',
     start_d: '2022-08-06T16:00:00.000Z',
     end_d: '2022-08-06T17:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 2
   },
   {
     title: 'Clean Dishes Again',
     start_d: '2022-08-05T14:00:00.000Z',
     end_d: '2022-08-05T16:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 3
   },
   {
     title: 'Clean Gutters',
     start_d: '2022-08-06T14:00:00.000Z',
     end_d: '2022-08-06T16:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 4
   },
   {
     title: 'Clean Garage',
     start_d: '2022-08-02T14:00:00.000Z',
     end_d: '2022-08-02T16:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 5
   },
   {
     title: 'Clean Room',
     start_d: '2022-08-06T14:00:00.000Z',
     end_d: '2022-08-06T16:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 6
   },
   {
     title: 'Clean Dishes',
     start_d: '2022-08-06T14:00:00.000Z',
     end_d: '2022-08-06T16:00:00.000Z',
     category_name: 'Chores',
-    color: 8
+    color: 8,
+    todo_id: 7
   },
   {
     title: 'Feautre Update 123.0',
     start_d: '2022-08-01T14:00:00.000Z',
     end_d: '2022-08-01T20:00:00.000Z',
     category_name: 'Work',
-    color: 3
+    color: 3,
+    todo_id: 8
   },
   {
     title: 'Client Meeting (Janet)',
     start_d: '2022-08-01T14:00:00.000Z',
     end_d: '2022-08-01T16:00:00.000Z',
     category_name: 'Work',
-    color: 3
+    color: 3,
+    todo_id: 9
   },
   {
     title: 'Client Meeting (Peter)',
     start_d: '2022-08-02T14:00:00.000Z',
     end_d: '2022-08-02T16:00:00.000Z',
     category_name: 'Work',
-    color: 3
+    color: 3,
+    todo_id: 10
   },
   {
     title: 'Client Meeting (Leah)',
     start_d: '2022-08-04T14:00:00.000Z',
     end_d: '2022-08-04T17:00:00.000Z',
     category_name: 'Work',
-    color: 3
+    color: 3,
+    todo_id: 11
   },
   {
     title: 'Client Meeting (Jim)',
     start_d: '2022-08-05T14:00:00.000Z',
     end_d: '2022-08-05T16:00:00.000Z',
     category_name: 'Work',
-    color: 3
+    color: 3,
+    todo_id: 12
   },
   {
     title: 'Interview',
     start_d: '2022-08-01T13:00:00.000Z',
     end_d: '2022-08-01T15:00:00.000Z',
     category_name: 'Work',
-    color: 3
+    color: 3,
+    todo_id: 13
   }
 ]
