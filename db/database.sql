@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS puffin;
 CREATE DATABASE puffin;
 \c puffin;
 \i db/users.sql
