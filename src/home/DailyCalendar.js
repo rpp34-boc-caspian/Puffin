@@ -207,7 +207,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         }}
         components={{
           event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          toolbar: (props) => <CustomCalendar {...props} myTodos={myTodos} setMyTodos={setMyTodos} />
+          toolbar: (props) => <CustomCalendar {...props} setMyTodos={setMyTodos} />
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)

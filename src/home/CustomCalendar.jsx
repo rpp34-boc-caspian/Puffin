@@ -12,10 +12,9 @@ const myCalendarMock = [
 const sharedCalendarMock = ['Darien', 'Vacation', 'Family']
 
 
-const CustomCalendar = ({myTodos}) => {
+const CustomCalendar = ({myTodos, setMyTodos}) => {
 
-  console.log('from custom calendar:', myTodos)
-  const [currentSelect, setCurrentSelect] = useState([myTodos]);
+  const [currentSelect, setCurrentSelect] = useState([]);
 
 
   const handleViewSelect = (event) => {
