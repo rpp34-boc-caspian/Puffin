@@ -1,3 +1,4 @@
+import { Slider, styled } from "@mui/material";
 import { colorMap } from "../../../theme";
 
 export const hexToRGBA = (hex: string) => {
@@ -162,3 +163,19 @@ export const buildWeekReportData = (weekTodos: any) => {
     todo_id: 13
   }
 ]
+
+export const sliderStyle = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+export const milliToHours = (hours: number) => {
+  return hours * 3600000;
+}

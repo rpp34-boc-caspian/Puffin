@@ -3,10 +3,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import { colorMap } from "../../theme";
 import { useState } from "react";
-import { id } from "date-fns/locale";
-import { getToDoHours } from "./helpers/helpers";
-import { stringOrDate } from "react-big-calendar";
-import { click } from "@testing-library/user-event/dist/click";
+import { getToDoHours, sliderStyle } from "./helpers/helpers";
+import axios from "axios";
 
 
 interface userTodo {
@@ -26,22 +24,17 @@ interface allTodos {
     today: boolean;
     week: boolean;
     month: boolean;
-  }>>
+  }>>,
+  user_id: number,
+  updateMetricsData: React.Dispatch<React.SetStateAction<{
+    title: string;
+    start_d: string;
+    end_d: string;
+    category_name: string;
+    color: number;
+    todo_id: number;
+}[]>>
 }
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-
 
 export const CategoryDetailed = (props: allTodos) => {
   const [modalOpen, setModal] = useState(false);
@@ -50,9 +43,10 @@ export const CategoryDetailed = (props: allTodos) => {
   const [clickedTodoTitle, setTitle] = useState('');
   const [clickedTodoId, setId] = useState(0);
   const [clickedTodoHours, setHours] = useState(0);
+  const [clickedTodoStartTime, setStartTime] = useState('');
 
-  const PrettoSlider = styled(Slider)({
-    color: '#52af77',
+  const UpdateTimeSlider = styled(Slider)({
+    color: '#0d47a1',
     height: 8,
     '& .MuiSlider-track': {
       border: 'none',
@@ -77,7 +71,7 @@ export const CategoryDetailed = (props: allTodos) => {
       width: 32,
       height: 32,
       borderRadius: '50% 50% 50% 0',
-      backgroundColor: '#52af77',
+      backgroundColor: '#0d47a1',
       transformOrigin: 'bottom left',
       transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
       '&:before': { display: 'none' },
@@ -90,30 +84,42 @@ export const CategoryDetailed = (props: allTodos) => {
     },
   });
 
-  const updateTodoTime = (id: number, start: string, end: string, hours: number) => {
-
-    closeModal()
+  const updateTodoTime = (id: number, start: string, hours: number) => {
+    const milliToHours = (hours: number) => {
+      return hours * 3600000;
+    }
+    let m = milliToHours(hours);
+    let startD = new Date(start);
+    let update = new Date();
+    update.setTime(startD.getTime())
+    update.setTime(startD.getTime() + m)
+    let end_d = update.toISOString();
+    let start_d = startD.toISOString()
+    axios.put('http://127.0.0.1:8080/updateTodoTime/', {end_d, id, start_d, user_id: props.user_id})
+      .then((data) => {
+        props.updateMetricsData(data.data);
+        closeModal()
+      })
+      .catch((err) => {
+        closeModal()
+        console.log('UPDATE ERROR:', err)
+      })
   }
 
   const getTitleName = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const target = e.currentTarget as HTMLLIElement;
     const todoTitle = target.title;
     const todoId = target.value;
-    console.log(todoTitle)
-    console.log(todoId)
+    const clickedTodoData = props.todos.filter((todos) => todos.id === todoId)[0];
     setTitle(todoTitle);
     setId(todoId);
-    const clickedTodoData = props.todos.filter((todos) => todos.id === todoId)[0]
-    console.log(clickedTodoData);
+    setStartTime(clickedTodoData.start_d);
     setHours(getToDoHours(clickedTodoData))
     modalOpen ? closeModal() : openModal();
   }
 
   const handleSliderChange = (e: Event | React.SyntheticEvent<Element, Event>, value: number | number[]) => {
-
-    console.log(value as number)
-    setHours(value as number)
-
+    setHours(value as number);
   }
 
   let formatedTimeTotal = props.categoryHours;
@@ -173,21 +179,21 @@ export const CategoryDetailed = (props: allTodos) => {
         </List>
       </CardContent>
       <Modal open={modalOpen} onClose={closeModal}>
-        <Box sx={style}>
+        <Box sx={sliderStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {clickedTodoTitle}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {`${clickedTodoHours} hours`}
           </Typography>
-          <PrettoSlider
+          <UpdateTimeSlider
             valueLabelDisplay="auto"
             aria-label="pretto slider"
             defaultValue={clickedTodoHours}
             max={24}
             onChangeCommitted={handleSliderChange}
           />
-          <Button onClick={() => updateTodoTime(3, 'hi', 'id', clickedTodoHours)}>
+          <Button onClick={() => updateTodoTime(clickedTodoId, clickedTodoStartTime, clickedTodoHours)}>
             Update
           </Button>
         </Box>

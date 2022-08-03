@@ -1,4 +1,4 @@
-import { Container, Grid, IconButton, Stack } from "@mui/material"
+import { Container, Grid, Stack } from "@mui/material"
 import { useEffect, useState } from "react"
 import { TodayMonth } from "./components/TodayMonth"
 import { Week } from "./components/Week"
@@ -19,11 +19,19 @@ interface userTodo {
 
 interface allTodos {
   todos?: userTodo[],
+  user_id: number,
+  updateMetricsData: React.Dispatch<React.SetStateAction<{
+    title: string;
+    start_d: string;
+    end_d: string;
+    category_name: string;
+    color: number;
+    todo_id: number;
+}[]>>
 }
 
 export const Metrics = (props: allTodos) => {
 
-  const [data, updateDataMetrics] = useState([]);
   const [todayData, updateTodayMetrics] = useState([]);
   const [todayTotalHours, setTodayTotalHours] = useState(0);
   const [todayCategoryTotalHours, setTodayCategoryHours] = useState(0);
@@ -98,8 +106,6 @@ export const Metrics = (props: allTodos) => {
         setMonthCategoryColors(colors);
       }
     }
-    updateDataMetrics(todos);
-
   }
 
   useEffect(() => {
@@ -193,8 +199,11 @@ export const Metrics = (props: allTodos) => {
       categoryHours={todayCategoryTotalHours}
       togglePage={togglePage}
       timeFrame="Today"
+      user_id={props.user_id}
+      updateMetricsData={props.updateMetricsData}
     ></Detailed>
   );
+
   let weekPage = (
     <Detailed
       todos={weekData}
@@ -202,8 +211,11 @@ export const Metrics = (props: allTodos) => {
       categoryHours={weekCategoryTotalHours}
       togglePage={togglePage}
       timeFrame="This Week"
+      user_id={props.user_id}
+      updateMetricsData={props.updateMetricsData}
     ></Detailed>
   );
+
   let monthPage = (
     <Detailed
       todos={monthData}
@@ -211,6 +223,8 @@ export const Metrics = (props: allTodos) => {
       categoryHours={monthCategoryHours}
       togglePage={togglePage}
       timeFrame="This Month"
+      user_id={props.user_id}
+      updateMetricsData={props.updateMetricsData}
     ></Detailed>
   );
 
@@ -221,8 +235,7 @@ export const Metrics = (props: allTodos) => {
             container
             direction="row"
             justifyContent="flex-end"
-            alignItems="center"
-          >
+            alignItems="center">
             <Link to="/">
               <CloseIcon></CloseIcon>
             </Link>

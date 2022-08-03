@@ -100,7 +100,7 @@ const App: React.FC = () => {
             <Route path="/create_todo" element={<CreateTodo />} />
             <Route path="/update_todo/:todoId" element={<UpdateTodo />} />
             <Route path='/share' element={<Share />} />
-            <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
+            <Route path="/metrics/*" element={<Metrics updateMetricsData={setMetricsData} user_id={userId} todos={metricsData}/>}/>
           </Routes>
         </BrowserRouter>
       </div>
