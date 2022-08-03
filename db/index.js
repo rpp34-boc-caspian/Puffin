@@ -20,5 +20,12 @@ const pool = new Pool({
   port: 5432,
 });
 
-// module.exports = {darianPool};
-module.exports = { pool };
+// for create-todo
+const tamPool = new Pool({
+  user:'anuar',
+  host: 'localhost',
+  database: 'puffin',
+  port: 5432,
+});
+
+module.exports = {pool, tamPool};
