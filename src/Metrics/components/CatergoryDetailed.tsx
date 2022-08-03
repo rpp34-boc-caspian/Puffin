@@ -1,10 +1,12 @@
-import { Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal, Slider, styled, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import { colorMap } from "../../theme";
 import { useState } from "react";
 import { id } from "date-fns/locale";
 import { getToDoHours } from "./helpers/helpers";
+import { stringOrDate } from "react-big-calendar";
+import { click } from "@testing-library/user-event/dist/click";
 
 
 interface userTodo {
@@ -49,6 +51,49 @@ export const CategoryDetailed = (props: allTodos) => {
   const [clickedTodoId, setId] = useState(0);
   const [clickedTodoHours, setHours] = useState(0);
 
+  const PrettoSlider = styled(Slider)({
+    color: '#52af77',
+    height: 8,
+    '& .MuiSlider-track': {
+      border: 'none',
+    },
+    '& .MuiSlider-thumb': {
+      height: 24,
+      width: 24,
+      backgroundColor: '#fff',
+      border: '2px solid currentColor',
+      '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+        boxShadow: 'inherit',
+      },
+      '&:before': {
+        display: 'none',
+      },
+    },
+    '& .MuiSlider-valueLabel': {
+      lineHeight: 1.2,
+      fontSize: 12,
+      background: 'unset',
+      padding: 0,
+      width: 32,
+      height: 32,
+      borderRadius: '50% 50% 50% 0',
+      backgroundColor: '#52af77',
+      transformOrigin: 'bottom left',
+      transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
+      '&:before': { display: 'none' },
+      '&.MuiSlider-valueLabelOpen': {
+        transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
+      },
+      '& > *': {
+        transform: 'rotate(45deg)',
+      },
+    },
+  });
+
+  const updateTodoTime = (id: number, start: string, end: string, hours: number) => {
+
+    closeModal()
+  }
 
   const getTitleName = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const target = e.currentTarget as HTMLLIElement;
@@ -62,6 +107,13 @@ export const CategoryDetailed = (props: allTodos) => {
     console.log(clickedTodoData);
     setHours(getToDoHours(clickedTodoData))
     modalOpen ? closeModal() : openModal();
+  }
+
+  const handleSliderChange = (e: Event | React.SyntheticEvent<Element, Event>, value: number | number[]) => {
+
+    console.log(value as number)
+    setHours(value as number)
+
   }
 
   let formatedTimeTotal = props.categoryHours;
@@ -126,8 +178,18 @@ export const CategoryDetailed = (props: allTodos) => {
             {clickedTodoTitle}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {clickedTodoHours}
+            {`${clickedTodoHours} hours`}
           </Typography>
+          <PrettoSlider
+            valueLabelDisplay="auto"
+            aria-label="pretto slider"
+            defaultValue={clickedTodoHours}
+            max={24}
+            onChangeCommitted={handleSliderChange}
+          />
+          <Button onClick={() => updateTodoTime(3, 'hi', 'id', clickedTodoHours)}>
+            Update
+          </Button>
         </Box>
       </Modal>
     </Card>
