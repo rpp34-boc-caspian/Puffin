@@ -136,7 +136,7 @@ function Login({ user }: { user: Function }) {
           />
 
           <Box p={ 2 } sx={{ width: 300 }}>
-            <Button fullWidth variant="contained" onClick={ () => { handleLogin() } }>Sign In</Button>
+            <Button fullWidth data-testid="login-btn" variant="contained" onClick={ () => { handleLogin() } }>Sign In</Button>
           </Box>
 
           <Box>

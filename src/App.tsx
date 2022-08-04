@@ -17,6 +17,7 @@ import Logout from './authentication/logout';
 import RequireAuth from './authentication/requireAuth';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
+import { ConstructionOutlined } from '@mui/icons-material';
 import { UpdateTodo } from './ToDo/Edit-todo';
 import { CreateTodo } from './ToDo/Create_todo';
 
@@ -27,9 +28,41 @@ export interface UnscheduledTodoList {
   color?: number
 }
 
+export interface TodoList {
+  id: number,
+  user_id: number,
+  cat_id: number,
+  title: string,
+  descript: string,
+  start_d: string,
+  end_d: string,
+  all_d: boolean,
+  complete: boolean,
+  color: number
+}
 
 const App: React.FC = () => {
   const [metricsPageOpent, toggleMetrics] = useState(false);
+
+  const [shareData, setShareData] = useState<{
+    userid: number,
+    calendar: string,
+    categories: string[],
+    todos:string[],
+    friends: string[],
+    test: any[]
+  }[]>([]);
+
+  const [sharingData, setSharingData] = useState<{
+    cal_name: string,
+    cal_id: number,
+    category: string,
+    cat_id: number,
+    color: number,
+    todo_id: number,
+    title: string
+  }[]>([]);
+
   const [metricsData, setMetricsData] = useState<{
     title: string,
     start_d: string,
@@ -43,17 +76,20 @@ const App: React.FC = () => {
   useEffect(() => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
     let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
+    let requestTodos = axios.get(`http://127.0.0.1:8080/todos/${userId}`);
+    let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`)
 
-    axios.all([requestCompletedTodos, requestUnscheduledTodos])
+    axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares])
       .then(axios.spread((...allData) => {
         setMetricsData(allData[0].data);
         setUnscheduledTodoList(allData[1].data);
+        setMyTodos(allData[2].data);
+        setSharingData(allData[3].data);
       }))
       .catch((err) => {
         setMetricsData(FakeTodoData)
       })
   },[userId])
-
   return (
     <ThemeProvider theme={theme}>
       <div className="App">

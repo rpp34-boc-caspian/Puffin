@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-function RequireAuth({ children, user }: { children: JSX.Element, user: Function }) {
+function RequireAuth({ children, user }: { children: JSX.Element, user: Dispatch<SetStateAction<number>>; }) {
   let authCookie = Cookies.get('token');
   const navigateTo = useNavigate();
 
