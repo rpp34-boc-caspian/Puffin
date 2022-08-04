@@ -5,10 +5,11 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const cors = require('cors');
-const {pool, darianPool, tamPool} = require('../db/index.js');
+const {pool, tamPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const axios = require('axios');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -395,29 +396,62 @@ app.get('/unscheduledTodos/:userId', (req, res) => {
     })
 })
 
-
 app.get('/completedTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
   const query = (
-    `SELECT todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
+    `SELECT todos.id, todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
     FROM todos
     INNER JOIN categories ON todos.cat_id=categories.id
     WHERE user_id=${user_id} AND complete=true`
   );
   pool.connect((err, client, release) => {
     if (err) {
-      return console.error('Error acquiring client', err.stack);
+      res.sendStatus(500);
+      console.error('Error acquiring client', err.stack);
     }
     client.query(query, (err, result) => {
       release();
       if (err) {
-        return console.error('Error executing query', err.stack);
+        res.sendStatus(500);
+        console.error('Error executing query', err.stack);
       }
-      console.log(result.rows)
       res.send(result.rows)
     })
   })
 });
+
+app.put('/updateTodoTime/', (req, res) => {
+  const {id, end_d, start_d, user_id} = req.body;
+  const query = (
+    `UPDATE todos
+     SET end_d='${end_d}', start_d='${start_d}'
+     WHERE id=${id}`
+  );
+
+  pool.connect((err, client, release) => {
+    if (err) {
+      res.sendStatus(500);
+      console.error('Error acquiring client', err.stack);
+    }
+    client.query(query, (err, result) => {
+      release();
+      if (err) {
+        console.error('Error executing query', err.stack);
+        res.sendStatus(500);
+      } else {
+        axios.get(`http://127.0.0.1:8080/completedTodos/${user_id}`)
+          .then((data) => {
+            res.send(data.data)
+          })
+          .catch((err) => {
+            console.log(err);
+            res.sendStatus(500);
+          })
+
+      }
+    })
+  })
+})
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

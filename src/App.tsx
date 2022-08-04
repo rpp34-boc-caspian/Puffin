@@ -69,7 +69,8 @@ const App: React.FC = () => {
     start_d: string,
     end_d: string,
     category_name: string,
-    color: number
+    color: number,
+    todo_id: number
   }[]>([]);
   const [userId, setUserId] = useState(3) //gave default val until signin uses it
   const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
@@ -121,7 +122,7 @@ const App: React.FC = () => {
             } />
             <Route path="/metrics/*" element={
               <RequireAuth user={setUserId} >
-                <Metrics todos={metricsData} />
+                <Metrics updateMetricsData={setMetricsData} user_id={userId} todos={metricsData}/>
               </RequireAuth>
             }/>
             <Route path="/login" element={ <Login user={ setUserId } /> } />
