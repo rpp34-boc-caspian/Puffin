@@ -71,12 +71,15 @@ const App: React.FC = () => {
   const [userId, setUserId] = useState(3) //gave default val until signin uses it
   const [unscheduledTodoList, setUnscheduledTodoList] = React.useState<UnscheduledTodoList[]>([]);
   const [myTodos, setMyTodos] = React.useState<TodoList[]>([]);
+  console.log('TEST', process.env)
+
 
   useEffect(() => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
     let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
     let requestTodos = axios.get(`http://127.0.0.1:8080/todos/${userId}`);
-    let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`)
+    let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`);
+
 
     axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares])
       .then(axios.spread((...allData) => {
@@ -98,7 +101,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList} myTodos={myTodos} setMyTodos={setMyTodos}/>} />
             <Route path="/create_todo" element={<CreateTodo />} />
             <Route path="/update_todo/:todoId" element={<UpdateTodo />} />
-            <Route path='/share' element={<Share />} />
+            <Route path='/share' element={<Share data={sharingData} />} />
             <Route path="/metrics/*" element={<Metrics todos={metricsData}/>}/>
           </Routes>
         </BrowserRouter>

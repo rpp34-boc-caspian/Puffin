@@ -1,4 +1,3 @@
-
 const express = require('express');
 var bodyParser = require('body-parser')
 const path = require('path');
@@ -30,7 +29,7 @@ app.post('/api/createtodo', (req, res) => {
   } = req.body;
   console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -63,7 +62,7 @@ app.post('/api/updatetodo', (req, res) => {
   } = req.body;
   console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -93,7 +92,7 @@ app.post('/api/updatetodo', (req, res) => {
 app.get('/api/getcategories', (req, res) => {
   const { calendarId } = req.query;
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -114,7 +113,7 @@ app.get('/api/getcategories', (req, res) => {
 app.get('/api/get_todo', (req, res) => {
   const { todo } = req.query;
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -138,7 +137,7 @@ app.post('/api/createcategory', (req, res) => {
     calendarId
   } = req.body;
   console.log(req.body)
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;

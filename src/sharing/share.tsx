@@ -1,9 +1,5 @@
 import { Container, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
-import { Circle, ReorderTwoTone } from "@mui/icons-material";
 import Categories from "./components/Categories";
-import internal from "stream";
-import { red } from "@mui/material/colors";
-import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
