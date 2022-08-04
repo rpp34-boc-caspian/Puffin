@@ -73,6 +73,7 @@ const App: React.FC = () => {
   }[]>([]);
   const [userId, setUserId] = useState(3) //gave default val until signin uses it
   const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
+  const [myTodos, setMyTodos] = React.useState<TodoList[]>([]);
 
   useEffect(() => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
@@ -100,7 +101,12 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={
               <RequireAuth user={setUserId} >
-                <Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList}/>
+                <Home 
+                  unscheduledTodoList={unscheduledTodoList} 
+                  setUnscheduledTodoList={setUnscheduledTodoList}
+                  myTodos={myTodos} 
+                  setMyTodos={setMyTodos}
+                />
               </RequireAuth>
             } />
             <Route path="/create_todo" element={
