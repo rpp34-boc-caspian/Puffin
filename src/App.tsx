@@ -125,6 +125,7 @@ const App: React.FC = () => {
                   setUnscheduledTodoList={setUnscheduledTodoList}
                   myTodos={myTodos}
                   setMyTodos={setMyTodos}
+                  friendsTodos={friendsTodos}
                 />
               </RequireAuth>
             } />
