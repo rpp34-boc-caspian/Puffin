@@ -25,3 +25,4 @@ id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 32,2,3,Research trip to Spain,Add spots to Google Maps,,,FALSE,FALSE
 31,2,3,Play Wingspan,With Paw Paw,,,FALSE,FALSE
 30,2,3,Go for a walk,Golden Gate Park,,,FALSE,FALSE
+33,1,2,Backgammon,With snacks,,,FALSE,FALSE

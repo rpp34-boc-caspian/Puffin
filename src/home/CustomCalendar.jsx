@@ -5,17 +5,16 @@ import 'rc-dropdown/assets/index.css';
 import Menu, { Item as MenuItem } from 'rc-menu';
 
 
-const myCalendarMock = [
-  'Tam','School','Holidays'
-];
+// const myCalendarMock = [
+//   'Tam','School','Holidays'
+// ];
 
-const sharedCalendarMock = ['Darien', 'Vacation', 'Family']
+const sharedCalendarMock = ['Tam','School','Holidays']
 
 
-const CustomCalendar = ({myTodos, setMyTodos}) => {
-
+const CustomCalendar = ({friendsTodos}) => {
+  console.log("from CustomCalendar", friendsTodos)
   const [currentSelect, setCurrentSelect] = useState([]);
-
   const handleViewSelect = (event) => {
     let user = {
       name: event.target.name,
@@ -37,30 +36,30 @@ const CustomCalendar = ({myTodos, setMyTodos}) => {
   }
 
   function onSelect({ key }) {
-    // console.log(`${key} selected`);
+    console.log(`${key} selected`);
   }
 
   function onVisibleChange(visible) {
     console.log(visible);
   }
 
-  const menu = (
-    <Menu onSelect={onSelect}>
-      {
-        myCalendarMock.map((item, i) => {
-          return <MenuItem key={i}>
-            {item}
-            <input
-              type="checkbox"
-              name={item}
-              onChange={(e) => {
-                handleViewSelect(e);
-              }}/>
-          </MenuItem>
-        })
-      }
-    </Menu>
-  );
+  // const menu = (
+  //   <Menu onSelect={onSelect}>
+  //     {
+  //       myCalendarMock.map((item, i) => {
+  //         return <MenuItem key={i}>
+  //           {item}
+  //           <input
+  //             type="checkbox"
+  //             name={item}
+  //             onChange={(e) => {
+  //               handleViewSelect(e);
+  //             }}/>
+  //         </MenuItem>
+  //       })
+  //     }
+  //   </Menu>
+  // );
 
   const sharedCalendarMenu = (
     <Menu onSelect={onSelect}>
@@ -77,7 +76,7 @@ const CustomCalendar = ({myTodos, setMyTodos}) => {
   return (
 
     <div className='rbc-toolbar'>
-      <div className="myCalendarView" style={{ padding: 5}}>
+      {/* <div className="myCalendarView" style={{ padding: 5}}>
       <Dropdown
         trigger={['click']}
         overlay={menu}
@@ -86,7 +85,7 @@ const CustomCalendar = ({myTodos, setMyTodos}) => {
       >
         <button style={{ width: 125 }}>My Calendars</button>
       </Dropdown>
-      </div>
+      </div> */}
       <div className="sharedCalendarView" style={{ padding: 5 }}>
       <Dropdown
         trigger={['click']}

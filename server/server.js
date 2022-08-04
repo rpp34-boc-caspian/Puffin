@@ -418,9 +418,10 @@ app.get('/completedTodos/:userId', (req, res) => {
 app.get('/friendsTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
   const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.title from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
-  pool.query(query, [user_id])
+
+  pool.query(query)
     .then(({ rows }) => {
-      // console.log('rows to get all todos in server', rows);
+      console.log('FRIENDS TODOS HERE!', rows);
       res.send(rows);
     })
     .catch(err => {

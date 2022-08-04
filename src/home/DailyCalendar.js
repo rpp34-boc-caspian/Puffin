@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
@@ -82,11 +81,15 @@ const localizer = dateFnsLocalizer({
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
-export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
+export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos, friendsTodos}) {
   const history = useNavigate()
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
+
+  console.log('From Daily Calendar: ', friendsTodos)
+  console.log('From Daily Calendar: ', myTodos)
+
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
@@ -207,7 +210,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         }}
         components={{
           event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          toolbar: (props) => <CustomCalendar {...props} myTodos={myTodos} setMyTodos={setMyTodos} />
+          toolbar: (props) => <CustomCalendar {...props} myTodos={myTodos} setMyTodos={setMyTodos} friendsTodos={friendsTodos} />
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)
