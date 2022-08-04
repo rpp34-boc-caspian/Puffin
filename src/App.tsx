@@ -86,7 +86,8 @@ const App: React.FC = () => {
     start_d: string,
     end_d: string,
     category_name: string,
-    color: number
+    color: number,
+    todo_id: number
   }[]>([]);
   const [userId, setUserId] = useState(2) //gave default val until signin uses it
   const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
@@ -117,11 +118,34 @@ const App: React.FC = () => {
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home unscheduledTodoList={unscheduledTodoList} setUnscheduledTodoList={setUnscheduledTodoList} myTodos={myTodos} setMyTodos={setMyTodos} friendsTodos={friendsTodos}/>} />
-            <Route path="/create_todo" element={<CreateTodo />} />
-            <Route path="/update_todo/:todoId" element={<UpdateTodo />} />
-            <Route path='/share' element={<Share />} />
-            <Route path="/metrics/*" element={<Metrics todos={metricsData} />} />
+            <Route path="/" element={
+              <RequireAuth user={setUserId} >
+                <Home
+                  unscheduledTodoList={unscheduledTodoList}
+                  setUnscheduledTodoList={setUnscheduledTodoList}
+                  myTodos={myTodos}
+                  setMyTodos={setMyTodos}
+                />
+              </RequireAuth>
+            } />
+            <Route path="/create_todo" element={
+              <RequireAuth user={setUserId} >
+                <CreateTodo />
+              </RequireAuth>
+              } />
+            <Route path='/share' element={
+              <RequireAuth user={setUserId} >
+                <Share />
+              </RequireAuth>
+            } />
+            <Route path="/metrics/*" element={
+              <RequireAuth user={setUserId} >
+                <Metrics updateMetricsData={setMetricsData} user_id={userId} todos={metricsData}/>
+              </RequireAuth>
+            }/>
+            <Route path="/login" element={ <Login user={ setUserId } /> } />
+            <Route path="/signup" element={ <SignUp user={ setUserId } /> } />
+            <Route path="/logout" element={ <Logout user={ setUserId } /> } />
           </Routes>
         </BrowserRouter>
       </div>
