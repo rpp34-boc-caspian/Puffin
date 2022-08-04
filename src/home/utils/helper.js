@@ -36,14 +36,3 @@ export const myFriends = () => {
   return []
 }
 
-export const getFriendsTodos = (todoId, start, end, allday, complete) => {
-  return axios.get(`${url}/friendsTodos`)
-  .then((data) => console.log(data))
-  .catch((err) => console.log(err))
-  // {
-  //   start,
-  //   end,
-  //   allday,
-  //   complete
-  // })
-}

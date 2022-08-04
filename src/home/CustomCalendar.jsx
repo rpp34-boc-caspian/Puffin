@@ -13,7 +13,7 @@ const sharedCalendarMock = ['Tam','School','Holidays']
 
 
 const CustomCalendar = ({friendsTodos}) => {
-  console.log("from CustomCalendar", friendsTodos)
+  // console.log("from CustomCalendar", friendsTodos)
   const [currentSelect, setCurrentSelect] = useState([]);
   const handleViewSelect = (event) => {
     let user = {

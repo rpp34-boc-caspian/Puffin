@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from './Nav';
 import DailyCalendar from './DailyCalendar';
-import { getDate, getFriendsTodos } from './utils/helper';
+import { getDate } from './utils/helper';
 import {UnscheduledTodoList, TodoList, FriendsTodoList} from '../App';
 
 interface Props {

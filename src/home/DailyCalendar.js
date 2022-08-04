@@ -87,8 +87,10 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
-  console.log('From Daily Calendar: ', friendsTodos)
-  console.log('From Daily Calendar: ', myTodos)
+  // console.log('From Daily Calendar: my friendsTodos ', friendsTodos)
+  // console.log('From Daily Calendar: myTodos', myTodos)
+
+  // console.log('Merging the two lists: ', [...myTodos, ...friendsTodos])
 
 
   const handleSelectedEvent = (myTodos) => {
@@ -189,7 +191,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onNavigate={() => { }}
         view='day'
         onView={() => { }}
-        events={myTodos}
+        events={[...myTodos, ...friendsTodos]}
         localizer={localizer}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}

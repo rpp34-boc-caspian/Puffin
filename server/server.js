@@ -28,7 +28,7 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   pool.connect((err, client, release) => {
     if (err) {
@@ -61,7 +61,7 @@ app.post('/api/updatetodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   pool.connect((err, client, release) => {
     if (err) {
@@ -238,10 +238,8 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
-  let test = await bcrypt.hash('$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36', 11);
+  let test = await bcrypt.hash('jane2', 11);
   console.log('this is the hash, save me: ', {test})
-  let testMatach = await bcrypt.compare('darian3', '$2b$11$3njt9daouraEufrFObd4vOY6Y3qHobGYrFOW1eJG0P5i4fS7Q.W36');
-  console.log('this is test match: ', {testMatach})
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
     if (results.rows.length === 0) {
@@ -287,7 +285,7 @@ app.get('/share/user_profile/:userId', (req, res) => {
   pool.connect((err, client, release) => {
     client.query(query, (err, result) => {
       release();
-      console.log(result.rows)
+      // console.log('/share/user_profile/:userId', result.rows)
       res.send(result.rows)
     })
   })
@@ -346,6 +344,7 @@ app.get('/todos/:userId', (req, res) => {
       res.status(500).send(err);
     })
 })
+
 
 app.put('/todos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
@@ -426,11 +425,11 @@ app.get('/completedTodos/:userId', (req, res) => {
 //friends todo list
 app.get('/friendsTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
-  const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.title from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
+  const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.* from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
 
   pool.query(query)
     .then(({ rows }) => {
-      console.log('FRIENDS TODOS HERE!', rows);
+      // console.log('FRIENDS TODOS HERE!', rows, 'END');
       res.send(rows);
     })
     .catch(err => {

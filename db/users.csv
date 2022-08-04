@@ -1,6 +1,6 @@
 ﻿id,username,email,friend_code,hashed_pass,sesh_id
 1,Tam,tam@gmail.com,xsadf,tam1,1
-2,Jane,jane@gmail.com,wdfsg,jane2,2
+2,Jane,jane@gmail.com,wdfsg,$2b$11$2Zw1EL5YYBOnqPBNBJyTNOtzTdTjT5/zWKma5XQWXvBpMQWjE8Qsi,2
 3,Darian,darian@gmail.com,yrgfh,$2b$11$.lFxzOJB0Uk2P5BqsbcQCOausgR4kdJs7ZjnvIzd0.ZLqf6vY7FD6,3
 4,Xinxin,xinxin@gmail.com,gfgdx,xinxin4,4
 5,Keegan,keegan@gmail.com,yrour,keegan5,5

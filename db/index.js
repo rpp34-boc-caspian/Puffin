@@ -13,10 +13,17 @@ const { Pool } = require('pg')
 //   port: 5432,
 // });
 
+// const pool = new Pool({
+//   user: 'kgnwlf',
+//   host: 'localhost',
+//   database: 'kgnwlf',
+//   port: 5432,
+// });
+
 const pool = new Pool({
-  user: 'kgnwlf',
+  user: 'donuty',
   host: 'localhost',
-  database: 'kgnwlf',
+  database: 'puffin',
   port: 5432,
 });
 
