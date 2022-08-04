@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, IconButton, Menu, MenuItem, AppBar, Toolbar, Tooltip, Typography } from '@mui/material';
 import { MdAdd, MdOutlineIosShare, MdPerson } from 'react-icons/md';
 import { BsCalendar4Week } from 'react-icons/bs';
@@ -17,6 +17,7 @@ const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
     const [anchorUserEl, setAnchorUserEl] = React.useState<null | HTMLElement>(null);
     const [anchorCalEl, setAnchorCalEl] = React.useState<null | HTMLElement>(null);
 
+    const navigateTo = useNavigate();
 
     const handleCalMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorCalEl(event.currentTarget);
@@ -33,6 +34,12 @@ const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
     const handleUserClose = () => {
         setAnchorUserEl(null);
     };
+
+    const handleLogout = () => {
+      setAnchorUserEl(null);
+
+      navigateTo('/logout');
+    }
 
     return (
         <>
@@ -162,7 +169,7 @@ const Nav: React.FC<Props> = ({ date, setDate, setToggleUnscheduledTodo }) => {
                                 <MenuItem>Report</MenuItem>
                             </Link>
                             <MenuItem onClick={handleUserClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleUserClose}>Log out</MenuItem>
+                            <MenuItem onClick={ handleLogout }>Log out</MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>
