@@ -6,20 +6,6 @@ const { Pool } = require('pg')
 //     port: 5432,
 //   });
 
-const pool = new Pool({
-    user: 'donuty',
-    host: 'localhost',
-    database: 'puffin',
-    port: 5432,
-  });
-
-  // const pool = new Pool({
-  //   user:'postgres',
-  //   host: 'localhost',
-  //   database: 'puffin',
-  //   port: 5432,
-  // });
-
 // const pool = new Pool({
 //   user: 'darianhogue',
 //   host: 'localhost',
@@ -27,13 +13,12 @@ const pool = new Pool({
 //   port: 5432,
 // });
 
-// const pool = new Pool({
-//   user: 'kgnwlf',
-//   host: 'localhost',
-//   database: 'kgnwlf',
-//   port: 5432,
-// });
-
+const pool = new Pool({
+  user: 'kgnwlf',
+  host: 'localhost',
+  database: 'kgnwlf',
+  port: 5432,
+});
 
 // for create-todo
 const tamPool = new Pool({

@@ -12,6 +12,8 @@ import { ToDo } from './ToDo/Todo';
 import { Share } from './sharing/share';
 import SignUp from './authentication/signup';
 import Login from './authentication/login';
+import Logout from './authentication/logout';
+
 import RequireAuth from './authentication/requireAuth';
 import axios from 'axios';
 import { FakeTodoData } from './Metrics/components/helpers/helpers';
@@ -86,9 +88,8 @@ const App: React.FC = () => {
     category_name: string,
     color: number
   }[]>([]);
-
-  const [userId, setUserId] = useState(2) //gave default val until signin uses it
-  const [unscheduledTodoList, setUnscheduledTodoList] = React.useState<UnscheduledTodoList[]>([]);
+  const [userId, setUserId] = useState(3) //gave default val until signin uses it
+  const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
   const [myTodos, setMyTodos] = React.useState<TodoList[]>([]);
   const [friendsTodos, setFriendsTodos] = React.useState<FriendsTodoList[]>([])
 
@@ -101,7 +102,6 @@ const App: React.FC = () => {
 
     axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares, requestFriendsTodos])
       .then(axios.spread((...allData) => {
-        console.log('allData in client side', allData);
         setMetricsData(allData[0].data);
         setUnscheduledTodoList(allData[1].data);
         setMyTodos(allData[2].data);
