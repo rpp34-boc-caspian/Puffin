@@ -173,7 +173,7 @@ function SignUp({ user }: { user: Function }) {
         />
 
         <Box p={ 2 } sx={{ width: 300 }} >
-          <Button fullWidth variant="contained" onClick={ () => { handleSignUp() } }>Sign Up</Button>
+          <Button fullWidth data-testid="signup-btn" variant="contained" onClick={ () => { handleSignUp() } }>Sign Up</Button>
         </Box>
 
         <Box>

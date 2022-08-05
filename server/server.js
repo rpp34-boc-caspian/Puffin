@@ -284,7 +284,6 @@ app.get('/share/user_profile/:userId', (req, res) => {
   pool.connect((err, client, release) => {
     client.query(query, (err, result) => {
       release();
-      console.log(result.rows)
       res.send(result.rows)
     })
   })
