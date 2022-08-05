@@ -239,7 +239,8 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
-
+  let test = await bcrypt.hash('xinxin4', 11);
+  console.log({test})
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
     if (results.rows.length === 0) {
@@ -348,13 +349,14 @@ app.get('/todos/:userId', (req, res) => {
 app.put('/todos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
   const {start, end, allday, complete} = req.body;
+  console.log(req.body, 'complete', complete);
   const updateCompleteQuery = 'UPDATE todos SET complete = $1 WHERE id = $2';
   const updateCompleteOptions = [complete, todo_id];
   const updateTiemQuery = 'UPDATE todos SET start_d = $1, end_d = $2, all_d = $3 WHERE id = $4';
   const updateTimeOptions = [new Date(start), new Date(end), allday, todo_id]
   const updateComplete = () => pool.query(updateCompleteQuery, updateCompleteOptions);
   const updateTime = () => pool.query(updateTiemQuery, updateTimeOptions);
-  const query = typeof complete === 'boolean' ? updateComplete() : updateTime();
+  const query = complete !== undefined ? updateComplete() : updateTime();
 
   query
   .then(({rowCount}) => {
