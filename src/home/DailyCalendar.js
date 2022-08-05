@@ -94,15 +94,44 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
+// don't want to change shared db query to access info just yet- will refactor this helper into server side rendering...
+  let friendsUserId = {
+    1: 'Tam',
+    2: 'Jane',
+    3: 'Darian',
+    4: 'Xinxin',
+    5: 'Keegan',
+    6: 'Cornie'
+  }
 
-  let allTodos = [...myTodos, ...friendsTodos];
+  let form = (toDo) => {
+    let newObject = {
+      allday: toDo.all_d,
+      color: toDo.color,
+      complete: toDo.complete,
+      descript: toDo.descript,
+      end: toDo.end_d,
+      id: toDo.todo_id,
+      permission: toDo.permission,
+      start: toDo.start_d,
+      title: toDo.title,
+      author: friendsUserId[toDo.user_id],
+      category: toDo.category_name,
+      username: toDo.username
+    }
+    return newObject
+  }
+
+  let formedFriendsToDo = friendsTodos.map(form);
+
+  let allTodos = [...formedFriendsToDo, ...myTodos];
 
   let friends = allTodos.filter((eachTodo) =>
-    eachTodo.category_name !== eachTodo.username
+    eachTodo.author !== eachTodo.username
   )
 
-  const listOfFriends = [...new Set(friends.map((item) => item.category_name))];
-  console.log("from daily calendar:" ,listOfFriends)
+  const listOfFriends = [...new Set(friends.map((item) => item.author))];
+  const listOfCategories = [...new Set(allTodos.map((todo) => todo.category))];
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
@@ -190,12 +219,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
 
   let eventStyleGetter = (event, start, end, isSelected) => {
-    console.log(isSelected);
-
-    // let backgroundColor = colorMap[event.color];
-    // const textDecorationLine = event.complete === false ? 'none' : 'line-through';
-    // return { style: { backgroundColor, textDecorationLine } }
-
     let backgroundColor = colorMap[event.color];
     let textDecorationLine = event.complete === false ? 'none' : 'line-through';
     var style = {
@@ -214,7 +237,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
       >
         {date}
       </Typography>
-      <FilterMenu  listOfFriends={listOfFriends}/>
+      <FilterMenu  listOfFriends={listOfFriends} listOfCategories={listOfCategories} />
       <DragAndDropCalendar
         defaultDate={defaultDate}
         formats={formats}
@@ -222,7 +245,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onNavigate={() => { }}
         view='day'
         onView={() => { }}
-        events={[...myTodos, ...friendsTodos]}
+        events={allTodos}
         localizer={localizer}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}

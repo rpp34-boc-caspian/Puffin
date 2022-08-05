@@ -5,7 +5,7 @@ import 'rc-dropdown/assets/index.css';
 import Menu, { Item as MenuItem } from 'rc-menu';
 
 
-const FilterMenu = ({listOfFriends}) => {
+const FilterMenu = ({listOfCategories, listOfFriends}) => {
 
   const [currentSelect, setCurrentSelect] = useState([]);
 
@@ -23,19 +23,15 @@ const FilterMenu = ({listOfFriends}) => {
     if (userIsChecked) {
       prevArr.push(user.name)
       setCurrentSelect(prevArr);
-      console.log(currentSelect)
     } else {
-      let indexDelete = prevArr.indexOf(user.name)
-      console.log(`the user ${user.name} needs to be removed from view/array ${indexDelete}`)
+      console.log(`the user ${user.name} needs to be removed from view/array`)
     }
   }
 
   function onSelect({ key }) {
-    console.log(`${key} selected`);
   }
 
   function onVisibleChange(visible) {
-    console.log(visible);
   }
 
   const sharedCalendarMenu = (

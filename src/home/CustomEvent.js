@@ -6,7 +6,6 @@ import {updateTodo, deleteTodo} from './utils/helper';
 import format from 'date-fns/format';
 
 const CustomEvent = ({event, setMyTodos}) => {
-    console.log('event', event);
     const handleTodoEdit = (event) => {
        console.log(event);
     }

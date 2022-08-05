@@ -8,3 +8,4 @@ id,user_id,friend_id,cal_share,cat_id,cat_share,todo_id,permission
 7,2,1,FALSE,3,TRUE,4,1
 8,2,1,FALSE,3,TRUE,4,1
 9,1,2,FALSE,1,TRUE,38,1
+10,1,2,FALSE,10,TRUE,55,1
