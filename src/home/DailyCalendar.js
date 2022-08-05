@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
@@ -78,6 +78,7 @@ const localizer = dateFnsLocalizer({
 })
 
 
+
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
@@ -87,11 +88,13 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
-  // console.log('From Daily Calendar: my friendsTodos ', friendsTodos)
-  // console.log('From Daily Calendar: myTodos', myTodos)
 
-  // console.log('Merging the two lists: ', [...myTodos, ...friendsTodos])
+  let allTodos = [...myTodos, ...friendsTodos];
+  let friends = allTodos.filter((eachTodo) =>
+    eachTodo.category_name !== eachTodo.username
+  )
 
+  const listOfFriends = [...new Set(friends.map((item) => item.category_name))];
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
@@ -177,6 +180,30 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
   const defaultDate = useMemo(() => new Date(), [])
 
+
+  let eventStyleGetter = (event, start, end, isSelected) => {
+    console.log(isSelected);
+
+    // let backgroundColor = colorMap[event.color];
+    // const textDecorationLine = event.complete === false ? 'none' : 'line-through';
+    // return { style: { backgroundColor, textDecorationLine } }
+
+    let backgroundColor = colorMap[event.color];
+    let textDecorationLine = event.complete === false ? 'none' : 'line-through';
+    var style = {
+        backgroundColor: backgroundColor,
+        textDecorationLine: textDecorationLine
+        // borderRadius: '0px',
+        // opacity: 0.8,
+        // color: 'black',
+        // border: '0px',
+        // display: 'block'
+    };
+    return {
+        style: style
+    };
+  }
+
   return (
     <div>
       <Typography
@@ -205,14 +232,10 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onSelectSlot={newEvent}
         onSelectEvent={(e) => handleSelectedEvent(e)}
         // draggable
-        eventPropGetter={(event) => {
-          let backgroundColor = colorMap[event.color];
-          const textDecorationLine = event.complete === false ? 'none' : 'line-through';
-          return { style: { backgroundColor, textDecorationLine } }
-        }}
+        eventPropGetter={eventStyleGetter}
         components={{
           event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          toolbar: (props) => <CustomCalendar {...props} myTodos={myTodos} setMyTodos={setMyTodos} friendsTodos={friendsTodos} />
+          toolbar: (props) => <CustomCalendar {...props} listOfFriends={listOfFriends}/>
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)

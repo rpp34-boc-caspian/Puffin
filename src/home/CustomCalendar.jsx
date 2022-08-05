@@ -1,19 +1,15 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
 import Menu, { Item as MenuItem } from 'rc-menu';
 
 
-// const myCalendarMock = [
-//   'Tam','School','Holidays'
-// ];
-
 const sharedCalendarMock = ['Tam','School','Holidays']
 
 
-const CustomCalendar = ({friendsTodos}) => {
-  // console.log("from CustomCalendar", friendsTodos)
+const CustomCalendar = (props) => {
+  console.log('from Custom Calendar :', props)
   const [currentSelect, setCurrentSelect] = useState([]);
   const handleViewSelect = (event) => {
     let user = {

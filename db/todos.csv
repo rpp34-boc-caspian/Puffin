@@ -28,3 +28,6 @@ id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 33,2,3,Backgammon,With snacks,,,FALSE,FALSE
 34,1,2,Exercise,Press ups,,,FALSE,FALSE
 35,1,2,Exercise,Press ups,,,FALSE,FALSE
+36,2,3,Checkout happy hour,Barbes,8/4/22 18:00,8/4/22 22:00,FALSE,FALSE
+37,2,3,Go to the Library,Outer Sunset,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE
+38,1,2,Exercise,Press ups,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE

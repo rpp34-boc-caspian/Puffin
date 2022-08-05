@@ -430,7 +430,7 @@ app.get('/friendsTodos/:userId', (req, res) => {
 
   pool.query(query)
     .then(({ rows }) => {
-      // console.log('FRIENDS TODOS HERE!', rows, 'END');
+      console.log('FRIENDS TODOS HERE!', rows, 'END');
       res.send(rows);
     })
     .catch(err => {
