@@ -36,6 +36,8 @@
     "nodemon": "^2.0.19",
     "npm": "^8.14.0",
     "pg": "^8.7.3",
+    "rc-dropdown": "^4.0.1",
+    "rc-menu": "^9.6.0",
     "react": "^18.2.0",
     "react-big-calendar": "^1.5.0",
     "react-chartjs-2": "^4.3.1",
@@ -78,7 +80,8 @@
     "@types/js-cookie": "^3.0.2",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/react-big-calendar": "^0.38.1",
-    "msw": "^0.44.2"
+    "msw": "^0.44.2",
+    "flow-babel-webpack-plugin": "^1.1.1"
   },
   "proxy": "http://localhost:8080/"
 }

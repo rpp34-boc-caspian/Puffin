@@ -5,4 +5,10 @@ id,user_id,friend_id,cal_share,cat_id,cat_share,todo_id,permission
 4,3,2,FALSE,3,FALSE,3,0
 5,4,5,FALSE,5,FALSE,8,1
 6,5,4,FALSE,8,FALSE,9,0
+<<<<<<< HEAD
 7,2,1,FALSE,3,TRUE,4,1
+=======
+7,2,1,FALSE,3,TRUE,4,1
+8,2,1,FALSE,3,TRUE,4,1
+9,1,2,FALSE,1,TRUE,38,1
+>>>>>>> d3c44df018d4161e447a59167e8ab8080d12d224

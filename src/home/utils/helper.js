@@ -20,8 +20,19 @@ export const updateTodo = (todoId, start, end, allday, complete) => {
     allday,
     complete
   })
-} 
+}
 
 export const deleteTodo = (todoId) => {
   return axios.delete(`${url}/todos/${todoId}`)
 }
+
+export const myCalendar = () => {
+  // need to get all calendars associated with userId
+  return []
+}
+
+export const myFriends = () => {
+  // need to get all friends associated with userId
+  return []
+}
+

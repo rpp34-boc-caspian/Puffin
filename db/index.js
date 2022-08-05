@@ -18,6 +18,18 @@ const { Pool } = require('pg')
 //   user: 'darianhogue',
 //   host: 'localhost',
 //   database: 'puffin',
+
+// const pool = new Pool({
+//     user: 'donuty',
+//     host: 'localhost',
+//     database: 'puffin',
+//     port: 5432,
+//   });
+
+// const pool = new Pool({
+//   user: 'kgnwlf',
+//   host: 'localhost',
+//   database: 'kgnwlf',
 //   port: 5432,
 // });
 
@@ -36,11 +48,18 @@ const pool = new Pool({
 });
 
 // for create-todo
-const tamPool = new Pool({
-  user:'anuar',
-  host: 'localhost',
-  database: 'puffin',
-  port: 5432,
-});
+// const tamPool = new Pool({
+//   user:'anuar',
+//   host: 'localhost',
+//   database: 'puffin',
+//   port: 5432,
+// });
 
-module.exports = {pool, tamPool};
+// const pool = new Pool({
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'puffin',
+//   port: 5432,
+// });
+
+module.exports = { pool };
