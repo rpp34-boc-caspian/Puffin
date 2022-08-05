@@ -95,15 +95,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
 
-  let allTodos = [...myTodos, ...friendsTodos];
-
-  let friends = allTodos.filter((eachTodo) =>
-    eachTodo.category_name !== eachTodo.username
-  )
-
-  const listOfFriends = [...new Set(friends.map((item) => item.category_name))];
-  console.log("from daily calendar:" ,listOfFriends)
-
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
     // history.push(`/edit_todo/${myTodos.id}`);
@@ -190,12 +181,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
 
   let eventStyleGetter = (event, start, end, isSelected) => {
-    console.log(isSelected);
-
-    // let backgroundColor = colorMap[event.color];
-    // const textDecorationLine = event.complete === false ? 'none' : 'line-through';
-    // return { style: { backgroundColor, textDecorationLine } }
-
     let backgroundColor = colorMap[event.color];
     let textDecorationLine = event.complete === false ? 'none' : 'line-through';
     var style = {
@@ -214,7 +199,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
       >
         {date}
       </Typography>
-      <FilterMenu  listOfFriends={listOfFriends}/>
+      <FilterMenu  setMyTodos={setMyTodos} myTodos={myTodos} friendsTodos={friendsTodos} />
       <DragAndDropCalendar
         defaultDate={defaultDate}
         formats={formats}
@@ -222,7 +207,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onNavigate={() => { }}
         view='day'
         onView={() => { }}
-        events={[...myTodos, ...friendsTodos]}
+        events={myTodos}
         localizer={localizer}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}

@@ -38,7 +38,8 @@ export interface TodoList {
   end_d: string,
   all_d: boolean,
   complete: boolean,
-  color: number
+  color: number,
+  category: string
 }
 
 export interface FriendsTodoList {
