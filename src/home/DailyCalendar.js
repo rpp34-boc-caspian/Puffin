@@ -13,7 +13,6 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Typography} from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 import { colorMap } from '../theme';
 import CustomEvent from './CustomEvent';
 import {updateTodo} from './utils/helper';
@@ -61,6 +60,12 @@ const styledCalendar = styled(Calendar)`
   .rbc-event {
     border: 1px solid #fff;
   }
+  .rbc-event-content {
+    font-size: 14px;
+  }
+  .rbc-event-label {
+    display: none;
+  }
 `
 
 const locales = {
@@ -87,13 +92,14 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
-    history.push(`/edit_todo/${myTodos.id}`);
+    // history.push(`/edit_todo/${myTodos.id}`);
   }
 
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
 
   const newEvent = useCallback(
     (event) => {
+      console.log('event', event);
       updateTodo(event.id, event.start, event.end, event.allday)
       .then(({data}) => {
         console.log('moveEvent', data);
@@ -111,14 +117,15 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   // need to carry over event.color in order to render colors
   const onDropFromOutside = useCallback(
     ({ start, end, allday: isallday }) => {
-      const { id, title, color } = draggedEvent;
+      const { id, title, color, complete } = draggedEvent;
       const event = {
         id,
         title,
         start,
         end,
         isallday, 
-        color
+        color,
+        complete
       }
       setDraggedEvent(null)
       newEvent(event)
@@ -130,8 +137,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const moveEvent = useCallback(
     ({ event, start, end, isallday: droppedOnalldaySlot = false }) => {
       const { allday } = event
-      console.log('droppedOnalldaySlot', droppedOnalldaySlot);
-      console.log('allday', allday);
       if (!allday && droppedOnalldaySlot) {
         event.allday = true
       }      

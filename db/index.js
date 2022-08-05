@@ -36,4 +36,11 @@ const tamPool = new Pool({
   port: 5432,
 });
 
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'puffin',
+  port: 5432,
+});
+
 module.exports = {pool, tamPool};
