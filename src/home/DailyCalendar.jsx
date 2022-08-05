@@ -94,7 +94,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
-
   ////////////////////////////////////beginning
 
   /// All of this logic needs to be moved up to Home or App
@@ -131,7 +130,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
   let allTodos = [...formedFriendsToDo, ...myTodos];
 
-  let friends = allTodos.filter((eachTodo) =>
+  let friends = formedFriendsToDo.filter((eachTodo) =>
     eachTodo.author !== eachTodo.username
   )
 
@@ -254,7 +253,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onNavigate={() => { }}
         view='day'
         onView={() => { }}
-        events={allTodos}
+        events={myTodos}
         localizer={localizer}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
