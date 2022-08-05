@@ -81,7 +81,6 @@ const App: React.FC = () => {
     let requestTodos = axios.get(`http://127.0.0.1:8080/todos/${userId}`);
     let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`);
 
-
     axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares])
 
       .then(axios.spread((...allData) => {
@@ -117,7 +116,7 @@ const App: React.FC = () => {
               } />
             <Route path='/share' element={
               <RequireAuth user={setUserId} >
-                <Share data={sharingData}/>
+                <Share user={userId} data={sharingData}/>
               </RequireAuth>
             } />
             <Route path="/metrics/*" element={

@@ -1,5 +1,4 @@
 CREATE TABLE permissions (
-  id SERIAL PRIMARY KEY,
   user_id int,
   friend_id int,
   cal_share boolean,
@@ -22,6 +21,6 @@ CREATE TABLE permissions (
 	      REFERENCES todos(id)
 );
 
-\copy permissions(id, user_id, friend_id, cal_share, cat_id, cat_share, todo_id, permission) from './db/permissions.csv' delimiter ',' csv header;
+\copy permissions(user_id, friend_id, cal_share, cat_id, cat_share, todo_id, permission) from './db/permissions.csv' delimiter ',' csv header;
 
-CREATE INDEX permission_index ON permissions(id);
+CREATE INDEX permission_index ON permissions(user_id);

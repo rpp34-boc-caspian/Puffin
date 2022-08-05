@@ -27,7 +27,6 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
 
   pool.connect((err, client, release) => {
     if (err) {
@@ -283,7 +282,6 @@ app.get('/share/user_profile/:userId', (req, res) => {
   pool.connect((err, client, release) => {
     client.query(query, (err, result) => {
       release();
-      console.log(result.rows)
       res.send(result.rows)
     })
   })
@@ -303,27 +301,54 @@ app.get('/share/todos_info/:userId', (req, res) => {
     });
 });
 
-app.post('/share/friends/:userId/:friendId', (req, res) => {
-  const query = `INSERT INTO friends(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
-  pool.query(query, (err, data) => {
-    if (err) {
-      console.log('err1: ', err);
+app.get('/share/friends/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  pool.query(`select friends.friend_id, users.username, users.email from friends join users on friend_id = users.id where friends.user_id = ${user_id}`)
+    .then(output => {
+      res.send(output);
+    })
+    .catch(err => {
       res.status(500).send(err);
-    } else {
-      //
-    }
+    });
+});
+
+app.get('/share/perm/:userId/:friend_id/:todo_id', (req, res) => {
+  const user_id = req.params.userId;
+  const friend_id = req.params.friend_id;
+  const todo_id = req.params.todo_id;
+  console.log('SDAf', friend_id, todo_id, user_id);
+  const query = `select * from permissions where user_id=${user_id} and friend_id=${friend_id} and todo_id=${todo_id};`;
+  pool.connect((err, client, release) => {
+    client.query(query, (err, result) => {
+      release();
+      console.log('RESAU', result);
+      res.send(result.rows);
+    })
   })
 });
 
-  app.put('/share/store', (req, res) => {
-    const query = `INSERT INTO user(user_id, friend_id) VALUES (${req.params.user_id}, ${req.params.friend_id})`;
-    pool.query(query, (err, data) => {
-      if (err) {
-        console.log('err1: ', err);
-        res.status(500).send(err);
-      } else {
-        //query.characteristicReviewsValues.push([friend_id]);
-      };
+
+app.post('/share/permissions/:userId/', (req, res) => {
+  const user_id = req.params.userId;
+  const {friend_id, cal_share, cat_id, cat_share, todo_id, permission} = req.body;
+  const query = `insert INTO permissions(user_id, friend_id, cal_share, cat_id, cat_share, todo_id, permission) VALUES (${user_id}, ${friend_id}, ${cal_share}, ${cat_id}, ${cat_share}, ${todo_id}, ${permission});`;
+  pool.connect((err, client, release) => {
+    client.query(query, (err, result) => {
+      release();
+      res.send(result.rows)
+    })
+  })
+});
+
+  app.put('/share/permissions/:userId', (req, res) => {
+    const user_id = req.params.userId;
+    const {friend_id, cal_share, cat_id, cat_share, todo_id, permission} = req.body;
+    const query = `UPDATE permissions SET cal_share=${cal_share}, cat_id=${cat_id}, cat_share=${cat_share}, permission=${permission} where user_id=${user_id} and friend_id=${friend_id} and todo_id=${todo_id};`;
+    pool.connect((err, client, release) => {
+      client.query(query, (err, result) => {
+        release();
+        res.send(result.rows)
+      })
     })
   });
 

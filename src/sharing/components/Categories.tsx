@@ -12,42 +12,36 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {colorMap} from '../../theme';
+import { catData } from "./helpers/helpers";
 
 
 interface todo {
-  title: string ,
-  complete: boolean,
-  permission: number
+  name: string,
+  cat_id: number,
+  todo_id: number
 }
 
 interface category {
   name: string,
+  cat_id: number
   color: number,
-  todos: string[]
+  todos: todo[]
 }
 
-interface user {
+interface Props {
+  cData: any,
+  catState: any,
+  setCatState: any,
+  todoState: any,
+  setTodoState: any,
   calendar: string,
-  calendarChecked: Boolean,
+  calendarChecked: boolean,
   categories: category[],
   friends: string[]
 }
 
-const Categories: React.FC<user> = ({ calendarChecked, calendar, categories, friends }) => {
-  const catState : any = {
-    calendarChecked: false
-  };
-
-  const expandState : any = {}
-
-  //Create the states for each category
-  for (var i = 0; i < categories.length; i++) {
-    catState[categories[i].name] = catState.calendarChecked ? true : false;
-    expandState[categories[i].name] = false;
-  }
-
-  const [state, setState] = React.useState(catState);
-
+const Categories: React.FC<Props> = ({ cData, catState, setCatState, calendarChecked, calendar, categories, friends, todoState, setTodoState}) => {
+  const expandState : any = {};
   const [open, setOpen] = React.useState(expandState);
 
   const handleClick = (
@@ -60,11 +54,20 @@ const Categories: React.FC<user> = ({ calendarChecked, calendar, categories, fri
     });
   };
 
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [event.target.name]: !state[event.target.name] // {key: [string]: string }
+    let temp : any = {};
+    for (var i = 0; i < cData[event.target.name].length; i++) {
+      temp[cData[event.target.name][i]] = !catState[event.target.name];
+    }
+    setCatState({
+      ...catState,
+      [event.target.name]: !catState[event.target.name]
     });
+    setTodoState({
+      ...todoState,
+      ...temp
+    })
   };
 
 
@@ -72,12 +75,12 @@ const Categories: React.FC<user> = ({ calendarChecked, calendar, categories, fri
     <>
       {
         categories.map((category) => (
-          <Fragment key={category.name}>
+          <Fragment key={category.cat_id}>
 
             <ListItemButton onClick={(event) => handleClick(event, category.name)}>
               <FormControlLabel
                   control={
-                    <Checkbox checked={state[category.name] || calendarChecked} onChange={handleChange} name={category.name} sx={{color: colorMap[category.color]}}/>
+                    <Checkbox checked={calendarChecked || catState[category.cat_id]} onChange={handleChange} name={`${category.cat_id}`} sx={{color: colorMap[category.color]}} style={{color: colorMap[category.color]}}/>
                   }
                   label={category.name}
                 />
@@ -85,7 +88,7 @@ const Categories: React.FC<user> = ({ calendarChecked, calendar, categories, fri
             </ListItemButton>
             <Collapse in={open[category.name]} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <Todos check={state[category.name] || calendarChecked} name={category.name} todos={category.todos} color={category.color}/>
+                <Todos check={catState[category.cat_id] || calendarChecked} name={category.name} todos={category.todos} color={category.color} todoState={todoState} setTodoState={setTodoState} cat_id={category.cat_id}/>
               </List>
             </Collapse>
           </Fragment>

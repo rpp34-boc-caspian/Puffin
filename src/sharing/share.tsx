@@ -21,15 +21,20 @@ import Friends from "./components/Friends";
 import React, { useEffect, useState } from 'react';
 import { format } from "path";
 import { Link } from "react-router-dom"
-import {formatData, userEx} from './components/helpers/helpers';
+import {formatData, userEx, catClean, todoClean, catData} from './components/helpers/helpers';
+import axios from "axios";
+import { createStatement } from "typescript";
+import { set } from "date-fns";
 
 
 interface friend {
   name: string,
+  id: number,
   permissions: number
 }
 
 interface user {
+  userId: number,
   calendar: string,
   categories: category[],
   friends: string[]
@@ -37,43 +42,119 @@ interface user {
 
 interface category {
   name: string,
-  todos: string[],
+  cat_id: number,
+  todos: todo[],
   color: number
 }
+
+interface todo {
+  name: string,
+  cat_id: number,
+  todo_id: number
+}
+
+interface permission {
+    email: string,
+    id: number,
+    permission: number
+}
+
 
 export const Share = (data: any) => {
 
   const options = userEx.friends;
-  const access : friend[] = [];
+  const accessor : friend[] = [];
 
   const [state, setState] = React.useState({
-    calendar: false,
     friends: userEx.friends,
-    friendsAccess: access
+    friendsAccess: accessor
   });
 
-  const [currentUser, setCurrentUser] = React.useState(userEx);
-  const [friends, setFriends] = React.useState(userEx.friends);
-  const [value, setValue] = React.useState<string | null>(options[0]);
+  const [calState, setCalState] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState(formatData(data.data));
+  const [permissions, setPermissions] = React.useState<any>({});
+  const [value, setValue] = React.useState<string | null>(`${state.friends[0]}`);
   const [inputValue, setInputValue] = React.useState('');
   const [openAdd, setOpenAdd] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
   const [openFriend, setOpenFriend] = React.useState(false);
+  const [catState, setCatState] = React.useState(catClean(data.data));
+  const [todoState, setTodoState] = React.useState({});
+  const [catMeta, setCatMeta] = React.useState({});
+  const [access, setAccess] = React.useState({});
 
   useEffect(() => {
     setCurrentUser(formatData(data.data));
-  }, [data.data]);
+    setCatMeta(catData(currentUser.categories));
+    setCatState(() => {
+      return {
+        ...catClean(data.data),
+        ...catState
+      }
+    });
+
+    setTodoState(() => {
+      return {
+        ...todoClean(data.data),
+        ...todoState
+      }
+    });
+
+    // setAccess(() => {
+    //   return {
+    //     ...accessClean(data.data),
+    //     ...access
+    //   }
+    // });
+
+    let updatedFriends: any = axios.get(`http://127.0.0.1:8080/share/friends/${currentUser.userId}`);
+
+    axios.all([updatedFriends])
+      .then(axios.spread((...shareData) => {
+        let permissions: any = {};
+        for (var i = 0; i < shareData[0].data.rows.length; i++) {
+          permissions[shareData[0].data.rows[i].email] = {
+            id: shareData[0].data.rows[i].friend_id,
+            permission: 0
+          }
+        }
+        setPermissions(() => {
+          return {
+            ...permissions
+          }
+        });
+        let friendList = shareData[0].data.rows.map((row: any) => {
+          return `${row.email} [${row.username}]`;
+        })
+        setState({
+          ...state,
+          friends: friendList
+        })
+      }))
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [state, currentUser.userId, data.data]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      calendar: !state.calendar
-    });
+    let temp : any = {};
+    let temp2: any = {};
+    for (const key in catState) {
+      temp[key] = !calState;
+    }
+    for (const key in todoState) {
+      temp2[key] = !calState;
+    }
+    setCalState(!calState);
+    setCatState(temp);
+    setTodoState(temp2);
+    console.log('Cal', permissions);
+    console.log('Cat',catState);
+    console.log('Todo',todoState);
   };
 
   const handleClickOpenAdd = () => {
-    console.log("rows", data.data);
-    console.log("user", currentUser);
+    setValue(state.friends[0]);
     setOpenAdd(true);
   };
 
@@ -82,22 +163,60 @@ export const Share = (data: any) => {
   };
 
   const handleDoAdd = () => {
-    const newFriend = {
-      name: 'One',
-      permissions: 0
-    }
-    setState({
-      ...state,
-      friendsAccess: [...state.friendsAccess, newFriend]
-    });
+    setOpenAdd(false);
+
+    // const newFriend = {
+    //   name: 'One',
+    //   permissions: 0
+    // }
+    // setState({
+    //   ...state,
+    //   friends: [...state.friends, newFriend.name],
+    //   friendsAccess: [...state.friendsAccess, newFriend]
+    // });
   };
 
   const handleClickOpenShare = () => {
     setOpenShare(true);
+    // axios({
+    //   method: 'get',
+    //   url: 'http://127.0.0.1:8080/share/perm/1/6/1',
+    // })
+    // .then((response) => {
+    //   console.log(response.data);
+    //   if(response.data.length === 0) {
+    //     axios({
+    //       method: 'post',
+    //       url: 'http://127.0.0.1:8080/share/permissions/1',
+    //       data: {
+    //         friend_id: 6,
+    //         cal_share: false,
+    //         cat_id: 1,
+    //         cat_share: false,
+    //         todo_id: 1,
+    //         permission: 1
+    //       }
+    //     })
+    //   } else {
+    //     axios({
+    //       method: 'put',
+    //       url: 'http://127.0.0.1:8080/share/permissions/1',
+    //       data: {
+    //         friend_id: 6,
+    //         cal_share: false,
+    //         cat_id: 1,
+    //         cat_share: false,
+    //         todo_id: 1,
+    //         permission: 0
+    //       }
+    //     })
+    //   }
+    // })
   };
 
   const handleCloseShare = () => {
     setOpenShare(false);
+    console.log(',asdf', permissions);
   };
 
   const handleClickOpenFriend = () => {
@@ -139,13 +258,13 @@ export const Share = (data: any) => {
         <FormGroup>
           <FormControlLabel
             control={
-              <Checkbox checked={state.calendar} onChange={handleChange} name="calendar" />
+              <Checkbox checked={calState} onChange={handleChange} name="calendar" />
             }
             label={currentUser.calendar}
           />
         </FormGroup>
       </FormControl>
-      <Categories calendarChecked={state.calendar} categories={currentUser.categories} calendar={currentUser.calendar} friends={state.friends} />
+      <Categories cData={catMeta} catState={catState} setCatState={setCatState} todoState={todoState} setTodoState={setTodoState} calendarChecked={calState} categories={currentUser.categories} calendar={currentUser.calendar} friends={state.friends} />
       <div>
         <PeopleAltIcon />
         <label>
@@ -153,7 +272,7 @@ export const Share = (data: any) => {
         </label>
         <AddIcon onClick={handleClickOpenAdd}></AddIcon>
       </div>
-      {/* <Friends friends={state.friendsAccess}/> */}
+      <Friends friends={state.friendsAccess}/>
       <Dialog open={openAdd} onClose={handleCloseAdd}>
         <DialogTitle>Share with Friend</DialogTitle>
         <DialogContent>
@@ -188,7 +307,7 @@ export const Share = (data: any) => {
           justifyContent="flex-end"
           alignItems="flex-end"
         >
-          <Button variant="contained" color="secondary" sx={{ height: 40 }} onClick={handleClickOpenShare}>
+          <Button onClick={handleClickOpenShare} variant="contained" color="secondary" sx={{ height: 40 }}>
             Share
           </Button>
         </Box>
@@ -204,41 +323,6 @@ export const Share = (data: any) => {
         </DialogActions>
       </Dialog>
       </div>
-      {/* <div>
-        <Box
-          component="span"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button onClick={handleClickOpenFriend}>Add Friends</Button>
-          <Dialog open={openFriend} onClose={handleCloseFriend}>
-        <DialogTitle>New Friend</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Enter your friend's friend code.
-          </DialogContentText>
-          <TextField
-            id="friendcode"
-            label="Friend Code"
-            helperText="Enter Friend Code."
-            variant="filled"
-        />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseFriend}>Close</Button>
-          <Button onClick={handleCloseFriend}>Add</Button>
-        </DialogActions>
-      </Dialog>
-        </Box>
-         <Box
-          component="span"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-        </Box>
-      </div> */}
     </Container>
   );
 };
