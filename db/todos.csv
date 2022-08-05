@@ -1,7 +1,7 @@
 id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 1,1,1,Eat Veggies,Broccoli,2022-07-26 19:10:00,2022-07-26 19:45:00,FALSE,FALSE
-2,1,2,Exercise,Press ups,2022-07-26 19:10:00,2022-07-26 19:45:00,FALSE,TRUE
-3,2,3,Watch movie,Thor,2022-07-26 19:10:00,2022-07-26 19:45:00,FALSE,TRUE
+2,1,2,Exercise,Press ups,2022-07-26 19:10:00,2022-07-26 19:45:00,FALSE,FALSE
+3,2,3,Watch movie,Thor,2022-07-26 19:10:00,2022-07-26 19:45:00,FALSE,FALSE
 4,2,3,Call mom,Ask about Dad,,,FALSE,TRUE
 5,3,4,Call dad,Ask about Mom,,,FALSE,FALSE
 6,3,4,Homework,Math,,,FALSE,FALSE
@@ -44,3 +44,12 @@ id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 43,4,5,Go to Costco,,,,FALSE,FALSE
 44,4,10,Client Meeting (Peter),,8/5/22 10:00,8/5/22 12:00,FALSE,FALSE
 45,4,10,Client Meeting (Janet),,8/5/22 14:00,8/5/22 16:00,FALSE,FALSE
+46,2,3,Research trip to Spain,Add spots to Google Maps,,,FALSE,FALSE
+47,2,3,Play Wingspan,With Paw Paw,,,FALSE,FALSE
+48,2,3,Go for a walk,Golden Gate Park,,,FALSE,FALSE
+49,2,5,Backgammon,With snacks,,,FALSE,FALSE
+50,1,2,Exercise,Press ups,,,FALSE,FALSE
+51,1,6,Exercise,Press ups,,,FALSE,FALSE
+52,2,3,Checkout happy hour,Barbes,8/4/22 18:00,8/4/22 22:00,FALSE,FALSE
+53,2,3,Go to the Library,Outer Sunset,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE
+54,1,2,Exercise,Press ups,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE

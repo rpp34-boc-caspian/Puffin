@@ -29,9 +29,9 @@ app.post('/api/createtodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -62,9 +62,9 @@ app.post('/api/updatetodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -94,7 +94,7 @@ app.post('/api/updatetodo', (req, res) => {
 app.get('/api/getcategories', (req, res) => {
   const { calendarId } = req.query;
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -115,7 +115,7 @@ app.get('/api/getcategories', (req, res) => {
 app.get('/api/get_todo', (req, res) => {
   const { todo } = req.query;
 
-  tamPool.connect((err, client, release) => {
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -138,8 +138,8 @@ app.post('/api/createcategory', (req, res) => {
     color,
     calendarId
   } = req.body;
-  console.log(req.body)
-  tamPool.connect((err, client, release) => {
+  // console.log(req.body)
+  pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
       return;
@@ -286,7 +286,7 @@ app.get('/share/user_profile/:userId', (req, res) => {
   pool.connect((err, client, release) => {
     client.query(query, (err, result) => {
       release();
-      console.log(result.rows)
+      // console.log('/share/user_profile/:userId', result.rows)
       res.send(result.rows)
     })
   })
@@ -338,13 +338,14 @@ app.get('/todos/:userId', (req, res) => {
   const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
-      console.log('rows to get all todos in server', rows);
+      // console.log('rows to get all todos in server', rows);
       res.send(rows);
     })
     .catch(err => {
       res.status(500).send(err);
     })
 })
+
 
 app.put('/todos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
@@ -421,6 +422,22 @@ app.get('/completedTodos/:userId', (req, res) => {
     })
   })
 });
+
+
+//friends todo list
+app.get('/friendsTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.* from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
+
+  pool.query(query)
+    .then(({ rows }) => {
+      console.log('FRIENDS TODOS HERE!', rows, 'END');
+      res.send(rows);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+  });
 
 app.put('/updateTodoTime/', (req, res) => {
   const {id, end_d, start_d, user_id} = req.body;

@@ -1,6 +1,5 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import format from 'date-fns/format'
@@ -10,13 +9,13 @@ import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
 import { colorMap } from '../theme';
 import CustomEvent from './CustomEvent';
-import {updateTodo} from './utils/helper';
-
+import { updateTodo } from './utils/helper';
+import FilterMenu from './FilterMenu';
 
 
 const styledCalendar = styled(Calendar)`
@@ -68,6 +67,10 @@ const styledCalendar = styled(Calendar)`
   }
 `
 
+let formats = {
+  timeGutterFormat: 'ha',
+}
+
 const locales = {
   'en-US': enUS,
 }
@@ -81,14 +84,25 @@ const localizer = dateFnsLocalizer({
 })
 
 
+
 const DragAndDropCalendar = withDragAndDrop(styledCalendar)
 
 
-export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos}) {
+export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduledTodoList, setUnscheduledTodoList, setToggleUnscheduledTodo, myTodos, setMyTodos, friendsTodos}) {
   const history = useNavigate()
   const [draggedEvent, setDraggedEvent] = useState();
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
+
+
+  let allTodos = [...myTodos, ...friendsTodos];
+
+  let friends = allTodos.filter((eachTodo) =>
+    eachTodo.category_name !== eachTodo.username
+  )
+
+  const listOfFriends = [...new Set(friends.map((item) => item.category_name))];
+  console.log("from daily calendar:" ,listOfFriends)
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
@@ -101,15 +115,15 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
     (event) => {
       console.log('event', event);
       updateTodo(event.id, event.start, event.end, event.allday)
-      .then(({data}) => {
-        console.log('moveEvent', data);
-        if (data.message === 'updated') {
-          setMyTodos((prev) => {
-            return [...prev, event]
-          })
-        }
-      })
-      .catch(err => console.log('update event err', err))
+        .then(({ data }) => {
+          console.log('moveEvent', data);
+          if (data.message === 'updated') {
+            setMyTodos((prev) => {
+              return [...prev, event]
+            })
+          }
+        })
+        .catch(err => console.log('update event err', err))
     },
     [setMyTodos]
   )
@@ -123,7 +137,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         title,
         start,
         end,
-        isallday, 
+        isallday,
         color,
         complete
       }
@@ -139,18 +153,18 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
       const { allday } = event
       if (!allday && droppedOnalldaySlot) {
         event.allday = true
-      }      
+      }
       updateTodo(event.id, start, end, allday)
-      .then(({data}) => {
-        if (data.message === 'updated') {
-          setMyTodos((prev) => {
-            const existing = prev.find((ev) => ev.id === event.id) ?? {}
-            const filtered = prev.filter((ev) => ev.id !== event.id)
-            return [...filtered, { ...existing, start, end, allday }]
-          })
-        }
-      })
-      .catch(err => console.log('update event err', err))
+        .then(({ data }) => {
+          if (data.message === 'updated') {
+            setMyTodos((prev) => {
+              const existing = prev.find((ev) => ev.id === event.id) ?? {}
+              const filtered = prev.filter((ev) => ev.id !== event.id)
+              return [...filtered, { ...existing, start, end, allday }]
+            })
+          }
+        })
+        .catch(err => console.log('update event err', err))
     },
     [setMyTodos]
   )
@@ -158,21 +172,40 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
       updateTodo(event.id, start, end)
-      .then(({data}) => {
-        console.log('resizeEvent', data);
-        if (data.message === 'updated') {
-          setMyTodos((prev) => {
-            const existing = prev.find((ev) => ev.id === event.id) ?? {}
-            const filtered = prev.filter((ev) => ev.id !== event.id)
-            return [...filtered, { ...existing, start, end }]
-          })
-        }
-      })
+        .then(({ data }) => {
+          console.log('resizeEvent', data);
+          if (data.message === 'updated') {
+            setMyTodos((prev) => {
+              const existing = prev.find((ev) => ev.id === event.id) ?? {}
+              const filtered = prev.filter((ev) => ev.id !== event.id)
+              return [...filtered, { ...existing, start, end }]
+            })
+          }
+        })
     },
     [setMyTodos]
   )
 
   const defaultDate = useMemo(() => new Date(), [])
+
+
+  let eventStyleGetter = (event, start, end, isSelected) => {
+    console.log(isSelected);
+
+    // let backgroundColor = colorMap[event.color];
+    // const textDecorationLine = event.complete === false ? 'none' : 'line-through';
+    // return { style: { backgroundColor, textDecorationLine } }
+
+    let backgroundColor = colorMap[event.color];
+    let textDecorationLine = event.complete === false ? 'none' : 'line-through';
+    var style = {
+        backgroundColor: backgroundColor,
+        textDecorationLine: textDecorationLine
+    };
+    return {
+        style: style
+    };
+  }
 
   return (
     <div>
@@ -181,19 +214,22 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
       >
         {date}
       </Typography>
+      <FilterMenu  listOfFriends={listOfFriends}/>
       <DragAndDropCalendar
         defaultDate={defaultDate}
+        formats={formats}
         date={date}
         onNavigate={() => { }}
         view='day'
         onView={() => { }}
-        events={myTodos}
+        events={[...myTodos, ...friendsTodos]}
         localizer={localizer}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         popup
         resizable
         step={60}
+        toolbar={false}
         dragFromOutsideItem={
           displayDragItemInCell ? dragFromOutsideItem : null
         }
@@ -201,19 +237,13 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         onSelectSlot={newEvent}
         onSelectEvent={(e) => handleSelectedEvent(e)}
         // draggable
-        eventPropGetter={(event) => {
-          let backgroundColor = colorMap[event.color];
-          const textDecorationLine = event.complete === false ? 'none' : 'line-through';
-          return { style: {backgroundColor, textDecorationLine} }
-        }}
-        toolbar={false}
+        eventPropGetter={eventStyleGetter}
         components={{
-          event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          // toolbar: CustomToolbar
+          event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)
-}
+        }
       />
       <UnscheduledTodo
         toggleUnscheduledTodo={toggleUnscheduledTodo}
@@ -222,7 +252,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         unscheduledTodoList={unscheduledTodoList}
         setUnscheduledTodoList={setUnscheduledTodoList}
       />
-      {/* {selectedEvent && <ToDoEditModal />} */}
     </div>
   )
 }

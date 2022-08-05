@@ -41,6 +41,23 @@ export interface TodoList {
   color: number
 }
 
+export interface FriendsTodoList {
+  cal_share: boolean,
+  calendar_id: number,
+  cat_id: number,
+  cat_share: boolean,
+  category_name: string,
+  color: number,
+  email: string,
+  friend_id: number,
+  id: number,
+  permission: number,
+  shared_user_id: number,
+  title: string,
+  todo_id: number,
+  username: string
+}
+
 
 const App: React.FC = () => {
   const [metricsPageOpent, toggleMetrics] = useState(false);
@@ -49,7 +66,7 @@ const App: React.FC = () => {
     userid: number,
     calendar: string,
     categories: string[],
-    todos:string[],
+    todos: string[],
     friends: string[],
     test: any[]
   }[]>([]);
@@ -72,29 +89,30 @@ const App: React.FC = () => {
     color: number,
     todo_id: number
   }[]>([]);
-  const [userId, setUserId] = useState(3) //gave default val until signin uses it
+  const [userId, setUserId] = useState(2) //gave default val until signin uses it
   const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
   const [myTodos, setMyTodos] = React.useState<TodoList[]>([]);
+  const [friendsTodos, setFriendsTodos] = React.useState<FriendsTodoList[]>([])
 
   useEffect(() => {
     let requestCompletedTodos = axios.get(`http://127.0.0.1:8080/completedTodos/${userId}`);
     let requestUnscheduledTodos = axios.get(`http://127.0.0.1:8080/unscheduledTodos/${userId}`);
     let requestTodos = axios.get(`http://127.0.0.1:8080/todos/${userId}`);
-    let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`)
+    let requestShares = axios.get(`http://127.0.0.1:8080/share/user_profile/${userId}`);
+    let requestFriendsTodos = axios.get(`http://127.0.0.1:8080/friendsTodos/${userId}`);
 
-    axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares])
-
+    axios.all([requestCompletedTodos, requestUnscheduledTodos, requestTodos, requestShares, requestFriendsTodos])
       .then(axios.spread((...allData) => {
         setMetricsData(allData[0].data);
         setUnscheduledTodoList(allData[1].data);
         setMyTodos(allData[2].data);
         setSharingData(allData[3].data);
-
+        setFriendsTodos(allData[4].data)
       }))
       .catch((err) => {
         setMetricsData(FakeTodoData)
       })
-  },[userId])
+  }, [userId])
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
@@ -102,11 +120,12 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={
               <RequireAuth user={setUserId} >
-                <Home 
-                  unscheduledTodoList={unscheduledTodoList} 
+                <Home
+                  unscheduledTodoList={unscheduledTodoList}
                   setUnscheduledTodoList={setUnscheduledTodoList}
-                  myTodos={myTodos} 
+                  myTodos={myTodos}
                   setMyTodos={setMyTodos}
+                  friendsTodos={friendsTodos}
                 />
               </RequireAuth>
             } />
