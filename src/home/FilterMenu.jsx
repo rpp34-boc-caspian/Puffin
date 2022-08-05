@@ -34,10 +34,20 @@ const FilterMenu = ({listOfCategories, listOfFriends}) => {
   function onVisibleChange(visible) {
   }
 
-  const sharedCalendarMenu = (
+  const friendsMenu = (
     <Menu onSelect={onSelect}>
       {
         listOfFriends.map((item, i) => {
+          return <MenuItem key={i}>{item}<input type="checkbox" name={item} onChange={handleViewSelect}/></MenuItem>
+        })
+      }
+    </Menu>
+  );
+
+  const categoriesMenu = (
+    <Menu onSelect={onSelect}>
+      {
+        listOfCategories.map((item, i) => {
           return <MenuItem key={i}>{item}<input type="checkbox" name={item} onChange={handleViewSelect}/></MenuItem>
         })
       }
@@ -48,14 +58,22 @@ const FilterMenu = ({listOfCategories, listOfFriends}) => {
   return (
 
     <div className='rbc-toolbar'>
-      <div className="sharedCalendarView" style={{ padding: 5 }}>
+      <div className="friendsView" style={{ padding: 5 }}>
       <Dropdown
         trigger={['click']}
-        overlay={sharedCalendarMenu}
+        overlay={friendsMenu}
         animation="slide-up"
-        onVisibleChange={onVisibleChange}
-      >
-        <button style={{ width: 150 }}>Shared Calendars</button>
+        onVisibleChange={onVisibleChange}>
+        <button style={{ width: 150 }}>My Friends</button>
+      </Dropdown>
+      </div>
+      <div className="categoriesView" style={{ padding: 5 }}>
+      <Dropdown
+        trigger={['click']}
+        overlay={categoriesMenu}
+        animation="slide-up"
+        onVisibleChange={onVisibleChange}>
+        <button style={{ width: 150 }}>My Categories</button>
       </Dropdown>
       </div>
     </div>

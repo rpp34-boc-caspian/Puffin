@@ -94,7 +94,12 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
-// don't want to change shared db query to access info just yet- will refactor this helper into server side rendering...
+
+  ////////////////////////////////////beginning
+
+  /// All of this logic needs to be moved up to Home or App
+
+  /// This is a shortcut object- will need to be replaced with proper db query, response object
   let friendsUserId = {
     1: 'Tam',
     2: 'Jane',
@@ -132,6 +137,10 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
   const listOfFriends = [...new Set(friends.map((item) => item.author))];
   const listOfCategories = [...new Set(allTodos.map((todo) => todo.category))];
+
+  ///////////////////////////////end
+
+
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
