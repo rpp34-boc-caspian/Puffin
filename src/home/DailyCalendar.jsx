@@ -94,52 +94,6 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(undefined)
 
-  ////////////////////////////////////beginning
-
-  /// All of this logic needs to be moved up to Home or App
-
-  /// This is a shortcut object- will need to be replaced with proper db query, response object
-  let friendsUserId = {
-    1: 'Tam',
-    2: 'Jane',
-    3: 'Darian',
-    4: 'Xinxin',
-    5: 'Keegan',
-    6: 'Cornie'
-  }
-
-  let form = (toDo) => {
-    let newObject = {
-      allday: toDo.all_d,
-      color: toDo.color,
-      complete: toDo.complete,
-      descript: toDo.descript,
-      end: toDo.end_d,
-      id: toDo.todo_id,
-      permission: toDo.permission,
-      start: toDo.start_d,
-      title: toDo.title,
-      author: friendsUserId[toDo.user_id],
-      category: toDo.category_name,
-      username: toDo.username
-    }
-    return newObject
-  }
-
-  let formedFriendsToDo = friendsTodos.map(form);
-
-  let allTodos = [...formedFriendsToDo, ...myTodos];
-
-  let friends = formedFriendsToDo.filter((eachTodo) =>
-    eachTodo.author !== eachTodo.username
-  )
-
-  const listOfFriends = [...new Set(friends.map((item) => item.author))];
-  const listOfCategories = [...new Set(allTodos.map((todo) => todo.category))];
-
-  ///////////////////////////////end
-
-
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
@@ -245,7 +199,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
       >
         {date}
       </Typography>
-      <FilterMenu  listOfFriends={listOfFriends} listOfCategories={listOfCategories} />
+      <FilterMenu  setMyTodos={setMyTodos} myTodos={myTodos} friendsTodos={friendsTodos} />
       <DragAndDropCalendar
         defaultDate={defaultDate}
         formats={formats}
