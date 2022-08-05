@@ -31,3 +31,25 @@ id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 36,2,3,Checkout happy hour,Barbes,8/4/22 18:00,8/4/22 22:00,FALSE,FALSE
 37,2,3,Go to the Library,Outer Sunset,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE
 38,1,2,Exercise,Press ups,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE
+24,4,9,Clean Dishes,,8/6/22 10:00,8/6/22 12:00,FALSE,FALSE
+25,4,9,Clean Room,,8/6/22 10:00,8/6/22 12:00,FALSE,FALSE
+26,4,9,Bake birthday cake,,8/1/22 10:00,8/1/22 12:00,FALSE,FALSE
+27,4,9,Laundry,,8/6/22 10:00,8/6/22 12:00,FALSE,FALSE
+28,4,9,Clean Dishes Again,,8/5/22 10:00,8/5/22 12:00,FALSE,FALSE
+29,4,9,Mow Lawn,,8/6/22 12:00,8/6/22 13:00,FALSE,FALSE
+30,4,9,Paint House,,8/4/22 11:00, 8/4/22 14:00,FALSE,FALSE
+31,4,10,Client Meeting (Zoe),SWE Canidate,7/24/22 9:00,7/24/22 11:00,FALSE,FALSE
+32,4,10,Client Meeting (Jim),,8/6/22 10:00,8/6/22 12:00,FALSE,FALSE
+33,4,10,Client Meeting (Leah),,8/3/22 10:00,8/3/22 13:00,FALSE,FALSE
+34,4,10,Client Meeting (Peter),,8/1/22 10:00,8/1/22 12:00,FALSE,FALSE
+35,4,10,Client Meeting (Janet),,8/4/22 10:00,8/4/22 12:00,FALSE,FALSE
+36,4,10,Feautre Update 123.0,,8/4/22 10:00,8/4/22 16:00,FALSE,FALSE
+37,4,8,Learn TypeScript,,,,FALSE,FALSE
+38,4,8,Learn MUI,,,,FALSE,FALSE
+39,4,8,Learn Array,,,,FALSE,FALSE
+40,4,10,Make an appointment with Jane,,,,FALSE,FALSE
+41,4,10,Make an appointment with Darian,,,,FALSE,FALSE
+42,4,5,Call mom,,,,FALSE,FALSE
+43,4,5,Go to Costco,,,,FALSE,FALSE
+44,4,10,Client Meeting (Peter),,8/5/22 10:00,8/5/22 12:00,FALSE,FALSE
+45,4,10,Client Meeting (Janet),,8/5/22 14:00,8/5/22 16:00,FALSE,FALSE
