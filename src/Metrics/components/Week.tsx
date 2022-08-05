@@ -52,8 +52,8 @@ export const Week = (props: allTodos) => {
                   today: false,
                   week: true,
                   month: false
-                }
-              )}}>
+                })
+              }}>
                 <InfoIcon/>
               </IconButton>
             }

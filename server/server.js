@@ -4,10 +4,11 @@ const path = require('path');
 const app = express();
 const port = 8080;
 const cors = require('cors');
-const {pool, darianPool, tamPool} = require('../db/index.js');
+const {pool, tamPool} = require('../db/index.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const axios = require('axios');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -59,7 +60,7 @@ app.post('/api/updatetodo', (req, res) => {
     end,
     allDay
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   pool.connect((err, client, release) => {
     if (err) {
@@ -135,7 +136,7 @@ app.post('/api/createcategory', (req, res) => {
     color,
     calendarId
   } = req.body;
-  console.log(req.body)
+
   pool.connect((err, client, release) => {
     if (err) {
       res.status(500).json(err);
@@ -236,7 +237,8 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   let { username, email, password } = req.body;
-
+  let test = await bcrypt.hash('xinxin4', 11);
+  console.log({test})
   pool.query(`SELECT * FROM users WHERE username = '${req.body.username}'`)
   .then( async (results) => {
     if (results.rows.length === 0) {
@@ -321,7 +323,6 @@ app.get('/share/perm/:userId/:friend_id/:todo_id', (req, res) => {
   pool.connect((err, client, release) => {
     client.query(query, (err, result) => {
       release();
-      console.log('RESAU', result);
       res.send(result.rows);
     })
   })
@@ -360,7 +361,7 @@ app.get('/todos/:userId', (req, res) => {
   const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
-      console.log('rows to get all todos in server', rows);
+      // console.log('rows to get all todos in server', rows);
       res.send(rows);
     })
     .catch(err => {
@@ -368,16 +369,18 @@ app.get('/todos/:userId', (req, res) => {
     })
 })
 
+
 app.put('/todos/:todoId', (req, res) => {
   const todo_id = req.params.todoId;
   const {start, end, allday, complete} = req.body;
+  console.log(req.body, 'complete', complete);
   const updateCompleteQuery = 'UPDATE todos SET complete = $1 WHERE id = $2';
   const updateCompleteOptions = [complete, todo_id];
   const updateTiemQuery = 'UPDATE todos SET start_d = $1, end_d = $2, all_d = $3 WHERE id = $4';
   const updateTimeOptions = [new Date(start), new Date(end), allday, todo_id]
   const updateComplete = () => pool.query(updateCompleteQuery, updateCompleteOptions);
   const updateTime = () => pool.query(updateTiemQuery, updateTimeOptions);
-  const query = typeof complete === 'boolean' ? updateComplete() : updateTime();
+  const query = complete !== undefined ? updateComplete() : updateTime();
 
   query
   .then(({rowCount}) => {
@@ -419,29 +422,78 @@ app.get('/unscheduledTodos/:userId', (req, res) => {
     })
 })
 
-
 app.get('/completedTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
   const query = (
-    `SELECT todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
+    `SELECT todos.id, todos.title, todos.start_d, todos.end_d, categories.category_name, categories.color
     FROM todos
     INNER JOIN categories ON todos.cat_id=categories.id
     WHERE user_id=${user_id} AND complete=true`
   );
   pool.connect((err, client, release) => {
     if (err) {
-      return console.error('Error acquiring client', err.stack);
+      res.sendStatus(500);
+      console.error('Error acquiring client', err.stack);
     }
     client.query(query, (err, result) => {
       release();
       if (err) {
-        return console.error('Error executing query', err.stack);
+        res.sendStatus(500);
+        console.error('Error executing query', err.stack);
       }
-      console.log(result.rows)
       res.send(result.rows)
     })
   })
 });
+
+
+//friends todo list
+app.get('/friendsTodos/:userId', (req, res) => {
+  const user_id = req.params.userId;
+  const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.* from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
+
+  pool.query(query)
+    .then(({ rows }) => {
+      console.log('FRIENDS TODOS HERE!', rows, 'END');
+      res.send(rows);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+  });
+
+app.put('/updateTodoTime/', (req, res) => {
+  const {id, end_d, start_d, user_id} = req.body;
+  const query = (
+    `UPDATE todos
+     SET end_d='${end_d}', start_d='${start_d}'
+     WHERE id=${id}`
+  );
+
+  pool.connect((err, client, release) => {
+    if (err) {
+      res.sendStatus(500);
+      console.error('Error acquiring client', err.stack);
+    }
+    client.query(query, (err, result) => {
+      release();
+      if (err) {
+        console.error('Error executing query', err.stack);
+        res.sendStatus(500);
+      } else {
+        axios.get(`http://127.0.0.1:8080/completedTodos/${user_id}`)
+          .then((data) => {
+            res.send(data.data)
+          })
+          .catch((err) => {
+            console.log(err);
+            res.sendStatus(500);
+          })
+
+      }
+    })
+  })
+})
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)

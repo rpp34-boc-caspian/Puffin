@@ -6,3 +6,5 @@ user_id,friend_id,cal_share,cat_id,cat_share,todo_id,permission
 4,5,FALSE,5,FALSE,8,1
 5,4,FALSE,8,FALSE,9,0
 2,1,FALSE,3,FALSE,4,1
+2,1,FALSE,3,TRUE,4,1
+1,2,FALSE,1,TRUE,38,1

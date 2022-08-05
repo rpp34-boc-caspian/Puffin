@@ -7,7 +7,8 @@ interface userTodo {
   start_d: string,
   end_d: string,
   category_name: string,
-  color: number
+  color: number,
+  id: number
 }
 interface allTodos {
   todos: userTodo[],
@@ -19,17 +20,30 @@ interface allTodos {
     week: boolean;
     month: boolean;
   }>>,
-  timeFrame: string
+  timeFrame: string,
+  user_id: number,
+  updateMetricsData: React.Dispatch<React.SetStateAction<{
+    title: string;
+    start_d: string;
+    end_d: string;
+    category_name: string;
+    color: number;
+    todo_id: number;
+}[]>>
 }
 
 export const Detailed = (props: allTodos) => {
+
+
   let categoryPage = [
       <CategoryDetailed
         key={'0-items-today'}
         togglePage={props.togglePage}
         categoryHours={0}
         categoryName={'No Tracked Todos'}
-        todayTodos={[]}
+        todos={[]}
+        user_id={props.user_id}
+        updateMetricsData={props.updateMetricsData}
       />
   ];
   if (props.categoryHours) {
@@ -40,7 +54,9 @@ export const Detailed = (props: allTodos) => {
           togglePage={props.togglePage}
           categoryHours={props.categoryHours[category]}
           categoryName={category}
-          todayTodos={props.todos.filter((todo) => (todo.category_name === category))}
+          todos={props.todos.filter((todo) => (todo.category_name === category))}
+          user_id={props.user_id}
+          updateMetricsData={props.updateMetricsData}
         />
       ))
     )
