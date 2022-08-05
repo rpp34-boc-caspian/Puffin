@@ -14,8 +14,8 @@ import UnscheduledTodo from './UnscheduledTodo';
 import { styled } from '@mui/material/styles';
 import { colorMap } from '../theme';
 import CustomEvent from './CustomEvent';
-import CustomCalendar from './CustomCalendar';
 import { updateTodo } from './utils/helper';
+import FilterMenu from './FilterMenu';
 
 
 const styledCalendar = styled(Calendar)`
@@ -90,11 +90,13 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
 
 
   let allTodos = [...myTodos, ...friendsTodos];
+
   let friends = allTodos.filter((eachTodo) =>
     eachTodo.category_name !== eachTodo.username
   )
 
   const listOfFriends = [...new Set(friends.map((item) => item.category_name))];
+  console.log("from daily calendar:" ,listOfFriends)
 
   const handleSelectedEvent = (myTodos) => {
     setSelectedEvent(myTodos)
@@ -211,6 +213,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
       >
         {date}
       </Typography>
+      <FilterMenu  listOfFriends={listOfFriends}/>
       <DragAndDropCalendar
         defaultDate={defaultDate}
         formats={formats}
@@ -225,6 +228,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         popup
         resizable
         step={60}
+        toolbar={false}
         dragFromOutsideItem={
           displayDragItemInCell ? dragFromOutsideItem : null
         }
@@ -234,8 +238,7 @@ export default function DailyCalendar({ date, toggleUnscheduledTodo, unscheduled
         // draggable
         eventPropGetter={eventStyleGetter}
         components={{
-          event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />,
-          toolbar: (props) => <CustomCalendar {...props} listOfFriends={listOfFriends}/>
+          event: (props) => <CustomEvent {...props} setMyTodos={setMyTodos} />
         }}
         startAccessor={event => new Date(event.start)}
         endAccessor={event => new Date(event.end)

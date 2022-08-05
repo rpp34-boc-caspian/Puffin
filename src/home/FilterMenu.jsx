@@ -5,11 +5,11 @@ import 'rc-dropdown/assets/index.css';
 import Menu, { Item as MenuItem } from 'rc-menu';
 
 
-const sharedCalendarMock = ['Tam','School','Holidays']
+// const sharedCalendarMock = ['Tam','School','Holidays']
 
 
-const CustomCalendar = (props) => {
-  console.log('from Custom Calendar :', props)
+const FilterMenu = ({listOfFriends}) => {
+  console.log('from Custom Calendar :', listOfFriends)
   const [currentSelect, setCurrentSelect] = useState([]);
   const handleViewSelect = (event) => {
     let user = {
@@ -96,6 +96,6 @@ const CustomCalendar = (props) => {
   )
 }
 
-export default CustomCalendar;
+export default FilterMenu;
 
 
