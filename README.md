@@ -3,9 +3,9 @@
 One Paragraph of project description goes here
 
 ## Technologies used
-Set-up and Workflow:
-Frontend Development:
-Backend Development:
+Set-up and Workflow:  Docker, Circle CI
+Frontend Development:  React, Typescript, Material UI, React-Big-Calendar
+Backend Development:  Postgres, Node.js, Express
 Testing:
 
 ## Description
@@ -22,9 +22,12 @@ Testing:
     <img src="https://user-images.githubusercontent.com/84343573/183218686-52b06c1d-9cdd-429e-b6dd-f0103e35c8b5.gif" width="30%" />
 
 2. Daily calendar:
-  - Displays all todos scheduled in the selected date.
+  - Displays all todos scheduled in the selected date, displaying the title, time and custom selected color.
   - Users can move/resize the todos to reassign its start and end times on the calendar.
   - Users can edit, mark as completed, and delete todos from the calendar.
+  - Users can view selected friends from dropdown menu to view todos authored by friends who have shared with user.
+  </br>
+  <img src="https://media.giphy.com/media/3RAc6QNwvQwF4j3ZkU/giphy.gif" width="30% />
 
 3. Navigation
   - Today Button: Takes a user to today's date on the calendar
