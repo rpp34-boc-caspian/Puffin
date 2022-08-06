@@ -4,7 +4,7 @@ One Paragraph of project description goes here
 
 ## Technologies used
 Set-up and Workflow:  Docker, Circle CI
-Frontend Development:  React, Typescript, Material UI, React-Big-Calendar, Chart.js
+Frontend Development:  React, Typescript, Material UI, React-Big-Calendar
 Backend Development:  Postgres, Node.js, Express
 Testing:
 
@@ -38,17 +38,14 @@ Testing:
   - User Button: Allows user to view reports, profile and logout.
   
 ### Add/Edit todos:
+- User can navigate to the Create-todo form from the "Plus" icon on the calendar.
+- On the Create-todo form, user can add a new item with title and description inputs.
+- If user checks the Add to calendar box then Start/end input boxes will show and the item will be added automatically to the calendar. If not checked then the item will go to the Unscheduled todo listing of the calendar. User then review the unscheduled todo listing and drag/drop items to the calendar later. 
+- If user checks the Share with Friends and then enter a friend's email. The item will be shared with the friend later
+- User can select the categories to tag the todo items. If a category is not on the list, user can add new category by selecting the Add category and a modal will pop up. The modal allows user to enter the name and select the color for the category.
+- Once on the calendar, user can click on the Edit button to see the Edit todo form in which they can update any fields
 
 ### Sharing todos/calendar
-1. Calendar, Categories, and Todos
-  - Users can choose between the different types of items to share.
-  - They can choose the whole calendar.
-  - They can choose the categories.
-  - They can choose the todos.
-2. Ability to add the individuals to share the data with.
-  - The plus sign will let you add friends. 
-  - Press the share button to share. 
-<img src="https://giphy.com/embed/lLcajTbjRw5GGLXkxv](https://media2.giphy.com/media/lLcajTbjRw5GGLXkxv/giphy.gif" width="30%">
 
 ### Report
 - Users can monitor all completed todos.
