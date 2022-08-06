@@ -314,11 +314,20 @@ app.get('/share/friends/:userId', (req, res) => {
     });
 });
 
+app.get('/share/users', (req, res) => {
+  const query = `select id, username, email from users`;
+  pool.connect((err, client, release) => {
+    client.query(query, (err, result) => {
+      release();
+      res.send(result.rows);
+    })
+  })
+});
+
 app.get('/share/perm/:userId/:friend_id/:todo_id', (req, res) => {
   const user_id = req.params.userId;
   const friend_id = req.params.friend_id;
   const todo_id = req.params.todo_id;
-  console.log('SDAf', friend_id, todo_id, user_id);
   const query = `select * from permissions where user_id=${user_id} and friend_id=${friend_id} and todo_id=${todo_id};`;
   pool.connect((err, client, release) => {
     client.query(query, (err, result) => {

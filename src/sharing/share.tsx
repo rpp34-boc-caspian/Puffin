@@ -21,16 +21,14 @@ import Friends from "./components/Friends";
 import React, { useEffect, useState } from 'react';
 import { format } from "path";
 import { Link } from "react-router-dom"
-import {formatData, userEx, catClean, todoClean, catData} from './components/helpers/helpers';
+import {formatData, userEx, catClean, todoClean, catData, cleanAccess, parseUsers} from './components/helpers/helpers';
 import axios from "axios";
 import { createStatement } from "typescript";
 import { set } from "date-fns";
 
 
-interface friend {
-  name: string,
-  id: number,
-  permissions: number
+interface friends {
+  names: string[]
 }
 
 interface user {
@@ -63,17 +61,16 @@ interface permission {
 export const Share = (data: any) => {
 
   const options = userEx.friends;
-  const accessor : friend[] = [];
-
+  const fAccess : friends = {names: []};
   const [state, setState] = React.useState({
     friends: userEx.friends,
-    friendsAccess: accessor
   });
 
+  const [friendAccess, setFriendAccess] = React.useState<string[]>([]);
   const [calState, setCalState] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState(formatData(data.data));
   const [permissions, setPermissions] = React.useState<any>({});
-  const [value, setValue] = React.useState<string | null>(`${state.friends[0]}`);
+  const [value, setValue] = React.useState<string | ''>(`${state.friends[0]}`);
   const [inputValue, setInputValue] = React.useState('');
   const [openAdd, setOpenAdd] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
@@ -81,10 +78,11 @@ export const Share = (data: any) => {
   const [catState, setCatState] = React.useState(catClean(data.data));
   const [todoState, setTodoState] = React.useState({});
   const [catMeta, setCatMeta] = React.useState({});
-  const [access, setAccess] = React.useState({});
+  const [access, setAccess] = React.useState(cleanAccess(data.friendsData.rows));
 
   useEffect(() => {
     setCurrentUser(formatData(data.data));
+    setAccess(cleanAccess(data.friendsData.rows))
     setCatMeta(catData(currentUser.categories));
     setCatState(() => {
       return {
@@ -100,12 +98,12 @@ export const Share = (data: any) => {
       }
     });
 
-    // setAccess(() => {
-    //   return {
-    //     ...accessClean(data.data),
-    //     ...access
-    //   }
-    // });
+    setAccess(() => {
+      return {
+        ...cleanAccess(data.friendsData.rows),
+        ...access
+      }
+    });
 
     let updatedFriends: any = axios.get(`http://127.0.0.1:8080/share/friends/${currentUser.userId}`);
 
@@ -134,7 +132,7 @@ export const Share = (data: any) => {
       .catch((error) => {
         console.log(error)
       })
-  }, [state, currentUser.userId, data.data]);
+  }, [state, currentUser.userId, data.data, data.friendsData.rows]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let temp : any = {};
@@ -148,9 +146,6 @@ export const Share = (data: any) => {
     setCalState(!calState);
     setCatState(temp);
     setTodoState(temp2);
-    console.log('Cal', permissions);
-    console.log('Cat',catState);
-    console.log('Todo',todoState);
   };
 
   const handleClickOpenAdd = () => {
@@ -164,6 +159,8 @@ export const Share = (data: any) => {
 
   const handleDoAdd = () => {
     setOpenAdd(false);
+    let email = value.split(" ")[0];
+    setFriendAccess([...friendAccess, email]);
 
     // const newFriend = {
     //   name: 'One',
@@ -178,6 +175,7 @@ export const Share = (data: any) => {
 
   const handleClickOpenShare = () => {
     setOpenShare(true);
+    setFriendAccess([]);
     // axios({
     //   method: 'get',
     //   url: 'http://127.0.0.1:8080/share/perm/1/6/1',
@@ -216,20 +214,6 @@ export const Share = (data: any) => {
 
   const handleCloseShare = () => {
     setOpenShare(false);
-    console.log(',asdf', permissions);
-  };
-
-  const handleClickOpenFriend = () => {
-    setOpenFriend(true);
-  };
-
-  const handleCloseFriend = () => {
-    setOpenFriend(false);
-    setState({
-      ...state,
-      friends: [...state.friends, 'Jim']
-    });
-    console.log(state.friends);
   };
 
   return (
@@ -272,7 +256,7 @@ export const Share = (data: any) => {
         </label>
         <AddIcon onClick={handleClickOpenAdd}></AddIcon>
       </div>
-      <Friends friends={state.friendsAccess}/>
+      <Friends friends={friendAccess} setState={setState} permissions={permissions} setPermissions={setPermissions} map={parseUsers(data.usersData)}/>
       <Dialog open={openAdd} onClose={handleCloseAdd}>
         <DialogTitle>Share with Friend</DialogTitle>
         <DialogContent>
@@ -282,6 +266,9 @@ export const Share = (data: any) => {
           <Autocomplete
             value={value}
             onChange={(event: any, newValue: string | null) => {
+              if (newValue === null) {
+                newValue = '';
+              }
               setValue(newValue);
             }}
             inputValue={inputValue}
@@ -326,5 +313,3 @@ export const Share = (data: any) => {
     </Container>
   );
 };
-
-export default Share;

@@ -40,14 +40,13 @@ interface user {
 
 interface friend {
   name: string,
-  permissions: number
 }
 
 interface friends {
   friends: friend[]
 }
 
-const Friends: React.FC<friends> = ({ friends }) => {
+const Friends: React.FC<any> = ({ friends, setFriendAccess, permissions, setPermissions, map}) => {
 
   const catState: any = {
     calendarChecked: false
@@ -70,6 +69,11 @@ const Friends: React.FC<friends> = ({ friends }) => {
 
   const [per, setPer] = React.useState('');
   const handleChange = (event: SelectChangeEvent) => {
+    console.log(event.target)
+    // setPermissions(
+    //   ...permissions,
+    //   [map[event.target.name]] = event.target.value;
+    // )
     setPer(event.target.value as string);
   };
 
@@ -77,12 +81,12 @@ const Friends: React.FC<friends> = ({ friends }) => {
   return (
     <>
       {
-        friends.map((friend) => (
-          <Fragment key={friend.name}>
+        friends.map((friend : string) => (
+          <Fragment key={friend}>
             <Box component='span' sx={{ minWidth: 120 }}>
               <div>
-              {friend.name}
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
+              {friend}
+              <FormControl sx={{ m: 1, minWidth: 80 }}>
                 <InputLabel id="demo-simple-select-label">Permission</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -90,6 +94,7 @@ const Friends: React.FC<friends> = ({ friends }) => {
                   value={per}
                   label="Name"
                   onChange={handleChange}
+                  name={friend}
                 >
                   <MenuItem value={0}>View</MenuItem>
                   <MenuItem value={1}>Edit</MenuItem>
