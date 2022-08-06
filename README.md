@@ -40,6 +40,15 @@ Testing:
 ### Add/Edit todos:
 
 ### Sharing todos/calendar
+1. Calendar, Categories, and Todos
+  - Users can choose between the different types of items to share.
+  - They can choose the whole calendar.
+  - They can choose the categories.
+  - They can choose the todos.
+2. Ability to add the individuals to share the data with.
+  - The plus sign will let you add friends. 
+  - Press the share button to share. 
+<img src="https://giphy.com/embed/lLcajTbjRw5GGLXkxv" width="30%">
 
 ### Report
 - Users can monitor all completed todos.
