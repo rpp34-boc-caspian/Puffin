@@ -14,46 +14,47 @@ import Button from '@mui/material/Button';
 import { toEditorSettings } from "typescript";
 import {colorMap} from '../../theme';
 
-
-interface todo {
-  title: string,
-  complete: boolean,
-  permission: number,
-}
-
-interface category {
-  check: boolean,
+interface Props {
+  todoState: any,
+  setTodoState: any,
   name: string,
-  todos: string[],
+  check: boolean,
+  cat_id: number,
+  todos: todo[],
   color: number
 }
 
-const Todos: React.FC<category> = ({ check, name, todos, color }) => {
-  const todoState : any = {};
+interface todo {
+  name: string,
+  cat_id: number,
+  todo_id: number
+}
 
-  for (var i = 0; i < todos.length; i++) {
-    todoState[todos[i]] = todoState.categoryChecked ? true : false;
-  }
 
-  const [state, setState] = React.useState(todoState);
+const Todos: React.FC<Props> = ({ check, name, todos, color, todoState, setTodoState, cat_id}) => {
+  // let todoTemp: any = {};
+  // for (var i = 0; i < todos.length; i++) {
+  //   todoTemp[todos[i].todo_id] = check ? true : false;
+  // }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [event.target.name]: !state[event.target.name] // {key: [string]: string }
+    setTodoState({
+      ...todoState,
+      [event.target.name]: !todoState[event.target.name] // {key: [string]: string }
     });
+    console.log(todoState);
   };
 
   return (
     <FormControl component="fieldset" variant="standard" sx={{ pl: 4 }}>
       {
         todos.map((todo) => (
-              <FormGroup key={todo}>
+              <FormGroup key={todo.todo_id}>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={check || state[todo]} onChange={handleChange} name={todo} sx={{color: colorMap[color]}}/>
+                    <Checkbox checked={check || todoState[todo.todo_id]} onChange={handleChange} name={`${todo.todo_id}`} sx={{color: colorMap[color]}} style={{color: colorMap[color]}}/>
                   }
-                  label={todo}
+                  label={todo.name}
                 />
               </FormGroup>
         ))
