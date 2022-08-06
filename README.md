@@ -47,8 +47,8 @@ Testing:
 - The completed todos are seperated by category and assigned the category color.
 - Completed todo data is displayed using interactive graphs (chart.js).
 - Users can view detailed view of completed todos.
--- In this view, users can see the indivdual todos names and time tracked.
--- In this view, users can edit the tracked time for a completed todo.
+- In this view, users can see the indivdual todos names and time tracked.
+- In this view, users can edit the tracked time for a completed todo.
 <img src="https://media4.giphy.com/media/3HoQhepNLGJkrFA0EF/giphy.gif" width="30%"/>
 
 ## Getting Started
