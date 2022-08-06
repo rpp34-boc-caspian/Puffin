@@ -89,7 +89,7 @@ const App: React.FC = () => {
     color: number,
     todo_id: number
   }[]>([]);
-  const [userId, setUserId] = useState(2) //gave default val until signin uses it
+  const [userId, setUserId] = useState(1) //gave default val until signin uses it
   const [unscheduledTodoList, setUnscheduledTodoList] = useState<UnscheduledTodoList[]>([]);
   const [myTodos, setMyTodos] = React.useState<TodoList[]>([]);
   const [friendsTodos, setFriendsTodos] = React.useState<FriendsTodoList[]>([])

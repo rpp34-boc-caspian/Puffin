@@ -418,6 +418,7 @@ app.get('/completedTodos/:userId', (req, res) => {
         res.sendStatus(500);
         console.error('Error executing query', err.stack);
       }
+      console.log(result)
       res.send(result.rows)
     })
   })
