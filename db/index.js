@@ -7,6 +7,3 @@ const pool = new Pool({
     database: 'puffin',
     port: 5432,
   });
-
-module.exports = {pool};
-

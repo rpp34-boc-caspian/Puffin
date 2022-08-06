@@ -50,6 +50,9 @@ id,user_id,cat_id,title,descript,start_d,end_d,all_d,complete
 49,2,5,Backgammon,With snacks,,,FALSE,FALSE
 50,1,2,Exercise,Press ups,,,FALSE,FALSE
 51,1,6,Exercise,Press ups,,,FALSE,FALSE
-52,2,3,Checkout happy hour,Barbes,8/4/22 18:00,8/4/22 22:00,FALSE,FALSE
-53,2,3,Go to the Library,Outer Sunset,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE
-54,1,2,Exercise,Press ups,8/4/22 09:30,8/4/22 12:00,FALSE,FALSE
+52,2,3,Checkout happy hour,Barbes,8/6/22 18:00,8/6/22 22:00,FALSE,FALSE
+53,2,3,Go to the Library,Outer Sunset,8/6/22 09:30,8/6/22 12:00,FALSE,FALSE
+54,1,2,Exercise,Press ups,8/6/22 09:30,8/6/22 12:00,FALSE,FALSE
+55,1,10,Data Share,Maybe Party Share Too,8/6/22 09:30,8/6/22 12:00,FALSE,FALSE
+56,4,8,Meeting,And Pizza,8/6/22 07:30,8/6/22 09:00,FALSE,FALSE
+57,4,6,Learn Docker,,8/06/22,8/06/22,TRUE,FALSE

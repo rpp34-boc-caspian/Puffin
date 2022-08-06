@@ -367,7 +367,7 @@ app.post('/share/permissions/:userId/', (req, res) => {
 //todo list
 app.get('/todos/:userId', (req, res) => {
   const user_id = req.params.userId;
-  const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
+  const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, c.category_name as category, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
   pool.query(query, [user_id])
     .then(({ rows }) => {
       // console.log('rows to get all todos in server', rows);
@@ -457,6 +457,12 @@ app.get('/completedTodos/:userId', (req, res) => {
 
 
 //friends todo list
+
+
+  //  const query = 'SELECT t.id, t.user_id, t.cat_id, t.title, t.descript, t.start_d as start, t.end_d as end, t.all_d as allday, t.complete, c.color, c.category_name as category, p.permission from todos t LEFT JOIN categories c ON t.cat_id = c.id LEFT JOIN permissions p ON p.todo_id = t.id WHERE t.user_id = $1 AND t.complete = false AND t.start_d IS NOT NULL AND t.end_d IS NOT NULL;'
+  // --> some edits to use as update here- but can we also return the author of the todo??? :  const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.id, todos.user_id, todos.cat_id, todos.title, todos.descript, todos.start_d as start, todos.end_d as end, todos.all_d as allday, todos.complete, from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
+
+
 app.get('/friendsTodos/:userId', (req, res) => {
   const user_id = req.params.userId;
   const query = (`select users.id, users.username, users.email, permissions.user_id as shared_user_id, permissions.friend_id, permissions.cal_share, permissions.cat_id, permissions.cat_share, permissions.todo_id, permissions.permission, categories.*, todos.* from users left join permissions on users.id = permissions.friend_id left join categories on permissions.cat_id = categories.id left join todos on permissions.todo_id = todos.id  where users.id = ${user_id};`)
@@ -470,6 +476,9 @@ app.get('/friendsTodos/:userId', (req, res) => {
       res.status(500).send(err);
     })
   });
+
+
+
 
 app.put('/updateTodoTime/', (req, res) => {
   const {id, end_d, start_d, user_id} = req.body;
