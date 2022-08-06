@@ -4,7 +4,7 @@ One Paragraph of project description goes here
 
 ## Technologies used
 Set-up and Workflow:  Docker, Circle CI
-Frontend Development:  React, Typescript, Material UI, React-Big-Calendar
+Frontend Development:  React, Typescript, Material UI, React-Big-Calendar, Chart.js
 Backend Development:  Postgres, Node.js, Express
 Testing:
 
