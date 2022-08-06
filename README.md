@@ -54,7 +54,7 @@ Testing:
 2. Ability to add the individuals to share the data with.
   - The plus sign will let you add friends.
   - Press the share button to share.
-<img src="https://media4.giphy.com/media/3HoQhepNLGJkrFA0EF/giphy.gi](https://media.giphy.com/media/lLcajTbjRw5GGLXkxv/giphy.gif" width="30%"/>
+<img src="https://media.giphy.com/media/lLcajTbjRw5GGLXkxv/giphy.gif" width="30%"/>
 
 ### Report
 - Users can monitor all completed todos.
