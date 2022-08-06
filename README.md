@@ -18,7 +18,7 @@ Testing:
   - When the user logs into the account the next time, any striked-through (completed) unscheduled todos disappear from the list completely.
   - Users can delete any unscheduled todo from the list by clicking the "delete" button.
   - Users can drag any incomplete unscheduled todo from the list and drop it into the desired time slot in the daily calendar.
-  <img src="https://user-images.githubusercontent.com/84343573/183218686-52b06c1d-9cdd-429e-b6dd-f0103e35c8b5.gif" width="30%" />
+    <img src="https://user-images.githubusercontent.com/84343573/183218686-52b06c1d-9cdd-429e-b6dd-f0103e35c8b5.gif" width="30%" />
 
 2. Daily calendar:
   - Displays all todos scheduled in the selected date.
