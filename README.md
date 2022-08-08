@@ -17,6 +17,8 @@ Testing:
   - On sign in, the system compares the password provided and the stored password.
     - If the passwords match, the compare function returns true and the system returns a cookie of the username and id within the database.
 
+<iframe src="https://giphy.com/embed/d2xw3okDQY1IfzU4ZB" width="222" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/d2xw3okDQY1IfzU4ZB">via GIPHY</a></p>
+
 2. Sign Up: 
   - The Sign Up page checks information that is being input by the user.
     - It checks to make sure the email address is valid via regex and that the passwords match.
