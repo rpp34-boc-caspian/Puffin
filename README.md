@@ -17,7 +17,7 @@ Testing:
   - On sign in, the system compares the password provided and the stored password.
     - If the passwords match, the compare function returns true and the system returns a cookie of the username and id within the database.
 
-<img src="https://giphy.com/gifs/d2xw3okDQY1IfzU4ZB" width="30%" />
+<img src="https://media.giphy.com/media/d2xw3okDQY1IfzU4ZB/giphy.gif" width="30%" />
 
 2. Sign Up: 
   - The Sign Up page checks information that is being input by the user.
