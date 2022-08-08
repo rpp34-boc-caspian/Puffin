@@ -10,6 +10,24 @@ Testing:
 
 ## Description
 ### Authentication:
+1. Account Creation:
+  - Users can create an account with at the sign up page, obtain a cookie, and navigate the rest of the site.
+  - Returning users also recieve a cookie upon sign in. 
+  - Passwords are encrypted and stored within the database.
+  - On sign in, the system compares the password provided and the stored password.
+    - If the passwords match, the compare function returns true and the system returns a cookie of the username and id within the database.
+
+2. Sign Up: 
+  - The Sign Up page checks information that is being input by the user.
+    - It checks to make sure the email address is valid via regex and that the passwords match.
+    - If these two things are input correctly, the server will make sure that the username and email aren't already in use. 
+    - Any failed attempt will give feedback to the user asking for changes.
+    
+3. Sign In:
+  - The Sign In page checks inputed information with the server.
+  - Requests are made for rows within the Postgres database where the username and email are present.
+    - Returned data is checked to make sure that the email belongs to the username provided. The hashed password is then compared to the provided one.
+    - Should the data returned not have the email but the username, or vice versa, the server will notify the client which piece of information is already       in use.
 
 ### Home page:
 1. Unscheduled todo list: 
