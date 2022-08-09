@@ -24,12 +24,16 @@ Testing:
     - It checks to make sure the email address is valid via regex and that the passwords match.
     - If these two things are input correctly, the server will make sure that the username and email aren't already in use. 
     - Any failed attempt will give feedback to the user asking for changes.
+
+<img src="https://media.giphy.com/media/d2xw3okDQY1IfzU4ZB/giphy.gif" width="30%" />
     
 3. Sign In:
   - The Sign In page checks inputed information with the server.
   - Requests are made for rows within the Postgres database where the username and email are present.
     - Returned data is checked to make sure that the email belongs to the username provided. The hashed password is then compared to the provided one.
     - Should the data returned not have the email but the username, or vice versa, the server will notify the client which piece of information is already       in use.
+
+<img src="https://media.giphy.com/media/yHVoxLLD7fvFuNAvSY/giphy.gif" width="30%" />
 
 ### Home page:
 1. Unscheduled todo list: 
