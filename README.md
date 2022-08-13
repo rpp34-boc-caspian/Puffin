@@ -1,12 +1,14 @@
 # Puffin (Todo & Calendar App)
-
-One Paragraph of project description goes here
+This app is a mobile-first todo list manager and schedule planner application which can be used to manage your time.
 
 ## Technologies used
 Set-up and Workflow:  Docker, Circle CI
+</br>
 Frontend Development:  React, Typescript, Material UI, React-Big-Calendar
+</br>
 Backend Development:  Postgres, Node.js, Express
-Testing:
+</br>
+Testing: React testing library
 
 ## Description
 ### Authentication:
@@ -18,7 +20,6 @@ Testing:
     - If the passwords match, the compare function returns true and the system returns a cookie of the username and id within the database.
 
 <img src="https://media.giphy.com/media/d2xw3okDQY1IfzU4ZB/giphy.gif" width="30%" />
-
 2. Sign Up: 
   - The Sign Up page checks information that is being input by the user.
     - It checks to make sure the email address is valid via regex and that the passwords match.
@@ -26,7 +27,6 @@ Testing:
     - Any failed attempt will give feedback to the user asking for changes.
 
 <img src="https://media.giphy.com/media/d2xw3okDQY1IfzU4ZB/giphy.gif" width="30%" />
-    
 3. Sign In:
   - The Sign In page checks inputed information with the server.
   - Requests are made for rows within the Postgres database where the username and email are present.
@@ -90,39 +90,20 @@ Testing:
   - In this view, users can edit the tracked time for a completed todo.
 <img src="https://media4.giphy.com/media/3HoQhepNLGJkrFA0EF/giphy.gif" width="30%"/>
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
+## Installation
+1. Install dependencies:
+```bash
+npm install
 ```
-Give examples
+2. Run webpack in development with:
+```bash
+npm run start
 ```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-
+  
+3. Run server with:
+```bash
+npm run server-dev
+```
 
 ## Contributors
 - Jane Srisarakorn (Product Manager & Software Engineer)
