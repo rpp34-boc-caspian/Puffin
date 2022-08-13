@@ -60,7 +60,8 @@ Testing: React testing library
   - Add Button: Allows user to add a new todo.
   - Share Button: Allows user to share calendar, categories, todos with friends.
   - User Button: Allows user to view reports, profile and logout.
-  
+  <img src="https://user-images.githubusercontent.com/84343573/184467836-9269e528-d3ab-4fd9-8774-43aa46aca152.gif" width="30%" />
+
 ### Add/Edit todos:
 - User can navigate to the Create-todo form from the "Plus" icon on the calendar.
 - On the Create-todo form, user can add a new item with title and description inputs.
